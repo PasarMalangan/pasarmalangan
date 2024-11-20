@@ -1,0 +1,83 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Build outputs
+dist/
+build/
+out/
+
+# Environment variables
+.env
+.env.*.local
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# IDE specific files
+.idea/
+.vscode/
+*.iml
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Git specific files
+.git/
+*.orig
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Sensitive Keys (frontend/backend keys for local use)
+key.json
+private.pem
+public.pem
+
+# Backend cache and output
+/tmp
+/.cache
+/.next
+/.nuxt
+
+# ViteJS specific
+/.vite
+
+# Coverage reports
+coverage/
+
+# Test output
+*.lcov
+.nyc_output/
+
+# Static files from uploads
+uploads/
+public/static/
+
+# Ignore local database
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+
+# Ignore security-sensitive files
+secrets.json
+config.json
+config.yaml
+
+# Ignore custom files
+*.bak
+*.backup
