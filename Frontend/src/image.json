@@ -1,0 +1,10 @@
+{
+    "logo_header" : "/header/logoumkm.png",
+    "logo_footer" : "/footer/logofooter.svg",
+    "logo_auth" : "/auth/logo_auth.png",
+    "icon_facebook" : "/footer/mdi_facebook.svg",
+    "icon_instagram" : "/footer/mdi_instagram.svg",
+    "icon_X" : "/footer/ant-design_x-outlined.svg",
+    "icon_bag" : "/auth/solar_bag-3-bold.svg",
+    "icon_shop" : "/auth/healthicons_market-stall-outline.svg"
+}
