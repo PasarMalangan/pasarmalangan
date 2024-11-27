@@ -13,6 +13,7 @@ const pedagangSchema = new mongoose.Schema(
     categorie: { type: String, required: true },
     identitaspedagang: { type: String, required: true },
     linkecommerences: { type: [String], required: true },
+    profilepict: { type: String, default: "https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png"},
   },
   { timestamps: true }
 );

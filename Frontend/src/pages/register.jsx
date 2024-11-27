@@ -1,5 +1,6 @@
-import Footer from "../components/elements/footer/footer";
-import NavAuth from "../components/elements/navbar/navbarAuth";
+import { Link } from "react-router-dom";
+import NavAuth from "../components/containers/navbar/navbarAuth";
+import Footer from "../components/containers/footer/footer";
 import image from "../image";
 export default function Register() {
   return (
@@ -13,25 +14,25 @@ export default function Register() {
               <div className="w-1/2 bg-white px-9 py-5">
                 <h2 className="font-semibold text-xl mb-7">Daftar Sebagai?</h2>
                 <section className="flex flex-col gap-10">
-                  <a
+                  <Link
                     className="flex items-center bg-gray-200 rounded-xl shadow-lg hover:bg-gray-400 transition-colors duration-300 ease-in-out"
-                    href=""
+                    to={"/register/pembeli"}
                   >
                     <img src={image.icon_bag} alt="" />
                     <h5>Pembeli</h5>
-                  </a>
-                  <a
+                  </Link>
+                  <Link
                     className="flex items-center bg-gray-200 rounded-xl shadow-lg hover:bg-gray-400 transition-colors duration-300 ease-in-out"
-                    href=""
+                    to={"/register/pedagang"}
                   >
                     <img src={image.icon_shop} alt="" />
                     <h5>Pedagang UMKM</h5>
-                  </a>
+                  </Link>
                 </section>
                 <p className="text-lg translate-y-full text-center text-gray-600">
                   Sudah Punya Akun?{" "}
                   <span className="text-red-500 font-semibold hover:text-red-700 transition-colors duration-300 ease-in-out">
-                    <a href=""> Login</a>
+                    <Link to={"/login"}> Login</Link>
                   </span>
                 </p>
               </div>

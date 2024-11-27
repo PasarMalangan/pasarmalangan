@@ -1,6 +1,6 @@
-import Footer from "../components/elements/footer/footer";
-import NavAuth from "../components/elements/navbar/navbarAuth";
-import image from "../image";
+import { Link } from "react-router-dom";
+import Footer from "../components/containers/footer/footer";
+import NavAuth from "../components/containers/navbar/navbarAuth";
 export default function RegPedagang() {
   return (
     <>
@@ -99,7 +99,7 @@ export default function RegPedagang() {
                 <p className="w-full text-center">
                   Sudah Punya Akun?{" "}
                   <span className="text-red-500 hover:text-red-700 transition-colors duration-500 ease-in-out">
-                    <a href="">Login</a>
+                    <Link to={"/login"}>Login</Link>
                   </span>
                 </p>
               </div>
