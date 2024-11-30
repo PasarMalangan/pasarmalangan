@@ -14,7 +14,9 @@ import {
   ProtectedDashboardRoute,
 } from "./components/protectedRoute.jsx";
 import Marketplace from "./pages/marketplace.jsx";
-import DashboardPembeli from "./pages/pembeli/dashboard.jsx";
+import DashboardPembeli from "./pages/pembeli/dashboardPembeli.jsx";
+import Wishlist from "./pages/pembeli/wishlist.jsx";
+import SettingsPembeli from "./pages/pembeli/settingspembeli.jsx";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +65,22 @@ const router = createBrowserRouter([
     element: (
       <ProtectedDashboardRoute>
         <DashboardPembeli />
+      </ProtectedDashboardRoute>
+    ),
+  },
+  {
+    path: "/wishlist/pembeli",
+    element: (
+      <ProtectedDashboardRoute>
+        <Wishlist />
+      </ProtectedDashboardRoute>
+    ),
+  },
+  {
+    path: "/pengaturan/pembeli",
+    element: (
+      <ProtectedDashboardRoute>
+        <SettingsPembeli/>
       </ProtectedDashboardRoute>
     ),
   },

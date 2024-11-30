@@ -5,7 +5,7 @@ export default function ErrorPage() {
   return (
     <main className="bg-gradient-to-r from-slate-300 to-blue-200 min-h-screen flex items-center justify-center">
       <div className="w-11/12 md:w-9/12 bg-white shadow overflow-hidden sm:rounded-lg pb-8">
-        <img className="mx-auto w-1/4 h-1/4" src={image.errorLogo} alt="errlogo" />
+        <img className="mx-auto w-[20%] h-[20%]" src={image.errorLogo} alt="errlogo" />
         <div className="border-t border-gray-200 text-center pt-8">
           <h1 className="text-9xl font-bold text-red-400">{error.status}</h1>
           <h1 className="text-6xl font-medium py-8">

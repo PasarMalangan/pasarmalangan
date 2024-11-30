@@ -31,11 +31,11 @@ export default function RegPembeli() {
         role,
       });
       setSuccess(responseData.message)
-      setError(""); // Reset error jika sukses
-      setEmail(""); // Reset email
-      setUsername(""); // Reset username
-      setPassword(""); // Reset password
-      setRePassword(""); // Reset Repassword
+      setError("");
+      setEmail(""); 
+      setUsername(""); 
+      setPassword(""); 
+      setRePassword(""); 
       // Tambahkan logika redirect atau notifikasi sukses di sini
     } catch (error) {
       setSuccess("")
@@ -102,7 +102,7 @@ export default function RegPembeli() {
                   />
                   <button
                     type="submit"
-                    className="bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out"
+                    className="rounded-xl text-xl bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out"
                   >
                     Daftar
                   </button>

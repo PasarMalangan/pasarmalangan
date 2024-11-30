@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Footer from "../components/containers/footer/footer";
 import Navbar from "../components/containers/navbar/navbar";
 import image from "../image";
@@ -18,40 +19,40 @@ export default function Home() {
                 Lokal, Layanan Unik, dan Berbagai Kesempatan Kolaborasi.
               </h4>
               <div className="flex justify-between my-5 pr-10">
-                <a
+                <Link
                   className="rounded-2xl border-[1.5px] shadow-2xl px-5 py-3 border-black bg-violet-500 text-white font-semibold hover:bg-violet-700 transition-colors duration-300 ease-out"
-                  href=""
+                  to={"/marketplace"}
                 >
                   JELAJAHI UMKM
-                </a>
-                <a
+                </Link>
+                <Link
                   className="rounded-2xl border-[1.5px] shadow-2xl px-5 py-3 border-black bg-violet-500 text-white font-semibold hover:bg-violet-700 transition-colors duration-300 ease-out"
-                  href=""
+                  to={"/register/pedagang"}
                 >
                   DAFTARKAN BISNIS
-                </a>
+                </Link>
               </div>
             </div>
             <div className="grid grid-cols-2 items-end px-5 gap-5">
-              <img className="w-full" src={image.hero_1} alt="" />
-              <img className="w-full" src={image.hero_2} alt="" />
+              <img className="w-full" src={image.hero_1} alt="icnhero1" />
+              <img className="w-full" src={image.hero_2} alt="icnhero2" />
             </div>
           </section>
           <section className="translate-y-1/2 w-[80%] h-max mx-auto bg-white flex justify-around items-center py-2 rounded-3xl shadow-2xl">
             <div className="w-24">
-              <img src={image.icon_marketplace_home} alt="" />
+              <img src={image.icon_marketplace_home} alt="icnmarket" />
               <h6 className="text-center font-medium">Marketplace</h6>
             </div>
             <div className="w-24">
-              <img src={image.icon_business_home} alt="" />
+              <img src={image.icon_business_home} alt="icnbisnis" />
               <h6 className="text-center font-medium">Profil Bisnis</h6>
             </div>
             <div className="w-24">
-              <img src={image.icon_community_home} alt="" />
+              <img src={image.icon_community_home} alt="icncommunity" />
               <h6 className="text-center font-medium">Komunitas</h6>
             </div>
             <div className="w-24">
-              <img src={image.icon_training_home} alt="" />
+              <img src={image.icon_training_home} alt="icntraining" />
               <h6 className="text-center font-medium">Pelatihan UMKM</h6>
             </div>
           </section>

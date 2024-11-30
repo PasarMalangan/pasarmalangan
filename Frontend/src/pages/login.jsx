@@ -53,7 +53,7 @@ export default function Login() {
           <section className="bg-blue-600 w-max h-max p-10">
             <div className="flex justify-center gap-10">
               <img className="w-1/2" src={image.logo_auth} alt="logoauth" />
-              <div className="relative w-1/2 bg-white px-9 py-5">
+              <div className="relative w-1/2 bg-white px-9 py-5 rounded-2xl">
                 <form
                   className="flex flex-col gap-8 mb-5"
                   onSubmit={handleSubmit}
@@ -82,7 +82,7 @@ export default function Login() {
                   />
                   <button
                     type="submit"
-                    className="bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out"
+                    className="rounded-xl text-xl bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out"
                   >
                     LOG IN
                   </button>
