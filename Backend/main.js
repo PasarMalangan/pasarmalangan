@@ -8,18 +8,11 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const port = process.env.PORT;
 const frontend = process.env.FRONTEND_DEST;
-const AWS = require("aws-sdk");
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const cors = require("cors");
 app.use(cors({ origin: frontend })); // Sesuaikan dengan URL frontend
-
-AWS.config.update({
-  region: 'us-east-1',
-  accessKeyId: '',
-  secretAccessKey: '',
-  sessionToken: '',
-})
 
 (async () => {
   try {
@@ -35,6 +28,24 @@ AWS.config.update({
 // Routes
 app.use("/api/auth", authRoutes);
 app.use('/api/user', userRoutes);
+// app.post('/upload', upload.single('file'), (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).send('No file uploaded.');
+//   }
+
+//   const bucketName = 'your-s3-bucket-name';  // Nama bucket Anda
+//   uploadFileToS3(req.file, bucketName)
+//     .then((data) => {
+//       res.status(200).send({
+//         message: 'File uploaded successfully!',
+//         fileUrl: data.Location,  // URL file yang ada di S3
+//       });
+//     })
+//     .catch((error) => {
+//       console.error('Error uploading file:', error);
+//       res.status(500).send('Error uploading file to S3');
+//     });
+// });
 
 // Error handling middleware
 app.use((err, req, res, next) => {

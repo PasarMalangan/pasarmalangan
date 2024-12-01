@@ -1,6 +1,6 @@
 import Footer from "../../components/containers/footer/footer";
 import Navbar from "../../components/containers/navbar/navbar";
-import Sidebar from "../../components/containers/sidebar/sidebar";
+import SidebarPembeli from "../../components/containers/sidebar/sidebarPembeli";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -140,7 +140,7 @@ export default function SettingsPembeli() {
     <>
       <Navbar />
       <main className="relative flex h-screen">
-        <Sidebar />
+        <SidebarPembeli />
         <article className="w-[80%] pt-5 pb-10 border-2 shadow-sm my-5 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
           <div className="w-full border-b-2 border-black px-5">
             <h5 className="font-bold text-2xl">Pengaturan Akun Saya</h5>

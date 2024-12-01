@@ -17,6 +17,7 @@ import Marketplace from "./pages/marketplace.jsx";
 import DashboardPembeli from "./pages/pembeli/dashboardPembeli.jsx";
 import Wishlist from "./pages/pembeli/wishlist.jsx";
 import SettingsPembeli from "./pages/pembeli/settingspembeli.jsx";
+import SettingsPedagang from "./pages/pedagang/settingsPedagang.jsx";
 
 const router = createBrowserRouter([
   {
@@ -81,6 +82,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedDashboardRoute>
         <SettingsPembeli/>
+      </ProtectedDashboardRoute>
+    ),
+  },
+  {
+    path: "/pengaturan/pedagang",
+    element: (
+      <ProtectedDashboardRoute>
+        <SettingsPedagang/>
       </ProtectedDashboardRoute>
     ),
   },

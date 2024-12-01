@@ -3,14 +3,13 @@ import Navbar from "../../components/containers/navbar/navbar";
 import image from "../../image";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import Sidebar from "../../components/containers/sidebar/sidebar";
+import SidebarPembeli from "../../components/containers/sidebar/sidebarPembeli";
 export default function Wishlist() {
-  const [gender, setGender] = useState("laki-laki");
   return (
     <>
       <Navbar />
       <main className="flex h-screen">
-        <Sidebar />
+        <SidebarPembeli />
         {/* Bagian konten yang bisa di-scroll */}
         <article className="w-[80%] pt-5 pb-10 shadow-sm overflow-y-auto my-5 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
           <div className="w-full border-b-2 border-black px-5">

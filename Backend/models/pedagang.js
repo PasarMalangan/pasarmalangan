@@ -3,17 +3,19 @@ const bcrypt = require('bcryptjs');
 
 const pedagangSchema = new mongoose.Schema(
   {
-    ownner: { type: String, required: true },
+    owner: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     notelepon: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, required: true, default: "pedagang" },
     namausaha: { type: String, required: true },
     alamatusaha: { type: String, required: true },
-    categorie: { type: String, required: true },
+    categorie: { type: String, default: null },
+    description: { type: String, default: null },
     identitaspedagang: { type: String, required: true },
-    linkecommerences: { type: [String], required: true },
+    linkecommerences: { type: [String], default: [] },
     profilepict: { type: String, default: "https://a0.awsstatic.com/libra-css/images/logos/aws_logo_smile_1200x630.png"},
+    isApproved: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

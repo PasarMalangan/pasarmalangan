@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import Footer from "../components/containers/footer/footer";
 import NavAuth from "../components/containers/navbar/navbarAuth";
 import { useState } from "react";
-import { registerUser } from "../../services/auth";
+import { registerUserPedagang } from "../../services/auth";
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 export default function RegPedagang() {
   const [success, setSuccess] = useState("");
@@ -12,10 +13,10 @@ export default function RegPedagang() {
   const [email, setEmail] = useState("");
   const [notelepon, setNotelepon] = useState("");
   const [alamatusaha, setAlamatusaha] = useState("");
-  const [identitaspedagang, setIdentitaspedaganag] = useState("");
+  const [identitaspedagang, setIdentitaspedagang] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
-  const role = "pembeli";
+  const role = "pedagang";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,31 +27,43 @@ export default function RegPedagang() {
       return;
     }
 
+    // Menyusun data form yang akan dikirim
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("namausaha", namausaha);
+    formData.append("owner", owner);
+    formData.append("notelepon", notelepon);
+    formData.append("alamatusaha", alamatusaha);
+    formData.append("password", password);
+    formData.append("role", role);
+    formData.append("identitaspedagang", identitaspedagang); // File KTP
+
     try {
-      const responseData = await registerUser({
-        email,
-        namausaha,
-        owner,
-        notelepon,
-        alamatusaha,
-        identitaspedagang,
-        password,
-        role,
+      const response = await fetch(`${apiroutes}/auth/register`, {
+        method: "POST",
+        body: formData, // Kirim FormData, bukan JSON
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Registrasi gagal!");
+      }
+
+      const responseData = await response.json();
       setSuccess(responseData.message);
       setError("");
+      // Reset form fields
       setNamausaha("");
       setOwner("");
       setEmail("");
       setNotelepon("");
       setAlamatusaha("");
-      setIdentitaspedaganag("");
+      setIdentitaspedagang(null);
       setPassword("");
       setRePassword("");
-      // Tambahkan logika redirect atau notifikasi sukses di sini
     } catch (error) {
       setSuccess("");
-      setError(error.message);
+      setError(error.message || "Terjadi kesalahan saat mendaftar.");
     }
   };
 
@@ -74,7 +87,11 @@ export default function RegPedagang() {
           <section className="bg-blue-600 w-[90%] h-max p-10">
             <div className="flex w-full justify-center">
               <div className="w-full bg-white px-9 py-5">
-                <form className="w-full mx-auto" onSubmit={handleSubmit} encType="multipart/form-data">
+                <form
+                  className="w-full mx-auto"
+                  onSubmit={handleSubmit}
+                  encType="multipart/form-data"
+                >
                   <p className="font-semibold text-xl text-center mb-5">
                     DAFTAR SEBAGAI PEDAGANG UMKM
                   </p>
@@ -131,8 +148,10 @@ export default function RegPedagang() {
                           type="file"
                           name="identitaspedagang"
                           id="identitaspedagang"
-                          placeholder="Unggah KTP"
-                          required
+                          accept=".jpg, .jpeg, .png"
+                          onChange={(e) =>
+                            setIdentitaspedagang(e.target.files[0])
+                          }
                         />
                       </div>
                       {inputField(

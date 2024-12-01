@@ -2,7 +2,7 @@ import Footer from "../../components/containers/footer/footer";
 import Navbar from "../../components/containers/navbar/navbar";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Sidebar from "../../components/containers/sidebar/sidebar";
+import SidebarPembeli from "../../components/containers/sidebar/sidebarPembeli";
 
 export default function DashboardPembeli() {
   const [userData, setUserData] = useState(null);
@@ -56,7 +56,7 @@ export default function DashboardPembeli() {
     <>
       <Navbar />
       <main className="flex h-screen">
-        <Sidebar />
+        <SidebarPembeli />
         <article className="w-[80%] pt-5 pb-10 border-2 shadow-sm my-5">
           <div className="w-full border-b-2 border-black px-5">
             <h5 className="font-bold text-2xl">Profil Saya</h5>

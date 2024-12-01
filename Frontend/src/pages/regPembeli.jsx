@@ -3,7 +3,7 @@ import Footer from "../components/containers/footer/footer";
 import NavAuth from "../components/containers/navbar/navbarAuth";
 import image from "../image";
 import { useState } from "react";
-import { registerUser } from "../../services/auth";
+import { registerUserPembeli } from "../../services/auth";
 export default function RegPembeli() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -24,7 +24,7 @@ export default function RegPembeli() {
 
     try {
       // Panggil fungsi registerUser dari services/auth.js
-      const responseData = await registerUser({
+      const responseData = await registerUserPembeli({
         email,
         username,
         password,
