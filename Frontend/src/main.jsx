@@ -9,6 +9,7 @@ import Register from "./pages/register.jsx";
 import RegPembeli from "./pages/regPembeli.jsx";
 import RegPedagang from "./pages/regPedagang.jsx";
 import ErrorPage from "./pages/404.jsx";
+import AboutUs from "./pages/about.jsx";
 import {
   ProtectedAuthRoute,
   ProtectedDashboardRoute,
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: "/marketplace",
     element: <Marketplace />,
+  },
+  {
+    path: "/aboutus",
+    element: <AboutUs />,
   },
   {
     path: "/login",
