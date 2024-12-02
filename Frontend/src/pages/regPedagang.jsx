@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import Footer from "../components/containers/footer/footer";
 import NavAuth from "../components/containers/navbar/navbarAuth";
 import { useState } from "react";
-import { registerUserPedagang } from "../../services/auth";
 const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 export default function RegPedagang() {
@@ -13,10 +12,16 @@ export default function RegPedagang() {
   const [email, setEmail] = useState("");
   const [notelepon, setNotelepon] = useState("");
   const [alamatusaha, setAlamatusaha] = useState("");
-  const [identitaspedagang, setIdentitaspedagang] = useState("");
+  const [identitaspedagang, setIdentitaspedagang] = useState(null);
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);  // State untuk loading
   const role = "pedagang";
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setIdentitaspedagang(file);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,6 +29,17 @@ export default function RegPedagang() {
     // Validasi konfirmasi password
     if (password !== rePassword) {
       setError("Password dan konfirmasi password tidak cocok.");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password harus terdiri dari minimal 8 karakter!");
+      return;
+    }
+    
+    // Validasi file
+    if (!identitaspedagang) {
+      setError("Silakan unggah KTP terlebih dahulu.");
       return;
     }
 
@@ -36,12 +52,15 @@ export default function RegPedagang() {
     formData.append("alamatusaha", alamatusaha);
     formData.append("password", password);
     formData.append("role", role);
-    formData.append("identitaspedagang", identitaspedagang); // File KTP
+    formData.append("identitaspedagang", identitaspedagang); // Kirim file KTP
+
+    // Set loading menjadi true saat submit
+    setIsLoading(true);
 
     try {
       const response = await fetch(`${apiroutes}/auth/register`, {
         method: "POST",
-        body: formData, // Kirim FormData, bukan JSON
+        body: formData,
       });
 
       if (!response.ok) {
@@ -58,12 +77,15 @@ export default function RegPedagang() {
       setEmail("");
       setNotelepon("");
       setAlamatusaha("");
-      setIdentitaspedagang(null);
+      setIdentitaspedagang(null); // Reset file
       setPassword("");
       setRePassword("");
     } catch (error) {
       setSuccess("");
       setError(error.message || "Terjadi kesalahan saat mendaftar.");
+    } finally {
+      // Set loading menjadi false setelah proses selesai
+      setIsLoading(false);
     }
   };
 
@@ -136,23 +158,26 @@ export default function RegPedagang() {
                         "Alamat Usaha",
                         (e) => setAlamatusaha(e.target.value)
                       )}
-                      <div className="relative border-[1px] border-slate-700 pl-4 pr-8 py-2">
+                      <div className="border-[1px] border-slate-700 px-4 py-2 w-full">
                         <label
-                          className="text-gray-500 cursor-pointer w-full"
+                          className="text-gray-500 cursor-pointer w-full block"
                           htmlFor="identitaspedagang"
                         >
                           Unggah KTP
                         </label>
                         <input
-                          className="absolute translate-x-1/2 "
+                          className="hidden"
                           type="file"
                           name="identitaspedagang"
                           id="identitaspedagang"
                           accept=".jpg, .jpeg, .png"
-                          onChange={(e) =>
-                            setIdentitaspedagang(e.target.files[0])
-                          }
+                          onChange={handleFileChange}
                         />
+                        {identitaspedagang && (
+                          <p className="mt-2 text-sm text-gray-600">
+                            File dipilih: {identitaspedagang.name}
+                          </p>
+                        )}
                       </div>
                       {inputField(
                         "password",
@@ -172,9 +197,41 @@ export default function RegPedagang() {
                   </section>
                   <button
                     type="submit"
-                    className="w-[50%] mx-auto translate-x-1/2 mt-10 mb-5 bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out"
+                    className={`w-[50%] mx-auto translate-x-1/2 mt-10 mb-5 bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out ${isLoading ? "bg-violet-400 cursor-not-allowed" : ""}`}
+                    disabled={isLoading}  // Disable tombol selama loading
                   >
-                    Daftar
+                    {isLoading ? (
+                      <span className="flex items-center justify-center">
+                        <svg
+                          className="w-5 h-5 animate-spin"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          ></circle>
+                          <path
+                            d="M4 12a8 8 0 1 0 16 0"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          ></path>
+                        </svg>
+                        <span className="ml-2">Loading...</span>
+                      </span>
+                    ) : (
+                      "Daftar"
+                    )}
                   </button>
                 </form>
                 <p className="w-full text-center">

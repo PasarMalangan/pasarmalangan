@@ -1,6 +1,7 @@
 const Pembeli = require("../models/pembeli");
 const Pedagang = require("../models/pedagang");
 const Superadmin = require("../models/superadmin");
+const uploadFileToS3 = require("../lib/S3Upload");
 
 exports.getuser = async (req, res) => {
   const { role, userId } = req.user; // Data dari middleware auth
@@ -36,7 +37,8 @@ exports.getuser = async (req, res) => {
 
 exports.editpembeli = async (req, res) => {
   const { userId } = req.user;
-  const updates = req.body; // Ambil data update dari request body
+  const updates = req.body; // Data update dari request body
+  const file = req.file; // File dari multer
 
   try {
     // Ambil data user pembeli dari database
@@ -50,11 +52,62 @@ exports.editpembeli = async (req, res) => {
       user[key] = updates[key];
     });
 
-    await user.save(); // Simpan perubahan
+    // Jika ada file baru, upload ke S3 dan update profile picture
+    if (file) {
+      const bucketName = "assetuserspembeli";
+      const uploadResult = await uploadFileToS3(file, bucketName);
+      user.profilepict = uploadResult.Location;
+      console.log("File uploaded to S3:", uploadResult);
+    }
+
+    // Simpan perubahan ke database
+    await user.save();
+
     res.json({ message: "Profil berhasil diperbarui", user });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Terjadi kesalahan saat memperbarui profil", error });
+    console.error("Error updating profile:", error);
+    res.status(500).json({
+      message: "Terjadi kesalahan saat memperbarui profil",
+      error: error.message,
+    });
+  }
+};
+
+exports.editpedagang = async (req, res) => {
+  const { userId } = req.user;
+  const updates = req.body; // Data update dari request body
+  const file = req.file; // File dari multer
+  console.log(updates);
+
+  try {
+    // Ambil data user pembeli dari database
+    const user = await Pedagang.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User tidak ditemukan" });
+    }
+
+    // Update hanya field yang disediakan dalam request body
+    Object.keys(updates).forEach((key) => {
+      user[key] = updates[key];
+    });
+
+    // Jika ada file baru, upload ke S3 dan update profile picture
+    if (file) {
+      const bucketName = "assetuserspedagang";
+      const uploadResult = await uploadFileToS3(file, bucketName);
+      user.profilepict = uploadResult.Location;
+      console.log("File uploaded to S3:", uploadResult);
+    }
+
+    // Simpan perubahan ke database
+    await user.save();
+
+    res.json({ message: "Profil berhasil diperbarui", user });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({
+      message: "Terjadi kesalahan saat memperbarui profil",
+      error: error.message,
+    });
   }
 };

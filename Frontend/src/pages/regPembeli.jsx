@@ -18,7 +18,12 @@ export default function RegPembeli() {
 
     // Validasi konfirmasi password
     if (password !== rePassword) {
-      setError("Password dan konfirmasi password tidak cocok.");
+      setError("Password dan konfirmasi password tidak cocok!");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password harus terdiri dari minimal 8 karakter!");
       return;
     }
 
