@@ -10,6 +10,7 @@ import RegPembeli from "./pages/regPembeli.jsx";
 import RegPedagang from "./pages/regPedagang.jsx";
 import ErrorPage from "./pages/404.jsx";
 import AboutUs from "./pages/about.jsx";
+
 import {
   ProtectedAuthRoute,
   ProtectedDashboardRoute,
@@ -18,6 +19,7 @@ import Marketplace from "./pages/marketplace.jsx";
 import DashboardPembeli from "./pages/pembeli/dashboardPembeli.jsx";
 import Wishlist from "./pages/pembeli/wishlist.jsx";
 import SettingsPembeli from "./pages/pembeli/settingspembeli.jsx";
+import Dashboard from "./pages/dashboardAdmin/dashboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -87,6 +89,12 @@ const router = createBrowserRouter([
       <ProtectedDashboardRoute>
         <SettingsPembeli/>
       </ProtectedDashboardRoute>
+    ),
+  },
+  {
+    path: "/dashboardAdmin",
+    element: (
+        <Dashboard />
     ),
   },
 ]);
