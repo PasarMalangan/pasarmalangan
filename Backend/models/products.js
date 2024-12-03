@@ -1,19 +1,46 @@
 const mongoose = require("mongoose");
 
-const productsSchema = new mongoose.Schema(
+const productSchema = new mongoose.Schema(
   {
-    pedagang_id: { type: String, required: true },
-    name: { type: String, required: true },
-    description: { type: String, required: true },
-    harga: { type: Number, required: true },
-    images: { type: String, required: true },
-    category: { type: String, required: true },
-    link_ecommerences: { type: [String], required: true },
-    isApproved: { type: Boolean, required: true, default: false },
+    owner_id: {
+      type: mongoose.Schema.Types.ObjectId, // Referensi ke pengguna
+      required: true,
+      ref: "pedagangs", // Nama koleksi referensi
+    },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
+    harga: {
+      type: Number,
+      required: true,
+      min: [0, "Harga tidak boleh negatif"],
+    },
+    images: {
+      type: [String],
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    linkecommerences: {
+      type: [String],
+    },
+    isApproved: {
+      type: String,
+      enum: ["pending", "ditolak", "disetujui"],
+      default: "pending",
+    },
   },
-  { timestamps: true }
+  { timestamps: true } // Menyimpan waktu pembuatan dan pembaruan
 );
 
-const products = mongoose.model("product", productsSchema);
+const products = mongoose.model("product", productSchema);
 
 module.exports = products;

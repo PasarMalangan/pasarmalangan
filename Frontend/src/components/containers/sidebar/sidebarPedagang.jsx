@@ -37,21 +37,20 @@ export default function SidebarPedagang() {
     // Mengambil data lengkap user dari backend
     fetch("http://localhost:5000/api/user/getuser", {
       headers: {
-        Authorization: `Bearer ${token}`, // Mengirim token untuk otentikasi
+        Authorization: `Bearer ${token}`, 
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        setUserData(data); // Menyimpan data user
-        setError(null); // Reset error jika berhasil
+        setUserData(data);
+        setError(null);
       })
       .catch((error) =>
         setError("Terjadi kesalahan saat mengambil data pengguna.")
       );
   }, [token]); // Menambahkan token sebagai dependency untuk memastikan fetch dijalankan jika token berubah
 
-  const isActive = (path) => location.pathname === path;
-  //   console.log(userData);
+  const isActive = (path) => location.pathname.startsWith(path);
   return (
     <aside className="w-[20%] h-full bg-slate-50 p-5 border-r-2 shadow-inner shadow-slate-100">
       <ul className="flex flex-col gap-10">
@@ -91,7 +90,7 @@ export default function SidebarPedagang() {
             </Link>
             <Link
               className={`hover:text-blue-700 transition-colors duration-300 ease-out ${
-                isActive("/products/pedagang")
+                isActive("/products")
                   ? "text-blue-600 font-medium"
                   : ""
               }`}

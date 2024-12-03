@@ -1,4 +1,4 @@
-export default function SuccessAlert() {
+export default function SuccessAlert(props) {
   return (
     <div className="absolute bottom-0 right-10 flex w-96 shadow-lg rounded-lg">
       <div className="bg-green-600 py-4 px-6 rounded-l-lg flex items-center">
@@ -17,7 +17,7 @@ export default function SuccessAlert() {
       </div>
       <div className="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
         <div>Berhasil mengubah profile</div>
-        <button onClick={() => setSuccess(false)}>
+        <button onClick={props.func}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="fill-current text-gray-700"

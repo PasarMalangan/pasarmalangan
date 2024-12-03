@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 
 const pedagangSchema = new mongoose.Schema(
   {
-    owner: { type: String, required: true },
+    owner: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true },
     notelepon: { type: String, required: true, unique: true },
     password: {
@@ -14,14 +14,14 @@ const pedagangSchema = new mongoose.Schema(
     role: { type: String, required: true, default: "pedagang" },
     namausaha: { type: String, required: true },
     alamatusaha: { type: String, required: true },
-    categorie: { type: String, default: null },
+    category: { type: String, default: null },
     description: { type: String, default: null },
     identitaspedagang: { type: String, required: true },
     linkecommerences: { type: String, default: null },
     profilepict: {
       type: String,
       default:
-        "https://i.pinimg.com/736x/81/63/78/81637861f1566bb718979b454ce94eed.jpg",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOG6E-AnifHE0PvMzIpCiDOZy1nWhJXXMZPg&s",
     },
     isApproved: { type: Boolean, default: false },
   },

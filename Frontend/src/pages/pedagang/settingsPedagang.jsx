@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import SidebarPedagang from "../../components/containers/sidebar/sidebarPedagang";
 import LoaderPage from "../../components/elements/loading";
 import SuccessAlert from "../../components/elements/successalert";
+import ErrorAlert from "../../components/elements/erroralert";
 
 export default function SettingsPedagang() {
   const [userData, setUserData] = useState({
@@ -13,7 +14,7 @@ export default function SettingsPedagang() {
     notelepon: "",
     namausaha: "",
     alamatusaha: "",
-    categorie: "",
+    category: "",
     description: "",
     linkecommerences: "",
     profilepict: "",
@@ -46,7 +47,7 @@ export default function SettingsPedagang() {
           notelepon: data.notelepon,
           namausaha: data.namausaha,
           alamatusaha: data.alamatusaha,
-          categorie: data.categorie,
+          category: data.category,
           description: data.description,
           linkecommerences: data.linkecommerences,
           profilepict: data.profilepict,
@@ -98,13 +99,20 @@ export default function SettingsPedagang() {
     formData.append("notelepon", userData.notelepon);
     formData.append("namausaha", userData.namausaha);
     formData.append("alamatusaha", userData.alamatusaha);
-    formData.append("categorie", userData.categorie);
+    formData.append("category", userData.category);
     formData.append("description", userData.description);
     formData.append("linkecommerences", userData.linkecommerences);
     if (userData.profilepict instanceof File) {
       formData.append("profilepict", userData.profilepict);
     }
+    const phoneRegex = /^(?:\+62|62|0)(?:8[1-9])[0-9]{7,11}$/;
 
+    if (!phoneRegex.test(userData.notelepon)) {
+      setError(
+        "Nomor telepon tidak valid. Pastikan nomor telepon Indonesia benar."
+      );
+      return;
+    }
     fetch("http://localhost:5000/api/user/editpedagang", {
       method: "PUT",
       headers: {
@@ -135,12 +143,18 @@ export default function SettingsPedagang() {
     return () => clearTimeout(timer);
   }, [success]);
 
+  useEffect(() => {
+    let timer;
+    if (error) {
+      timer = setTimeout(() => {
+        setError(false); // Sembunyikan notifikasi setelah 5 detik (5000 ms)
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [error]);
+
   if (loading) {
     return <LoaderPage />;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
   }
 
   return (
@@ -216,17 +230,17 @@ export default function SettingsPedagang() {
                 />
               </div>
               <div className="flex items-center justify-between">
-                <label htmlFor="categorie" className="">
+                <label htmlFor="category" className="">
                   Kategori
                 </label>
                 <select
-                  id="categorie"
-                  name="categorie"
-                  value={userData.categorie || ""}
+                  id="category"
+                  name="category"
+                  value={userData.category || ""}
                   onChange={handleChange}
                   className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 >
-                  <option value="" disabled selected={!userData.categorie}>
+                  <option value="" disabled selected={!userData.category}>
                     Pilih kategori usaha
                   </option>
 
@@ -284,7 +298,8 @@ export default function SettingsPedagang() {
             </div>
           </form>
         </article>
-        {success && <SuccessAlert />}
+        {success && <SuccessAlert func={() => setSuccess(false)}/>}
+        {error && <ErrorAlert error={error} func={() => setError(false)} />}
       </main>
       <Footer />
     </>

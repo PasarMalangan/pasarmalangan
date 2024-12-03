@@ -1,8 +1,8 @@
 const Pembeli = require("../models/pembeli");
 const Pedagang = require("../models/pedagang");
 const Superadmin = require("../models/superadmin");
-const uploadFileToS3 = require("../lib/S3Upload");
-
+const { uploadFileToS3, deleteFileFromS3 } = require("../lib/S3client");
+require("dotenv").config();
 exports.getuser = async (req, res) => {
   const { role, userId } = req.user; // Data dari middleware auth
 
@@ -24,8 +24,6 @@ exports.getuser = async (req, res) => {
       return res.status(404).json({ message: "User tidak ditemukan" });
     }
 
-    // // Kirim data user tanpa password
-    // const { password, ...userData } = user.toObject();
     res.json(user);
   } catch (error) {
     res.status(500).json({
@@ -37,8 +35,8 @@ exports.getuser = async (req, res) => {
 
 exports.editpembeli = async (req, res) => {
   const { userId } = req.user;
-  const updates = req.body; // Data update dari request body
-  const file = req.file; // File dari multer
+  const updates = req.body;
+  const file = req.file;
 
   try {
     // Ambil data user pembeli dari database
@@ -47,17 +45,23 @@ exports.editpembeli = async (req, res) => {
       return res.status(404).json({ message: "User tidak ditemukan" });
     }
 
-    // Update hanya field yang disediakan dalam request body
+    // Update field yang diberikan dalam request body
     Object.keys(updates).forEach((key) => {
       user[key] = updates[key];
     });
+    
+    const bucketName = process.env.BUCKET_ASBY;
 
-    // Jika ada file baru, upload ke S3 dan update profile picture
+    // Jika ada file baru (foto profil baru), hapus foto lama dari S3
     if (file) {
-      const bucketName = "assetuserspembeli";
+      // Jika ada foto profil lama, hapus dari S3
+      if (user.profilepict) {
+        await deleteFileFromS3(user.profilepict, bucketName); // Hapus foto lama
+      }
+
+      // Upload foto profil baru ke S3
       const uploadResult = await uploadFileToS3(file, bucketName);
-      user.profilepict = uploadResult.Location;
-      console.log("File uploaded to S3:", uploadResult);
+      user.profilepict = uploadResult.Location; // Update URL foto profil baru
     }
 
     // Simpan perubahan ke database
@@ -75,12 +79,10 @@ exports.editpembeli = async (req, res) => {
 
 exports.editpedagang = async (req, res) => {
   const { userId } = req.user;
-  const updates = req.body; // Data update dari request body
-  const file = req.file; // File dari multer
-  console.log(updates);
+  const updates = req.body;
+  const file = req.file;
 
   try {
-    // Ambil data user pembeli dari database
     const user = await Pedagang.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User tidak ditemukan" });
@@ -91,15 +93,20 @@ exports.editpedagang = async (req, res) => {
       user[key] = updates[key];
     });
 
-    // Jika ada file baru, upload ke S3 dan update profile picture
+    const bucketName = process.env.BUCKET_ASSL;
+
+    // Jika ada file baru (foto profil baru), hapus foto lama dari S3
     if (file) {
-      const bucketName = "assetuserspedagang";
+      // Jika ada foto profil lama, hapus dari S3
+      if (user.profilepict) {
+        await deleteFileFromS3(user.profilepict, bucketName); // Hapus foto lama
+      }
+
+      // Upload foto profil baru ke S3
       const uploadResult = await uploadFileToS3(file, bucketName);
-      user.profilepict = uploadResult.Location;
-      console.log("File uploaded to S3:", uploadResult);
+      user.profilepict = uploadResult.Location; // Update URL foto profil baru
     }
 
-    // Simpan perubahan ke database
     await user.save();
 
     res.json({ message: "Profil berhasil diperbarui", user });

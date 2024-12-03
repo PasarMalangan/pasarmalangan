@@ -18,7 +18,7 @@ const pembeliSchema = new mongoose.Schema(
     profilepict: {
       type: String,
       default:
-        "https://i.pinimg.com/736x/81/63/78/81637861f1566bb718979b454ce94eed.jpg",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOG6E-AnifHE0PvMzIpCiDOZy1nWhJXXMZPg&s",
     },
     wishlist: { type: [String], default: null },
   },

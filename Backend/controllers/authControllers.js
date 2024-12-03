@@ -3,7 +3,8 @@ const pedagang = require("../models/pedagang");
 const superAdmin = require("../models/superadmin");
 const jwt = require("jsonwebtoken");
 const { secret, expiresIn } = require("../lib/jwt");
-const uploadFileToS3 = require("../lib/S3Upload");
+const { uploadFileToS3 } = require("../lib/S3client");
+require("dotenv").config();
 
 const checkEmailExists = async (email) => {
   const existsInPedagang = await pedagang.findOne({ email });
@@ -39,7 +40,7 @@ exports.register = async (req, res) => {
       }
 
       // Upload file ke S3
-      const bucketName = "identityseller";
+      const bucketName = process.env.BUCKET_IDSL;
       const uploadResult = await uploadFileToS3(file, bucketName);
       data.identitaspedagang = uploadResult.Location;
 

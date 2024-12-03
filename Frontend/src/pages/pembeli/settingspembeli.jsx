@@ -140,7 +140,7 @@ export default function SettingsPembeli() {
 
   const inputField = (label, id, type, value) => (
     <div className="flex items-center">
-      <label className="w-1/4 text-xl" htmlFor={id}>
+      <label className="w-1/4 text-xl mr-3" htmlFor={id}>
         {label}
       </label>
       <input
@@ -211,7 +211,7 @@ export default function SettingsPembeli() {
                   )}
 
                   <div className="flex items-center">
-                    <h6 className="w-1/4 text-xl">Jenis Kelamin</h6>
+                    <h6 className="w-1/4 text-xl mr-5">Jenis Kelamin</h6>
                     <div className="flex items-center gap-3 mr-10">
                       {radioButton(
                         "laki-laki",
@@ -266,11 +266,11 @@ export default function SettingsPembeli() {
               <div className="flex gap-10">
                 <button
                   type="submit"
-                  className="mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out"
+                  className="rounded-md mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out"
                 >
                   Simpan Perubahan
                 </button>
-                <Link className="mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
+                <Link className="rounded-md mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
                   Ubah Password
                 </Link>
               </div>
@@ -278,7 +278,7 @@ export default function SettingsPembeli() {
             <h5 className="text-red-500 font-bold text-lg mt-5">
               Minta Penghapusan Akun
             </h5>
-            <button className="mt-5 w-1/4 text-center text-lg bg-red-500 text-white font-semibold py-2 px-5 hover:bg-red-700 transition-colors duration-300 ease-out">
+            <button className="rounded-md mt-5 w-1/4 text-center text-lg bg-red-500 text-white font-semibold py-2 px-5 hover:bg-red-700 transition-colors duration-300 ease-out">
               Menghapus Akun
             </button>
           </section>

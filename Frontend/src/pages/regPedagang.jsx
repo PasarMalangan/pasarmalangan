@@ -15,7 +15,7 @@ export default function RegPedagang() {
   const [identitaspedagang, setIdentitaspedagang] = useState(null);
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);  // State untuk loading
+  const [isLoading, setIsLoading] = useState(false); // State untuk loading
   const role = "pedagang";
 
   const handleFileChange = (e) => {
@@ -25,6 +25,22 @@ export default function RegPedagang() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validasi email
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      setError("Format email tidak valid.");
+      return;
+    }
+
+    // Validasi nomor telepon
+    const phoneRegex = /^(?:\+62|62|0)(?:8[1-9])[0-9]{7,11}$/;
+    if (!phoneRegex.test(notelepon)) {
+      setError(
+        "Nomor telepon tidak valid. Pastikan nomor telepon Indonesia benar."
+      );
+      return;
+    }
 
     // Validasi konfirmasi password
     if (password !== rePassword) {
@@ -36,7 +52,7 @@ export default function RegPedagang() {
       setError("Password harus terdiri dari minimal 8 karakter!");
       return;
     }
-    
+
     // Validasi file
     if (!identitaspedagang) {
       setError("Silakan unggah KTP terlebih dahulu.");
@@ -197,8 +213,10 @@ export default function RegPedagang() {
                   </section>
                   <button
                     type="submit"
-                    className={`w-[50%] mx-auto translate-x-1/2 mt-10 mb-5 bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out ${isLoading ? "bg-violet-400 cursor-not-allowed" : ""}`}
-                    disabled={isLoading}  // Disable tombol selama loading
+                    className={`w-[50%] mx-auto translate-x-1/2 mt-10 mb-5 bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out ${
+                      isLoading ? "bg-violet-400 cursor-not-allowed" : ""
+                    }`}
+                    disabled={isLoading} // Disable tombol selama loading
                   >
                     {isLoading ? (
                       <span className="flex items-center justify-center">
