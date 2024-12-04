@@ -9,6 +9,8 @@ import Register from "./pages/register.jsx";
 import RegPembeli from "./pages/regPembeli.jsx";
 import RegPedagang from "./pages/regPedagang.jsx";
 import ErrorPage from "./pages/404.jsx";
+import AboutUs from "./pages/about.jsx";
+
 import {
   ProtectedAuthRoute,
   ProtectedDashboardRoute,
@@ -17,10 +19,14 @@ import Marketplace from "./pages/marketplace.jsx";
 import DashboardPembeli from "./pages/pembeli/dashboardPembeli.jsx";
 import Wishlist from "./pages/pembeli/wishlist.jsx";
 import SettingsPembeli from "./pages/pembeli/settingspembeli.jsx";
+
 import SettingsPedagang from "./pages/pedagang/settingsPedagang.jsx";
 import ProductList from "./pages/pedagang/productslist.jsx";
 import CreateProduct from "./pages/pedagang/createProduct.jsx";
 import EditProduct from "./pages/pedagang/editProduct.jsx";
+
+import Dashboard from "./pages/dashboardAdmin/dashboard.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -31,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: "/marketplace",
     element: <Marketplace />,
+  },
+  {
+    path: "/aboutus",
+    element: <AboutUs />,
   },
   {
     path: "/login",
@@ -118,6 +128,12 @@ const router = createBrowserRouter([
       <ProtectedDashboardRoute>
         <EditProduct />
       </ProtectedDashboardRoute>
+    ),
+  },
+  {
+    path: "/dashboardAdmin",
+    element: (
+        <Dashboard />
     ),
   },
 ]);
