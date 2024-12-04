@@ -1,12 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const { getuser, editpembeli } = require("../controllers/userControllers");
+const { getuser, editpembeli, editpedagang } = require("../controllers/userControllers");
 const { authenticateToken } = require("../middlewares/auth");
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // GET user profile
 router.get("/getuser", authenticateToken, getuser);
 
-// PUT user profile (update)
-router.put("/editpembeli", authenticateToken, editpembeli);
+router.put("/editpembeli", authenticateToken, upload.single("profilepict"), editpembeli);
+router.put("/editpedagang", authenticateToken, upload.single("profilepict"), editpedagang);
 
 module.exports = router;

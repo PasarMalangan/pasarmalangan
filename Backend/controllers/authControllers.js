@@ -3,31 +3,72 @@ const pedagang = require("../models/pedagang");
 const superAdmin = require("../models/superadmin");
 const jwt = require("jsonwebtoken");
 const { secret, expiresIn } = require("../lib/jwt");
+const { uploadFileToS3 } = require("../lib/S3client");
+require("dotenv").config();
+
+const checkEmailExists = async (email) => {
+  const existsInPedagang = await pedagang.findOne({ email });
+  const existsInPembeli = await pembeli.findOne({ email });
+  const existsInSuperAdmin = await superAdmin.findOne({ email });
+
+  return existsInPedagang || existsInPembeli || existsInSuperAdmin;
+};
 
 exports.register = async (req, res) => {
   const { role, ...data } = req.body;
-  console.log("Data yang diterima dari client:", { role, ...data });
+  const file = req.file;
 
   try {
+    // Validasi role
+    if (!role) {
+      return res.status(400).json({ message: "Role tidak boleh kosong" });
+    }
+
+    // Cek apakah email sudah digunakan di salah satu koleksi
+    const emailExists = await checkEmailExists(data.email);
+    if (emailExists) {
+      return res.status(400).json({ message: "Email sudah digunakan" });
+    }
+
     let user;
-    if (role === "pembeli") {
-      user = new pembeli(data);
-    } else if (role === "pedagang") {
+
+    if (role === "pedagang") {
+      if (!file) {
+        return res
+          .status(400)
+          .json({ message: "File wajib diunggah untuk pedagang" });
+      }
+
+      // Upload file ke S3
+      const bucketName = process.env.BUCKET_IDSL;
+      const uploadResult = await uploadFileToS3(file, bucketName);
+      data.identitaspedagang = uploadResult.Location;
+
       user = new pedagang(data);
+    } else if (role === "pembeli") {
+      user = new pembeli(data);
     } else if (role === "superadmin") {
       user = new superAdmin(data);
     } else {
       return res.status(400).json({ message: "Invalid role" });
     }
 
+    // Simpan user ke database
     await user.save();
-    res.status(201).json({ message: `${role} berhasil mendaftar, silahkan login ke Pasar Malangan 🤩`, user });
+
+    const successMessage =
+      role === "pedagang"
+        ? "Pendaftaran berhasil, silahkan tunggu konfirmasi untuk login ke dashboard."
+        : "Pendaftaran berhasil, silahkan login ke Pasar Malangan 🤩";
+
+    res.status(201).json({ message: successMessage, user });
   } catch (error) {
     if (error.code === 11000) {
       return res
         .status(400)
         .json({ message: "Email atau Username sudah terdaftar" });
     }
+
     res
       .status(500)
       .json({ message: "Error registering user", error: error.message });

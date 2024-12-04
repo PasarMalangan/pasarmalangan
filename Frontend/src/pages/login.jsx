@@ -33,7 +33,7 @@ export default function Login() {
         navigate(`/dashboard/${role}`); // Redirect ke halaman dashboard jika role = pembeli
       }
       if (role === "pedagang") {
-        navigate(`/dashboard/${role}`); // Redirect ke halaman utama pedagang
+        navigate(`/pengaturan/${role}`); // Redirect ke halaman utama pedagang
       }
       if (role === "superadmin") {
         navigate(`/dashboard/${role}`); // Redirect ke halaman utama superadmin

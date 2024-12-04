@@ -19,7 +19,14 @@ import Marketplace from "./pages/marketplace.jsx";
 import DashboardPembeli from "./pages/pembeli/dashboardPembeli.jsx";
 import Wishlist from "./pages/pembeli/wishlist.jsx";
 import SettingsPembeli from "./pages/pembeli/settingspembeli.jsx";
+
+import SettingsPedagang from "./pages/pedagang/settingsPedagang.jsx";
+import ProductList from "./pages/pedagang/productslist.jsx";
+import CreateProduct from "./pages/pedagang/createProduct.jsx";
+import EditProduct from "./pages/pedagang/editProduct.jsx";
+
 import Dashboard from "./pages/dashboardAdmin/dashboard.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -87,7 +94,39 @@ const router = createBrowserRouter([
     path: "/pengaturan/pembeli",
     element: (
       <ProtectedDashboardRoute>
-        <SettingsPembeli/>
+        <SettingsPembeli />
+      </ProtectedDashboardRoute>
+    ),
+  },
+  {
+    path: "/pengaturan/pedagang",
+    element: (
+      <ProtectedDashboardRoute>
+        <SettingsPedagang />
+      </ProtectedDashboardRoute>
+    ),
+  },
+  {
+    path: "/products/pedagang",
+    element: (
+      <ProtectedDashboardRoute>
+        <ProductList />
+      </ProtectedDashboardRoute>
+    ),
+  },
+  {
+    path: "/products/create",
+    element: (
+      <ProtectedDashboardRoute>
+        <CreateProduct />
+      </ProtectedDashboardRoute>
+    ),
+  },
+  {
+    path: "/products/edit/:id",
+    element: (
+      <ProtectedDashboardRoute>
+        <EditProduct />
       </ProtectedDashboardRoute>
     ),
   },

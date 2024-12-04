@@ -2,7 +2,7 @@ import Footer from "../../components/containers/footer/footer";
 import Navbar from "../../components/containers/navbar/navbar";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Sidebar from "../../components/containers/sidebar/sidebar";
+import SidebarPembeli from "../../components/containers/sidebar/sidebarPembeli";
 
 export default function DashboardPembeli() {
   const [userData, setUserData] = useState(null);
@@ -56,7 +56,7 @@ export default function DashboardPembeli() {
     <>
       <Navbar />
       <main className="flex h-screen">
-        <Sidebar />
+        <SidebarPembeli />
         <article className="w-[80%] pt-5 pb-10 border-2 shadow-sm my-5">
           <div className="w-full border-b-2 border-black px-5">
             <h5 className="font-bold text-2xl">Profil Saya</h5>
@@ -71,7 +71,7 @@ export default function DashboardPembeli() {
                 Nama
               </label>
               <input
-                className="w-1/2 border-[1px] border-black px-5 py-1 font-medium text-lg"
+                className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 type="text"
                 value={userData.name || ""}
                 name="name"
@@ -84,7 +84,7 @@ export default function DashboardPembeli() {
                 Username
               </label>
               <input
-                className="w-1/2 border-[1px] border-black px-5 py-1 font-medium text-lg"
+                className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 type="text"
                 value={userData.username || ""}
                 name="username"
@@ -97,7 +97,7 @@ export default function DashboardPembeli() {
                 Email
               </label>
               <input
-                className="w-1/2 border-[1px] border-black px-5 py-1 font-medium text-lg"
+                className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 type="email"
                 value={userData.email || ""}
                 name="email"
@@ -110,7 +110,7 @@ export default function DashboardPembeli() {
                 No Telepon
               </label>
               <input
-                className="w-1/2 border-[1px] border-black px-5 py-1 font-medium text-lg"
+                className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 type="tel"
                 value={userData.notelepon || ""}
                 name="notelepon"
@@ -150,7 +150,7 @@ export default function DashboardPembeli() {
                 Tanggal Lahir
               </label>
               <input
-                className="w-1/2 border-[1px] border-black px-5 py-1 font-medium text-lg"
+                className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 type="date"
                 value={
                   userData.tanggallahir
@@ -167,7 +167,7 @@ export default function DashboardPembeli() {
             </div>
             <Link
               to="/pengaturan/pembeli"
-              className="mt-5 w-1/3 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out"
+              className="rounded-md mt-5 w-1/3 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out"
             >
               Ubah Pengaturan Akun
             </Link>

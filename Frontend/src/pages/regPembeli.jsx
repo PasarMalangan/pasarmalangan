@@ -3,7 +3,7 @@ import Footer from "../components/containers/footer/footer";
 import NavAuth from "../components/containers/navbar/navbarAuth";
 import image from "../image";
 import { useState } from "react";
-import { registerUser } from "../../services/auth";
+import { registerUserPembeli } from "../../services/auth";
 export default function RegPembeli() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -18,13 +18,18 @@ export default function RegPembeli() {
 
     // Validasi konfirmasi password
     if (password !== rePassword) {
-      setError("Password dan konfirmasi password tidak cocok.");
+      setError("Password dan konfirmasi password tidak cocok!");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password harus terdiri dari minimal 8 karakter!");
       return;
     }
 
     try {
       // Panggil fungsi registerUser dari services/auth.js
-      const responseData = await registerUser({
+      const responseData = await registerUserPembeli({
         email,
         username,
         password,

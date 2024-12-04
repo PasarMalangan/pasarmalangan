@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import useAuthCheck from "../../../hooks/useAuthCheck";
-export default function Sidebar() {
+export default function SidebarPembeli() {
   const location = useLocation(); // Mendapatkan informasi route saat ini
 
   const navigate = useNavigate();
@@ -74,7 +74,7 @@ export default function Sidebar() {
         </li>
         <Link to="/dashboard/pembeli">
           <li
-            className={`flex items-center text-xl gap-5 ${
+            className={`flex items-center text-xl gap-5 hover:text-blue-700 transition-colors duration-300 ease-out ${
               isActive("/dashboard/pembeli") ? "text-blue-600 font-medium" : ""
             }`}
           >
@@ -84,7 +84,7 @@ export default function Sidebar() {
         </Link>
         <Link to="/wishlist/pembeli">
           <li
-            className={`flex items-center text-xl gap-5 ${
+            className={`flex items-center text-xl gap-5 hover:text-blue-700 transition-colors duration-300 ease-out ${
               isActive("/wishlist/pembeli") ? "text-blue-600 font-medium" : ""
             }`}
           >
@@ -94,7 +94,7 @@ export default function Sidebar() {
         </Link>
         <Link to="/pengaturan/pembeli">
           <li
-            className={`flex items-center text-xl gap-5 ${
+            className={`flex items-center text-xl gap-5 hover:text-blue-700 transition-colors duration-300 ease-out ${
               isActive("/pengaturan/pembeli") ? "text-blue-600 font-medium" : ""
             }`}
           >
@@ -104,7 +104,7 @@ export default function Sidebar() {
         </Link>
         <Link to="/helpsupport">
           <li
-            className={`flex items-center text-xl gap-5 ${
+            className={`flex items-center text-xl gap-5 hover:text-blue-700 transition-colors duration-300 ease-out ${
               isActive("/helpsupport") ? "text-blue-600 font-medium" : ""
             }`}
           >
@@ -113,7 +113,7 @@ export default function Sidebar() {
           </li>
         </Link>
         <button onClick={handleLogout}>
-          <li className="flex items-center text-xl gap-5 text-red-600">
+          <li className="flex items-center text-xl gap-5 hover:text-blue-700 transition-colors duration-300 ease-out text-red-600">
             <ion-icon size="large" name="log-out-outline"></ion-icon>
             <p>Log Out</p>
           </li>

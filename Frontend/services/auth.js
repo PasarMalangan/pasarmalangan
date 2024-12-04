@@ -1,7 +1,7 @@
 const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 // Fungsi untuk registrasi pengguna
-const registerUser = async (data) => {
+const registerUserPembeli = async (data) => {
   try {
     const response = await fetch(`${apiroutes}/auth/register`, {
       method: "POST",
@@ -22,6 +22,30 @@ const registerUser = async (data) => {
     throw new Error(error.message || "Terjadi kesalahan saat mendaftar.");
   }
 };
+
+const registerUserPedagang = async (data) => {  // Hanya membutuhkan data saja
+  try {
+    const response = await fetch(`${apiroutes}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Tentukan tipe konten
+      },
+      body: JSON.stringify(data),  // Kirim data dalam bentuk JSON
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Registrasi gagal!");
+    }
+
+    return await response.json(); // Return hasil sukses
+  } catch (error) {
+    console.error("Error during registration:", error);
+    throw new Error(error.message || "Terjadi kesalahan saat mendaftar.");
+  }
+};
+
+
 
 // Fungsi untuk login pengguna
 const loginUser = async (data) => {
@@ -47,4 +71,4 @@ const loginUser = async (data) => {
 };
 
 // Ekspor fungsi
-export { registerUser, loginUser };
+export { registerUserPembeli, registerUserPedagang, loginUser };
