@@ -18,5 +18,6 @@
     "icon_community_home" : "/home/fluent_people-community-28-filled.svg",
     "icon_training_home" : "/home/oui_training.svg",
     "icon_search" : "/marketplace/material-symbols_search.svg",
-    "ads_example" : "/marketplace/bannerexample.png"
+    "ads_example" : "/marketplace/bannerexample.png",
+    "icon_location" : "/marketplace/lokasi.svg"
 }

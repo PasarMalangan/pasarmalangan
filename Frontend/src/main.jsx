@@ -10,6 +10,7 @@ import RegPembeli from "./pages/regPembeli.jsx";
 import RegPedagang from "./pages/regPedagang.jsx";
 import ErrorPage from "./pages/404.jsx";
 import AboutUs from "./pages/about.jsx";
+import DetailProduk from "./pages/produk.jsx";
 
 import {
   ProtectedAuthRoute,
@@ -95,6 +96,12 @@ const router = createBrowserRouter([
     path: "/dashboardAdmin",
     element: (
         <Dashboard />
+    ),
+  },
+  {
+    path: "/produkdetail/:id",
+    element: (
+        <DetailProduk />
     ),
   },
 ]);
