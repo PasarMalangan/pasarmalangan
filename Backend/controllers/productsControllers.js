@@ -1,7 +1,8 @@
 const Product = require("../models/products");
+const Pedagang = require("../models/pedagang");
 const { uploadFileToS3, deleteFileFromS3 } = require("../lib/S3client");
 require("dotenv").config();
-exports.getProduct = async (req, res) => {
+exports.getProductbyId = async (req, res) => {
   const { userId } = req.user; // Ambil data user yang sudah diset di middleware
 
   try {
@@ -34,18 +35,24 @@ exports.getProduct = async (req, res) => {
   }
 };
 
-exports.getProductbyId = async (req, res) => {
+exports.getAllProducts = async (req, res) => {
   try {
-    const { id } = req.params;
-    const product = await Product.findById(id);
+    const products = await Product.find();
 
-    if (!product) {
-      return res.status(404).json({ message: "Produk tidak ditemukan" });
+    if (products.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Produk tidak ditemukan",
+      });
     }
 
-    res.json(product);
+    return res.status(200).json(products);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat mengambil produk",
+      error: error.message,
+    });
   }
 };
 
@@ -56,12 +63,11 @@ exports.createProduct = async (req, res) => {
   const { userId } = req.user;
 
   const files = req.files;
-
   let images = [];
 
   // Upload gambar ke S3 jika ada
   if (files && files.length > 0) {
-    const bucketName = process.env.BUCKET_PRD;
+    const bucketName = process.env.BUCKET_PRD; // Bucket S3 untuk produk
     for (let file of files) {
       const uploadResult = await uploadFileToS3(file, bucketName);
       images.push(uploadResult.Location);
@@ -69,6 +75,18 @@ exports.createProduct = async (req, res) => {
   }
 
   try {
+    // Ambil nama usaha berdasarkan userId
+    const pedagang = await Pedagang.findById(userId);
+    if (!pedagang) {
+      return res.status(404).json({
+        success: false,
+        message: "Pedagang tidak ditemukan",
+      });
+    }
+
+    const namausaha = pedagang.namausaha;
+
+    // Buat produk baru
     const newProduct = new Product({
       name,
       description,
@@ -77,7 +95,8 @@ exports.createProduct = async (req, res) => {
       category,
       linkecommerences,
       isApproved,
-      owner_id: userId, // Menggunakan owner_id sebagai ID pemilik produk
+      owner_id: userId,
+      namausaha,
     });
 
     await newProduct.save();
@@ -125,9 +144,6 @@ exports.editProduct = async (req, res) => {
   const { id } = req.params;
   const updates = req.body;
   const files = req.files;
-  console.log(id)
-  console.log(updates)
-  console.log(files)
   try {
     const product = await Product.findById(id);
 
@@ -169,11 +185,43 @@ exports.editProduct = async (req, res) => {
       product,
     });
   } catch (error) {
-    
     console.error("Error updating product:", error);
     res.status(500).json({
       message: "Terjadi kesalahan saat memperbarui produk",
       error: error.message,
     });
+  }
+};
+
+exports.approveProduct = async (req, res) => {
+  const { id } = req.params;
+  const { isApproved } = req.body;
+
+  try {
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Produk tidak ditemukan" });
+    }
+
+    // Update status produk
+    product.isApproved = isApproved;
+    await product.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Status produk berhasil diperbarui",
+      data: product,
+    });
+  } catch (err) {
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Gagal memperbarui status produk",
+        error: err.message,
+      });
   }
 };

@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 
 const pedagangSchema = new mongoose.Schema(
   {
-    owner: { type: String, required: true, trim: true },
+    name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true },
     notelepon: { type: String, required: true, unique: true },
     password: {

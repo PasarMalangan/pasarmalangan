@@ -5,11 +5,12 @@ const registerUserPembeli = async (data) => {
   try {
     const response = await fetch(`${apiroutes}/auth/register`, {
       method: "POST",
+      // mode: "no-cors",
       headers: {
         "Content-Type": "application/json",
-        "Cache-Control": "no-cache",
       },
       body: JSON.stringify(data),
+      // credentials: 'include'
     });
 
     if (!response.ok) {

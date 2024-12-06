@@ -7,6 +7,10 @@ const productSchema = new mongoose.Schema(
       required: true,
       ref: "pedagangs", // Nama koleksi referensi
     },
+    namausaha: {
+      type: String,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -36,6 +40,10 @@ const productSchema = new mongoose.Schema(
       type: String,
       enum: ["pending", "ditolak", "disetujui"],
       default: "pending",
+    },
+    click: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true } // Menyimpan waktu pembuatan dan pembaruan

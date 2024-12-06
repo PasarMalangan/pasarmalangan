@@ -8,7 +8,7 @@ export default function RegPedagang() {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const [namausaha, setNamausaha] = useState("");
-  const [owner, setOwner] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [notelepon, setNotelepon] = useState("");
   const [alamatusaha, setAlamatusaha] = useState("");
@@ -63,7 +63,7 @@ export default function RegPedagang() {
     const formData = new FormData();
     formData.append("email", email);
     formData.append("namausaha", namausaha);
-    formData.append("owner", owner);
+    formData.append("name", name);
     formData.append("notelepon", notelepon);
     formData.append("alamatusaha", alamatusaha);
     formData.append("password", password);
@@ -89,7 +89,7 @@ export default function RegPedagang() {
       setError("");
       // Reset form fields
       setNamausaha("");
-      setOwner("");
+      setName("");
       setEmail("");
       setNotelepon("");
       setAlamatusaha("");
@@ -146,10 +146,10 @@ export default function RegPedagang() {
                       )}
                       {inputField(
                         "text",
-                        owner,
-                        "owner",
+                        name,
+                        "name",
                         "Nama Pemilik Usaha",
-                        (e) => setOwner(e.target.value)
+                        (e) => setName(e.target.value)
                       )}
                       {inputField(
                         "email",

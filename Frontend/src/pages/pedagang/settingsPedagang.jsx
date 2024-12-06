@@ -9,7 +9,7 @@ import ErrorAlert from "../../components/elements/erroralert";
 
 export default function SettingsPedagang() {
   const [userData, setUserData] = useState({
-    owner: "",
+    name: "",
     email: "",
     notelepon: "",
     namausaha: "",
@@ -42,7 +42,7 @@ export default function SettingsPedagang() {
       .then((response) => response.json())
       .then((data) => {
         setUserData({
-          owner: data.owner,
+          name: data.name,
           email: data.email,
           notelepon: data.notelepon,
           namausaha: data.namausaha,
@@ -94,7 +94,7 @@ export default function SettingsPedagang() {
     const token = localStorage.getItem("token");
 
     const formData = new FormData();
-    formData.append("owner", userData.owner);
+    formData.append("name", userData.name);
     formData.append("email", userData.email);
     formData.append("notelepon", userData.notelepon);
     formData.append("namausaha", userData.namausaha);
@@ -194,13 +194,13 @@ export default function SettingsPedagang() {
                 placeholder="Deskripsi Usaha..."
               />
               <div className="flex items-center justify-between">
-                <label htmlFor="owner">Nama Pemilik</label>
+                <label htmlFor="name">Nama Pemilik</label>
                 <input
                   className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                   type="text"
-                  name="owner"
-                  id="owner"
-                  value={userData.owner}
+                  name="name"
+                  id="name"
+                  value={userData.name}
                   onChange={handleChange}
                   placeholder="Nama Pemilik"
                 />

@@ -35,7 +35,11 @@ app.use("/api/products", productRoutes);
 app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
 });
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 
 app.listen(port, () =>
   console.log(`Listening on ${port}, udah jalan backendnya bro`)
 );
+
