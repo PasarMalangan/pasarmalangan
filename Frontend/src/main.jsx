@@ -25,8 +25,7 @@ import ProductList from "./pages/pedagang/productslist.jsx";
 import CreateProduct from "./pages/pedagang/createProduct.jsx";
 import EditProduct from "./pages/pedagang/editProduct.jsx";
 
-import Dashboard from "./pages/dashboardAdmin/dashboard.jsx";
-
+import DashboardSuperAdmin from "./pages/dashboardAdmin/dashboard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -131,9 +130,11 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/dashboardAdmin",
+    path: "/dashboard/superadmin",
     element: (
-        <Dashboard />
+      <ProtectedDashboardRoute>
+        <DashboardSuperAdmin />
+      </ProtectedDashboardRoute>
     ),
   },
 ]);

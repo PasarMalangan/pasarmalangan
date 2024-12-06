@@ -118,3 +118,44 @@ exports.editpedagang = async (req, res) => {
     });
   }
 };
+
+exports.getUsers = async (req, res) => {
+  const { role, name } = req.query;
+
+  try {
+    let filter = {};
+
+    // Filter berdasarkan nama jika ada (case-insensitive)
+    if (name) filter.name = { $regex: name, $options: 'i' };
+
+    let users = [];
+
+    if (role) {
+      // Jika role diberikan, filter berdasarkan role dan ambil data dari koleksi yang sesuai
+      if (role === "pedagang") {
+        users = await Pedagang.find(filter);
+      } else if (role === "pembeli") {
+        users = await Pembeli.find(filter);
+      } else if (role === "superadmin") {
+        users = await Superadmin.find(filter);
+      } else {
+        return res.status(400).json({ message: "Role tidak valid" });
+      }
+    } else {
+      // Jika role tidak ada, ambil data dari semua koleksi
+      const pedagang = await Pedagang.find(filter);
+      const pembeli = await Pembeli.find(filter);
+      const superadmin = await Superadmin.find(filter);
+
+      // Gabungkan semua data
+      users = [...pedagang, ...pembeli, ...superadmin];
+    }
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({
+      message: "Terjadi kesalahan saat mengfilter data pengguna",
+      error,
+    });
+  }
+};

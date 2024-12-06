@@ -51,7 +51,7 @@ export default function Navbar() {
   }, [token]); // Menambahkan token sebagai dependency untuk memastikan fetch dijalankan jika token berubah
 
   return (
-    <header className="w-full bg-blue-500 px-10 py-2 sticky top-0 left-0 w-full z-50">
+    <header className="w-full bg-blue-500 px-10 py-2 sticky top-0 left-0 z-50">
       <nav className="flex items-center justify-between">
         <Link to="/">
           <img src={image.logo_header} alt="iconhome" />
