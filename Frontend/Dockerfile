@@ -17,5 +17,5 @@ COPY . .
 RUN npm run build
 
 # Jalankan aplikasi menggunakan server bawaan Vite.js
-EXPOSE 4173
+EXPOSE 8080
 CMD ["npm", "run", "preview"]
