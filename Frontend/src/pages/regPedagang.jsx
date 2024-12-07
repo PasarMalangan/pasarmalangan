@@ -103,6 +103,7 @@ export default function RegPedagang() {
       setIsLoading(false);
     }
   };
+  console.log("VITE_API_BASE_URL:", import.meta.env.VITE_API_BASE_URL);
 
   const inputField = (type, value, id, label, setter) => (
     <input

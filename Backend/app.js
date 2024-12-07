@@ -1,8 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const products = require("./models/products");
-const categories = require("./models/categories");
 const connectDB = require("./lib/mongodb");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -34,6 +32,10 @@ app.use("/api/products", productRoutes);
 // Error handling middleware
 app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
+});
+
+app.get("/", (req, res) => {
+  res.send("helloworld");
 });
 
 app.listen(port, () =>
