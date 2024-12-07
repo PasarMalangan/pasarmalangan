@@ -1,4 +1,3 @@
-import React from "react";
 import Navbar from "../components/containers/navbar/navbar";
 
 export default function About() {

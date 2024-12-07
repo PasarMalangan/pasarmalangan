@@ -18,30 +18,25 @@ export default function Login() {
       const response = await loginUser(userData);
       const { token } = response;
 
-      // Simpan token di localStorage
       localStorage.setItem("token", token);
 
-      // Mendekode token dan mendapatkan role
       const decodedToken = JSON.parse(atob(token.split(".")[1]));
       const role = decodedToken.role; // Ambil role dari token
 
-      // Simpan role di localStorage
       localStorage.setItem("role", role);
 
-      // Redirect berdasarkan role
       if (role === "pembeli") {
-        navigate(`/dashboard/${role}`); // Redirect ke halaman dashboard jika role = pembeli
+        navigate(`/dashboard/${role}`);
       }
       if (role === "pedagang") {
-        navigate(`/pengaturan/${role}`); // Redirect ke halaman utama pedagang
+        navigate(`/pengaturan/${role}`);
       }
       if (role === "superadmin") {
-        navigate(`/dashboard/${role}`); // Redirect ke halaman utama superadmin
+        navigate(`/dashboard/${role}`);
       }
 
-      console.log(response); // Menampilkan response untuk debug
     } catch (err) {
-      setError(err.message); // Menampilkan error jika login gagal
+      setError(err.message);
     }
   };
 

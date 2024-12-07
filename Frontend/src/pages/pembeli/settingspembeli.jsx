@@ -4,6 +4,7 @@ import SidebarPembeli from "../../components/containers/sidebar/sidebarPembeli";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import LoaderPage from "../../components/elements/loading";
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 export default function SettingsPembeli() {
   const [userData, setUserData] = useState({
@@ -22,7 +23,6 @@ export default function SettingsPembeli() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Ambil token dari localStorage atau context
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -31,7 +31,7 @@ export default function SettingsPembeli() {
       return;
     }
 
-    fetch("http://localhost:5000/api/user/getuser", {
+    fetch(`${apiroutes}/user/getuser`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -52,6 +52,7 @@ export default function SettingsPembeli() {
       })
       .catch((err) => {
         setError("Terjadi kesalahan saat mengambil data pengguna.");
+        console.error(err);
         setLoading(false);
       });
   }, []);
@@ -64,19 +65,18 @@ export default function SettingsPembeli() {
     }));
   };
 
-  const [preview, setPreview] = useState(null); // State untuk pratinjau gambar
+  const [preview, setPreview] = useState(null);
 
-  // Fungsi untuk menangani perubahan file
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]; // Ambil file pertama yang dipilih
-    
+    const selectedFile = e.target.files[0];
+
     if (selectedFile) {
       // Buat URL blob untuk pratinjau
       const objectUrl = URL.createObjectURL(selectedFile);
-      
+
       // Simpan URL blob ke state pratinjau
       setPreview(objectUrl);
-      
+
       // Simpan file asli ke state userData
       setUserData((prevData) => ({
         ...prevData,
@@ -116,6 +116,7 @@ export default function SettingsPembeli() {
         }));
       })
       .catch((err) => {
+        console.error(err);
         setSuccess(false);
       });
   };
@@ -124,7 +125,7 @@ export default function SettingsPembeli() {
     let timer;
     if (success) {
       timer = setTimeout(() => {
-        setSuccess(false); // Sembunyikan notifikasi setelah 5 detik (5000 ms)
+        setSuccess(false);
       }, 5000);
     }
     return () => clearTimeout(timer);
@@ -163,10 +164,8 @@ export default function SettingsPembeli() {
         value={id}
         name="jeniskelamin"
         id={id}
-        checked={userData.jeniskelamin === id}
-        onChange={(e) =>
-          setUserData({ ...userData, jeniskelamin: e.target.value })
-        }
+        checked={checked}
+        onChange={onChange}
       />
       <label className="text-xl" htmlFor={id}>
         {label}
@@ -217,13 +216,13 @@ export default function SettingsPembeli() {
                         "laki-laki",
                         "Laki-laki",
                         gender === "laki-laki",
-                        () => setGender("laki-laki")
+                        (e) => setGender(e.target.value)
                       )}
                       {radioButton(
                         "perempuan",
                         "Perempuan",
                         gender === "perempuan",
-                        () => setGender("perempuan")
+                        (e) => setGender(e.target.value)
                       )}
                     </div>
                   </div>

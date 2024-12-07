@@ -15,7 +15,7 @@ export default function RegPedagang() {
   const [identitaspedagang, setIdentitaspedagang] = useState(null);
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // State untuk loading
+  const [isLoading, setIsLoading] = useState(false);
   const role = "pedagang";
 
   const handleFileChange = (e) => {
@@ -68,7 +68,7 @@ export default function RegPedagang() {
     formData.append("alamatusaha", alamatusaha);
     formData.append("password", password);
     formData.append("role", role);
-    formData.append("identitaspedagang", identitaspedagang); // Kirim file KTP
+    formData.append("identitaspedagang", identitaspedagang);
 
     // Set loading menjadi true saat submit
     setIsLoading(true);
@@ -93,14 +93,13 @@ export default function RegPedagang() {
       setEmail("");
       setNotelepon("");
       setAlamatusaha("");
-      setIdentitaspedagang(null); // Reset file
+      setIdentitaspedagang(null);
       setPassword("");
       setRePassword("");
     } catch (error) {
       setSuccess("");
       setError(error.message || "Terjadi kesalahan saat mendaftar.");
     } finally {
-      // Set loading menjadi false setelah proses selesai
       setIsLoading(false);
     }
   };
@@ -114,6 +113,7 @@ export default function RegPedagang() {
       id={id}
       placeholder={label}
       onChange={setter}
+      required
     />
   );
 
@@ -167,13 +167,22 @@ export default function RegPedagang() {
                       )}
                     </div>
                     <div className="flex flex-col gap-5">
-                      {inputField(
-                        "text",
-                        alamatusaha,
-                        "alamatusaha",
-                        "Alamat Usaha",
-                        (e) => setAlamatusaha(e.target.value)
-                      )}
+                      <select
+                        className="border-[1px] border-slate-700 pl-4 pr-8 py-2 text-gray-600"
+                        name="alamatusaha"
+                        id="alamatusaha"
+                        defaultValue={alamatusaha}
+                        onChange={(e) => setAlamatusaha(e.target.value)}
+                      >
+                        <option value="" disabled selected>
+                          Pilih Alamat Usaha
+                        </option>
+                        <option value="Kedungkandang">Kedungkandang</option>
+                        <option value="Klojen">Klojen</option>
+                        <option value="Blimbing">Blimbing</option>
+                        <option value="Lowokwaru">Lowokwaru</option>
+                        <option value="Sukun">Sukun</option>
+                      </select>
                       <div className="border-[1px] border-slate-700 px-4 py-2 w-full">
                         <label
                           className="text-gray-500 cursor-pointer w-full block"

@@ -8,47 +8,44 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [error, setError] = useState(null); // Menambahkan state untuk error
   const token = localStorage.getItem("token");
 
   useAuthCheck();
   useEffect(() => {
-    setIsLoggedIn(!!token); // Set isLoggedIn berdasarkan keberadaan token
+    setIsLoggedIn(!!token);
   }, [token]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); // Hapus token dari localStorage
-    localStorage.removeItem("role"); // Hapus role dari localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
     setIsLoggedIn(false);
-    setUserData(null); // Reset userData saat logout
-    navigate("/login"); // Redirect ke halaman login setelah logout
+    setUserData(null);
+    navigate("/login");
   };
 
   useEffect(() => {
     if (!token) {
-      setError("Token tidak ditemukan, silakan login.");
       return;
     }
 
     // Mendekode token untuk mendapatkan userId dan role
     const decodedToken = jwtDecode(token);
-    const userId = decodedToken.userId;
+    decodedToken.userId;
 
     // Mengambil data lengkap user dari backend
     fetch("http://localhost:5000/api/user/getuser", {
       headers: {
-        Authorization: `Bearer ${token}`, // Mengirim token untuk otentikasi
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        setUserData(data); // Menyimpan data user
-        setError(null); // Reset error jika berhasil
+        setUserData(data);
       })
       .catch((error) =>
-        setError("Terjadi kesalahan saat mengambil data pengguna.")
+        console.error(error)
       );
-  }, [token]); // Menambahkan token sebagai dependency untuk memastikan fetch dijalankan jika token berubah
+  }, [token]);
 
   return (
     <header className="w-full bg-blue-500 px-10 py-2 sticky top-0 left-0 z-50">
