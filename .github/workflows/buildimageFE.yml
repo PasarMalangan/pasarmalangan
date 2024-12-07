@@ -52,7 +52,7 @@ jobs:
 
       # Build Docker image for Frontend
       - name: Build Docker image
-        run: docker build -t koozee/pasarmalangan:latest -f Frontend/Dockerfile .
+        run: docker build -t koozee/pasarmalangan:latest -f Frontend/Dockerfile ./Frontend
 
       - name: Tag and push to Docker Hub
         run: |
