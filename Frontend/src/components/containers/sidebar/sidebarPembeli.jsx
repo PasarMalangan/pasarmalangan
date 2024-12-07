@@ -2,26 +2,23 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import useAuthCheck from "../../../hooks/useAuthCheck";
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 export default function SidebarPembeli() {
   const location = useLocation(); // Mendapatkan informasi route saat ini
 
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [error, setError] = useState(null); // Menambahkan state untuk error
+  const [error, setError] = useState(null);
   const token = localStorage.getItem("token");
 
   useAuthCheck();
-  useEffect(() => {
-    setIsLoggedIn(!!token); // Set isLoggedIn berdasarkan keberadaan token
-  }, [token]);
+  useEffect(() => {}, [token]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); 
-    localStorage.removeItem("role"); 
-    setIsLoggedIn(false);
-    setUserData(null); 
-    navigate("/login"); 
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    setUserData(null);
+    navigate("/login");
   };
 
   useEffect(() => {
@@ -32,23 +29,24 @@ export default function SidebarPembeli() {
 
     // Mendekode token untuk mendapatkan userId dan role
     const decodedToken = jwtDecode(token);
-    const userId = decodedToken.userId;
+    decodedToken.userId;
 
     // Mengambil data lengkap user dari backend
-    fetch("http://localhost:5000/api/user/getuser", {
+    fetch(`${apiroutes}/api/user/getuser`, {
       headers: {
-        Authorization: `Bearer ${token}`, // Mengirim token untuk otentikasi
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        setUserData(data); // Menyimpan data user
-        setError(null); // Reset error jika berhasil
+        setUserData(data);
+        setError(null);
       })
       .catch((error) =>
+        console.error(error),
         setError("Terjadi kesalahan saat mengambil data pengguna.")
       );
-  }, [token]); // Menambahkan token sebagai dependency untuk memastikan fetch dijalankan jika token berubah
+  }, [token]);
 
   const isActive = (path) => location.pathname === path;
   console.log(userData);
@@ -56,6 +54,7 @@ export default function SidebarPembeli() {
     <aside className="w-[20%] h-full bg-gray-200 p-5 border-r-2 shadow-inner shadow-gray-300">
       <ul className="flex flex-col gap-10">
         <li className="flex items-center gap-5">
+        {error && <div className="text-red-500">{error}</div>}
           {userData ? (
             <>
               <img

@@ -8,13 +8,11 @@ const ApproveProduk = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
   const [loading, setLoading] = useState(false);
-
+  const apiroutes = import.meta.env.VITE_API_BASE_URL;
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/products/getallproducts"
-      );
+      const response = await fetch(`${apiroutes}/products/getallproducts`);
 
       if (!response.ok) {
         throw new Error("Gagal memuat produk");
@@ -45,6 +43,7 @@ const ApproveProduk = () => {
 
   useEffect(() => {
     fetchProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleFilterChange = (status) => {
@@ -56,7 +55,7 @@ const ApproveProduk = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:5000/api/products/updateStatus/${productId}`,
+        `${apiroutes}/products/updateStatus/${productId}`,
         {
           method: "PUT",
           headers: {
@@ -108,9 +107,9 @@ const ApproveProduk = () => {
 
       <div className="flex justify-between mb-4">
         <select
-          onChange={(e) => handleFilterChange(e.target.value)} // Memanggil handleFilterChange
+          onChange={(e) => handleFilterChange(e.target.value)}
           className="border rounded px-2 py-1"
-          value={selectedStatus} // Mengikat nilai selectedStatus
+          value={selectedStatus}
         >
           <option value="all">Semua Status</option>
           <option value="pending">Pending</option>

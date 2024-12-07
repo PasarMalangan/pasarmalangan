@@ -3,6 +3,7 @@ import Navbar from "../../components/containers/navbar/navbar";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import SidebarPembeli from "../../components/containers/sidebar/sidebarPembeli";
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 export default function DashboardPembeli() {
   const [userData, setUserData] = useState(null);
@@ -13,16 +14,15 @@ export default function DashboardPembeli() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    // Jika token tidak ada, redirect ke halaman login
     if (!token) {
       window.location.href = "/login";
       return;
     }
 
     // Fetch data user dari API menggunakan token
-    fetch("http://localhost:5000/api/user/getuser", {
+    fetch(`${apiroutes}/user/getuser`, {
       headers: {
-        Authorization: `Bearer ${token}`, // Kirim token sebagai Authorization header
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => {
@@ -32,21 +32,21 @@ export default function DashboardPembeli() {
         return response.json();
       })
       .then((data) => {
-        setUserData(data); // Simpan data user ke dalam state
-        setGender(data.jeniskelamin); // Atur gender sesuai data
-        setLoading(false); // Hentikan loading
+        setUserData(data);
+        setGender(data.jeniskelamin);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
         setLoading(false);
       });
-  }, [token]); // Dependency pada token
+  }, [token]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
   if (!userData) {
-    return <div>Data pengguna tidak ditemukan.</div>; // Error state jika userData null setelah loading selesai
+    return <div>Data pengguna tidak ditemukan.</div>;
   }
   const formattedDate = new Date(userData.tanggallahir)
     .toISOString()

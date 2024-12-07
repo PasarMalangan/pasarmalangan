@@ -2,42 +2,36 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import useAuthCheck from "../../../hooks/useAuthCheck";
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 export default function SidebarPedagang() {
-  const location = useLocation(); // Mendapatkan informasi route saat ini
+  const location = useLocation();
 
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [error, setError] = useState(null); // Menambahkan state untuk error
   const token = localStorage.getItem("token");
+  const [error, setError] = useState();
 
   useAuthCheck();
-  useEffect(() => {
-    setIsLoggedIn(!!token); // Set isLoggedIn berdasarkan keberadaan token
-  }, [token]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    setIsLoggedIn(false);
     setUserData(null);
     navigate("/login");
   };
 
   useEffect(() => {
     if (!token) {
-      setError("Token tidak ditemukan, silakan login.");
       return;
     }
 
-    // Mendekode token untuk mendapatkan userId dan role
     const decodedToken = jwtDecode(token);
-    const userId = decodedToken.userId;
+    decodedToken.userId;
 
     // Mengambil data lengkap user dari backend
-    fetch("http://localhost:5000/api/user/getuser", {
+    fetch(`${apiroutes}/api/user/getuser`, {
       headers: {
-        Authorization: `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((response) => response.json())
@@ -46,15 +40,17 @@ export default function SidebarPedagang() {
         setError(null);
       })
       .catch((error) =>
+        console.error(error),
         setError("Terjadi kesalahan saat mengambil data pengguna.")
       );
-  }, [token]); // Menambahkan token sebagai dependency untuk memastikan fetch dijalankan jika token berubah
+  }, [token]);
 
   const isActive = (path) => location.pathname.startsWith(path);
   return (
     <aside className="w-[20%] h-full bg-slate-50 p-5 border-r-2 shadow-inner shadow-slate-100">
       <ul className="flex flex-col gap-10">
         <li className="flex items-center gap-5">
+          {error && <div className="text-red-500">{error}</div>}
           {userData ? (
             <>
               <img
@@ -90,9 +86,7 @@ export default function SidebarPedagang() {
             </Link>
             <Link
               className={`hover:text-blue-700 transition-colors duration-300 ease-out ${
-                isActive("/products")
-                  ? "text-blue-600 font-medium"
-                  : ""
+                isActive("/products") ? "text-blue-600 font-medium" : ""
               }`}
               to={"/products/pedagang"}
             >
@@ -101,7 +95,7 @@ export default function SidebarPedagang() {
           </div>
         </li>
 
-        <li>
+        {/* <li>
           <div className="flex items-center text-xl gap-5 font-medium text-gray-600">
             <ion-icon size="large" name="school-outline"></ion-icon>
             <h6>Pembelajaran</h6>
@@ -132,7 +126,8 @@ export default function SidebarPedagang() {
               Forum Diskusi
             </Link>
           </div>
-        </li>
+        </li> */}
+
         <li>
           <div className="flex items-center text-xl gap-5 font-medium text-gray-600">
             <ion-icon size="large" name="settings-outline"></ion-icon>

@@ -3,31 +3,27 @@ import Navbar from "../../components/containers/navbar/navbar";
 import SidebarPedagang from "../../components/containers/sidebar/sidebarPedagang";
 import Footer from "../../components/containers/footer/footer";
 import { Link } from "react-router-dom";
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false); // Untuk kontrol modal
+  const [showModal, setShowModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null); // ID produk yang akan dihapus
 
-  // Ambil token dari localStorage atau context (sesuaikan dengan implementasi Anda)
   const token = localStorage.getItem("token");
 
-  // Ambil data produk saat komponen dimuat
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/products/getproducts",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${apiroutes}/products/getproducts`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error(
@@ -50,7 +46,7 @@ export default function ProductList() {
   // Untuk menghapus produk
   const handleDeleteProduct = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const response = await fetch(`${apiroutes}/products/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -62,20 +58,18 @@ export default function ProductList() {
         throw new Error("Gagal menghapus produk");
       }
 
-      setProducts(products.filter((product) => product._id !== id)); // Hapus dari state
-      setShowModal(false); // Tutup modal setelah penghapusan berhasil
+      setProducts(products.filter((product) => product._id !== id));
+      setShowModal(false);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // Tampilkan modal konfirmasi
   const handleOpenModal = (id) => {
     setProductToDelete(id);
     setShowModal(true);
   };
 
-  // Tutup modal
   const handleCloseModal = () => {
     setShowModal(false);
     setProductToDelete(null);
@@ -164,7 +158,7 @@ export default function ProductList() {
                             Edit
                           </Link>
                           <button
-                            onClick={() => handleOpenModal(product._id)} // Membuka modal
+                            onClick={() => handleOpenModal(product._id)}
                             className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600"
                           >
                             Hapus
@@ -189,7 +183,6 @@ export default function ProductList() {
         </article>
       </main>
 
-      {/* Modal konfirmasi */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto">

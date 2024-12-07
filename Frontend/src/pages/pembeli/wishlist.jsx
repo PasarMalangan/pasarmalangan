@@ -1,6 +1,5 @@
 import Footer from "../../components/containers/footer/footer";
 import Navbar from "../../components/containers/navbar/navbar";
-import image from "../../image";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import SidebarPembeli from "../../components/containers/sidebar/sidebarPembeli";

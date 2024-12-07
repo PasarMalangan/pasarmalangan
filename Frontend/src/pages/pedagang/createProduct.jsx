@@ -4,7 +4,7 @@ import Navbar from "../../components/containers/navbar/navbar";
 import SidebarPedagang from "../../components/containers/sidebar/sidebarPedagang";
 import Footer from "../../components/containers/footer/footer";
 import { Link } from "react-router-dom";
-
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 export default function CreateProduct() {
   const [productData, setProductData] = useState({
     name: "",
@@ -21,9 +21,8 @@ export default function CreateProduct() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
 
-  // Menangani perubahan input teks
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductData({
@@ -72,8 +71,8 @@ export default function CreateProduct() {
     });
   };
 
- // Menambahkan auto-resize pada textarea
- const handleAutoResize = (e) => {
+  // Menambahkan auto-resize pada textarea
+  const handleAutoResize = (e) => {
     e.target.style.height = "auto"; // Reset height
     e.target.style.height = `${e.target.scrollHeight}px`; // Set height sesuai scrollHeight
   };
@@ -105,16 +104,13 @@ export default function CreateProduct() {
         formData.append("images", image);
       });
 
-      const response = await fetch(
-        "http://localhost:5000/api/products/createproduct",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: formData,
-        }
-      );
+      const response = await fetch(`${apiroutes}/products/createproduct`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
 
       const data = await response.json();
 
@@ -130,15 +126,15 @@ export default function CreateProduct() {
           isApproved: "pending",
         });
 
-        // Redirect ke halaman /products/pedagang setelah produk berhasil ditambahkan
         setTimeout(() => {
           navigate("/products/pedagang");
-        }, 1500); // Memberikan sedikit delay sebelum redirect
+        }, 1500);
       } else {
         setError(data.message || "Gagal menambahkan produk");
       }
     } catch (err) {
       setError("Terjadi kesalahan saat menambahkan produk");
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -232,7 +228,6 @@ export default function CreateProduct() {
                   />
                 </div>
 
-                {/* Form kategori */}
                 <div className="mb-4">
                   <label
                     htmlFor="category"

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-
+import { useState, useEffect } from "react";
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState({ role: "", name: "" });
@@ -7,7 +7,8 @@ const UserManagement = () => {
   // Ambil data pengguna saat komponen dimuat
   useEffect(() => {
     fetchUsers();
-  }, [filter]); // Menambahkan dependensi filter untuk memperbarui data setiap kali filter berubah
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
 
   // Fungsi untuk mengambil data pengguna berdasarkan filter
   const fetchUsers = async () => {
@@ -17,7 +18,7 @@ const UserManagement = () => {
     if (filter.role) queryParams.append("role", filter.role);
     if (filter.name) queryParams.append("name", filter.name);
     const response = await fetch(
-      `http://localhost:5000/api/user/users?${queryParams.toString()}`
+      `${apiroutes}/user/users?${queryParams.toString()}`
     );
     const data = await response.json();
     console.log(data);
@@ -26,18 +27,13 @@ const UserManagement = () => {
 
   // Fungsi untuk menangani perubahan filter
   const handleFilterChange = (e) => {
-    console.log("Change event", e.target.name, e.target.value); // Log perubahan setiap input
+    console.log("Change event", e.target.name, e.target.value);
     setFilter({
       ...filter,
-      [e.target.name]: e.target.value === "Semua" ? "" : e.target.value, // Set "" jika "Semua"
+      [e.target.name]: e.target.value === "Semua" ? "" : e.target.value,
     });
   };
 
-  useEffect(() => {
-    console.log(filter); // Ini akan memantau setiap perubahan pada filter
-  }, [filter]); // Akan dipicu setiap kali `filter` berubah
-
-  console.log(filter);
   return (
     <section>
       <h2 className="text-xl font-bold mb-4">Manajemen Pengguna</h2>

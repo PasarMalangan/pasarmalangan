@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../../components/containers/navbar/navbar";
 import SidebarPedagang from "../../components/containers/sidebar/sidebarPedagang";
 import Footer from "../../components/containers/footer/footer";
-
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 export default function EditProduct() {
   const { id } = useParams(); // Ambil ID produk dari URL
   const [productData, setProductData] = useState({
@@ -27,7 +27,7 @@ export default function EditProduct() {
       const token = localStorage.getItem("token");
       try {
         const response = await fetch(
-          `http://localhost:5000/api/products/${id}`,
+          `${apiroutes}/products/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -37,11 +37,12 @@ export default function EditProduct() {
         const data = await response.json();
         if (response.ok) {
           // Ubah state menjadi objek pertama dari array
-          setProductData({...data[0],  previewImages: data[0].images}); // Ambil hanya objek pertama
+          setProductData({...data[0],  previewImages: data[0].images});
         } else {
           setError(data.message || "Gagal mengambil data produk");
         }
       } catch (error) {
+        console.error(error);
         setError("Terjadi kesalahan saat mengambil data produk");
       }
     };
@@ -77,7 +78,6 @@ export default function EditProduct() {
     setProductData({ ...productData, linkecommerences: updatedLinks });
   };
 
-  // Menangani perubahan gambar baru
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     const previewUrls = files.map((file) => URL.createObjectURL(file));
@@ -89,7 +89,6 @@ export default function EditProduct() {
     }));
   };
 
-  // Fungsi submit untuk update produk
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -117,7 +116,7 @@ export default function EditProduct() {
   });
 
   if (!response.ok) {
-    throw new Error(jsonData.message || "Gagal memperbarui produk");
+    throw new Error("Gagal memperbarui produk");
   }
 
   setSuccess(true);

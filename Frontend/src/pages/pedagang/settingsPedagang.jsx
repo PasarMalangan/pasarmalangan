@@ -6,7 +6,7 @@ import SidebarPedagang from "../../components/containers/sidebar/sidebarPedagang
 import LoaderPage from "../../components/elements/loading";
 import SuccessAlert from "../../components/elements/successalert";
 import ErrorAlert from "../../components/elements/erroralert";
-
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 export default function SettingsPedagang() {
   const [userData, setUserData] = useState({
     name: "",
@@ -24,7 +24,6 @@ export default function SettingsPedagang() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Ambil token dari localStorage atau context
     const token = localStorage.getItem("token");
 
     if (!token) {
@@ -33,7 +32,7 @@ export default function SettingsPedagang() {
       return;
     }
 
-    fetch("http://localhost:5000/api/user/getuser", {
+    fetch(`${apiroutes}/user/getuser`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -56,6 +55,7 @@ export default function SettingsPedagang() {
       })
       .catch((err) => {
         setError("Terjadi kesalahan saat mengambil data pengguna.");
+        console.error(err);
         setLoading(false);
       });
   }, []);
@@ -68,11 +68,10 @@ export default function SettingsPedagang() {
     }));
   };
 
-  const [preview, setPreview] = useState(null); // State untuk pratinjau gambar
+  const [preview, setPreview] = useState(null);
 
-  // Fungsi untuk menangani perubahan file
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]; // Ambil file pertama yang dipilih
+    const selectedFile = e.target.files[0];
 
     if (selectedFile) {
       // Buat URL blob untuk pratinjau
@@ -113,7 +112,7 @@ export default function SettingsPedagang() {
       );
       return;
     }
-    fetch("http://localhost:5000/api/user/editpedagang", {
+    fetch(`${apiroutes}/user/editpedagang`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -125,10 +124,11 @@ export default function SettingsPedagang() {
         setSuccess(true);
         setUserData((prevData) => ({
           ...prevData,
-          profilepict: data.user.profilepict, // Pastikan backend mengembalikan URL gambar baru
+          profilepict: data.user.profilepict,
         }));
       })
       .catch((err) => {
+        console.error(err);
         setSuccess(false);
       });
   };
@@ -137,7 +137,7 @@ export default function SettingsPedagang() {
     let timer;
     if (success) {
       timer = setTimeout(() => {
-        setSuccess(false); // Sembunyikan notifikasi setelah 5 detik (5000 ms)
+        setSuccess(false);
       }, 5000);
     }
     return () => clearTimeout(timer);
@@ -147,7 +147,7 @@ export default function SettingsPedagang() {
     let timer;
     if (error) {
       timer = setTimeout(() => {
-        setError(false); // Sembunyikan notifikasi setelah 5 detik (5000 ms)
+        setError(false);
       }, 5000);
     }
     return () => clearTimeout(timer);
@@ -298,7 +298,7 @@ export default function SettingsPedagang() {
             </div>
           </form>
         </article>
-        {success && <SuccessAlert func={() => setSuccess(false)}/>}
+        {success && <SuccessAlert func={() => setSuccess(false)} />}
         {error && <ErrorAlert error={error} func={() => setError(false)} />}
       </main>
       <Footer />
