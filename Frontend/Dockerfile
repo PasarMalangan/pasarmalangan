@@ -5,7 +5,7 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 # Salin file package.json dan package-lock.json
-COPY package*.json ./
+COPY package*.json ./ 
 
 # Install dependencies
 RUN npm install
@@ -25,11 +25,11 @@ WORKDIR /app
 # Salin hasil build dari tahap build ke direktori /app/dist
 COPY --from=build /app/dist /app/dist
 
-# Install http-server untuk melayani aplikasi statis
-RUN npm install -g http-server
+# Install serve untuk melayani aplikasi statis
+RUN npm install -g serve
 
-# Expose port untuk http-server
+# Expose port untuk serve
 EXPOSE 8080
 
-# Jalankan http-server untuk melayani aplikasi statis
-CMD ["http-server", "dist", "-p", "8080"]
+# Jalankan serve untuk melayani aplikasi statis
+CMD ["serve", "-s", "dist", "-l", "8080"]
