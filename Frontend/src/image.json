@@ -1,0 +1,23 @@
+{
+    "errorLogo" : "/errorlogo.png",
+    "logo_header" : "/header/logoumkm.png",
+    "logo_footer" : "/footer/logofooter.svg",
+    "logo_auth" : "/auth/logo_auth.png",
+    "icon_facebook" : "/footer/mdi_facebook.svg",
+    "icon_instagram" : "/footer/mdi_instagram.svg",
+    "icon_X" : "/footer/ant-design_x-outlined.svg",
+    "icon_bag" : "/auth/solar_bag-3-bold.svg",
+    "icon_shop" : "/auth/healthicons_market-stall-outline.svg",
+    "hero_1" : "/home/heroimg.png",
+    "hero_2" : "/home/heroimg2.png",
+    "icon_x_home" : "/home/ant-design_x-outlined_white.svg",
+    "icon_facebook_home" : "/home/mdi_facebook_white.svg",
+    "icon_instagram_home" : "/home/mdi_instagram_white.svg",
+    "icon_marketplace_home" : "/home/mdi_marketplace.svg",
+    "icon_business_home" : "/home/ion_business.svg",
+    "icon_community_home" : "/home/fluent_people-community-28-filled.svg",
+    "icon_training_home" : "/home/oui_training.svg",
+    "icon_search" : "/marketplace/material-symbols_search.svg",
+    "ads_example" : "/marketplace/bannerexample.png",
+    "icon_location" : "/marketplace/lokasi.svg"
+}
