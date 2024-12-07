@@ -100,7 +100,7 @@ export default function SettingsPembeli() {
       formData.append("profilepict", userData.profilepict);
     }
 
-    fetch("http://localhost:5000/api/user/editpembeli", {
+    fetch(`${apiroutes}/user/editpembeli`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,

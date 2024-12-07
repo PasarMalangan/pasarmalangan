@@ -3,7 +3,7 @@ import image from "../../../image";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import useAuthCheck from "../../../hooks/useAuthCheck";
-
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 export default function Navbar() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,7 +33,7 @@ export default function Navbar() {
     decodedToken.userId;
 
     // Mengambil data lengkap user dari backend
-    fetch("http://localhost:5000/api/user/getuser", {
+    fetch(`${apiroutes}/user/getuser`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -36,7 +36,7 @@ const UserManagement = () => {
 
   return (
     <section>
-      <h2 className="text-xl font-bold mb-4">Manajemen Pengguna</h2>
+      <h2 className="text-xl font-bold mb-4">Manajemen User</h2>
 
       {/* Filter */}
       <div className="mb-4">

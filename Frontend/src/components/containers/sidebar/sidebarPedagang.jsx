@@ -29,7 +29,7 @@ export default function SidebarPedagang() {
     decodedToken.userId;
 
     // Mengambil data lengkap user dari backend
-    fetch(`${apiroutes}/api/user/getuser`, {
+    fetch(`${apiroutes}/user/getuser`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
