@@ -38,20 +38,7 @@ jobs:
         run: npm run lint
         working-directory: ./Frontend
 
-      # Build Vite.js project
-      - name: Build Vite.js project
-        run: npm run build
-        working-directory: ./Frontend
-
-      # Upload build output as artifact
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: vite-build
-          path: ./Frontend/dist
-
-      # Build Docker image for Frontend
-      - name: Build Docker image
+      - name: Build Docker image for Frontend
         run: docker build -t koozee/pasarmalangan:latest -f Frontend/Dockerfile .
 
       - name: Tag and push to Docker Hub
@@ -62,9 +49,9 @@ jobs:
         uses: appleboy/ssh-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
             cd /home/ubuntu/pasarmalanganFE
-            sudo docker pull koozee/pasarmalangan:latest
-            sudo docker-compose up -d
+            docker pull koozee/pasarmalangan:latest
+            docker-compose up -d
