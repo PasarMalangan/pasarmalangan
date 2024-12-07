@@ -1,4 +1,4 @@
-name: CI/CD for Frontend (Vite.js)
+name: CI/CD for Frontend 
 
 on:
   push:
