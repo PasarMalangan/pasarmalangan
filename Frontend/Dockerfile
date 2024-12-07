@@ -13,7 +13,9 @@ RUN npm install
 # Salin seluruh kode aplikasi
 COPY . .
 
-# Build aplikasi untuk produksi
+# Build aplikasi untuk produksi dengan environment variable dari ARG
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
 # Stage berikutnya adalah menyalin hasil build

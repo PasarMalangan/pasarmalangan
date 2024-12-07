@@ -50,9 +50,13 @@ jobs:
           name: vite-build
           path: ./Frontend/dist
 
-      # Build Docker image for Frontend
+      # Build Docker image for Frontend with environment variable
       - name: Build Docker image
-        run: docker build -t koozee/pasarmalangan:latest -f Frontend/Dockerfile ./Frontend
+        run: |
+          docker build \
+            --build-arg VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }} \
+            -t koozee/pasarmalangan:latest \
+            -f Frontend/Dockerfile ./Frontend
 
       - name: Tag and push to Docker Hub
         run: |
