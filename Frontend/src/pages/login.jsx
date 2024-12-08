@@ -8,12 +8,13 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const userData = { email, password };
-
+    setIsLoading(true);
     try {
       const response = await loginUser(userData);
       const { token } = response;
@@ -34,9 +35,10 @@ export default function Login() {
       if (role === "superadmin") {
         navigate(`/dashboard/${role}`);
       }
-
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -77,9 +79,38 @@ export default function Login() {
                   />
                   <button
                     type="submit"
-                    className="rounded-xl text-xl bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out"
+                    disabled={isLoading}
+                    className={`rounded-xl text-xl bg-violet-500 text-white font-semibold py-2 
+    ${isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-violet-700"} 
+    transition-colors duration-300 ease-out`}
                   >
-                    LOG IN
+                    {isLoading ? (
+                      <div className="flex justify-center items-center">
+                        <svg
+                          className="animate-spin h-5 w-5 mr-2 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8v8H4z"
+                          ></path>
+                        </svg>
+                        Loading...
+                      </div>
+                    ) : (
+                      "LOG IN"
+                    )}
                   </button>
                 </form>
                 <Link

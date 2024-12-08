@@ -8,8 +8,9 @@ export default function SidebarPedagang() {
 
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
-  const token = localStorage.getItem("token");
   const [error, setError] = useState();
+  const [isLoading, setLoading] = useState(false);
+  const token = localStorage.getItem("token");
 
   useAuthCheck();
 
@@ -21,37 +22,58 @@ export default function SidebarPedagang() {
   };
 
   useEffect(() => {
-    if (!token) {
-      return;
-    }
+    const fetchUserData = async () => {
+      if (!token) {
+        return;
+      }
 
-    const decodedToken = jwtDecode(token);
-    decodedToken.userId;
+      setLoading(true);
+      try {
+        // Mendekode token
+        const decodedToken = jwtDecode(token);
+        console.log("UserId:", decodedToken.userId);
 
-    // Mengambil data lengkap user dari backend
-    fetch(`${apiroutes}/user/getuser`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
+        // Mengambil data lengkap user dari backend
+        const response = await fetch(`${apiroutes}/user/getuser`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Gagal mengambil data pengguna.");
+        }
+
+        const data = await response.json();
         setUserData(data);
         setError(null);
-      })
-      .catch((error) =>
-        console.error(error),
-        setError("Terjadi kesalahan saat mengambil data pengguna.")
-      );
+      } catch (err) {
+        console.error(err);
+        setError("Terjadi kesalahan saat mengambil data pengguna.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, [token]);
 
   const isActive = (path) => location.pathname.startsWith(path);
+
   return (
     <aside className="w-[20%] h-full bg-slate-50 p-5 border-r-2 shadow-inner shadow-slate-100">
       <ul className="flex flex-col gap-10">
         <li className="flex items-center gap-5">
-          {error && <div className="text-red-500">{error}</div>}
-          {userData ? (
+          {isLoading ? (
+            <>
+              <ion-icon
+                size="large"
+                name="refresh-outline"
+                className="animate-spin"
+              ></ion-icon>
+              <p>Memuat data akun...</p>
+            </>
+          ) : userData ? (
             <>
               <img
                 className="w-16 h-16 rounded-full"
@@ -61,10 +83,7 @@ export default function SidebarPedagang() {
               <h6 className="text-xl font-medium">{userData.namausaha}</h6>
             </>
           ) : (
-            <>
-              <ion-icon size="large" name="refresh-outline"></ion-icon>
-              <p>Mendapatkan data akun</p>
-            </>
+            <p>{error || "Data pengguna tidak tersedia."}</p>
           )}
         </li>
 

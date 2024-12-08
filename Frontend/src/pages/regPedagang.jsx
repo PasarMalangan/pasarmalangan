@@ -107,7 +107,7 @@ export default function RegPedagang() {
 
   const inputField = (type, value, id, label, setter) => (
     <input
-      className="border-[1px] border-slate-700 pl-4 pr-8 py-2"
+      className="rounded-xl border-[1px] border-slate-700 pl-4 pr-8 py-2"
       type={type}
       value={value ?? ""}
       name={id}
@@ -125,7 +125,7 @@ export default function RegPedagang() {
         <article className="w-full h-full bg-blue-400 flex items-center justify-center">
           <section className="bg-blue-600 w-[90%] h-max p-10">
             <div className="flex w-full justify-center">
-              <div className="w-full bg-white px-9 py-5">
+              <div className="w-full rounded-xl bg-white px-9 py-5">
                 <form
                   className="w-full mx-auto"
                   onSubmit={handleSubmit}
@@ -169,7 +169,7 @@ export default function RegPedagang() {
                     </div>
                     <div className="flex flex-col gap-5">
                       <select
-                        className="border-[1px] border-slate-700 pl-4 pr-8 py-2 text-gray-600"
+                        className="rounded-xl border-[1px] border-slate-700 pl-4 pr-8 py-2 text-gray-600"
                         name="alamatusaha"
                         id="alamatusaha"
                         defaultValue={alamatusaha}
@@ -184,7 +184,7 @@ export default function RegPedagang() {
                         <option value="Lowokwaru">Lowokwaru</option>
                         <option value="Sukun">Sukun</option>
                       </select>
-                      <div className="border-[1px] border-slate-700 px-4 py-2 w-full">
+                      <div className="rounded-xl border-[1px] border-slate-700 px-4 py-2 w-full">
                         <label
                           className="text-gray-500 cursor-pointer w-full block"
                           htmlFor="identitaspedagang"
@@ -223,7 +223,7 @@ export default function RegPedagang() {
                   </section>
                   <button
                     type="submit"
-                    className={`w-[50%] mx-auto translate-x-1/2 mt-10 mb-5 bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out ${
+                    className={`rounded-xl text-xl w-[50%] mx-auto translate-x-1/2 mt-10 mb-5 bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out ${
                       isLoading ? "bg-violet-400 cursor-not-allowed" : ""
                     }`}
                     disabled={isLoading} // Disable tombol selama loading

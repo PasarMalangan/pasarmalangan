@@ -19,26 +19,34 @@ export default function SettingsPembeli() {
 
   const [success, setSuccess] = useState(false);
   const [gender, setGender] = useState();
-  const [loading, setLoading] = useState(true);
+  const [loadingGet, setLoadingGet] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
 
-    if (!token) {
-      setError("Token tidak ditemukan.");
-      setLoading(false);
-      return;
-    }
+      if (!token) {
+        setError("Token tidak ditemukan.");
+        setLoadingGet(false);
+        return;
+      }
 
-    fetch(`${apiroutes}/user/getuser`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
+      try {
+        const response = await fetch(`${apiroutes}/user/getuser`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Gagal mengambil data pengguna.");
+        }
+
+        const data = await response.json();
+
         setUserData({
           name: data.name,
           username: data.username,
@@ -48,13 +56,15 @@ export default function SettingsPembeli() {
           tanggallahir: data.tanggallahir,
           profilepict: data.profilepict,
         });
-        setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         setError("Terjadi kesalahan saat mengambil data pengguna.");
         console.error(err);
-        setLoading(false);
-      });
+      } finally {
+        setLoadingGet(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleChange = (e) => {
@@ -85,9 +95,16 @@ export default function SettingsPembeli() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token tidak ditemukan.");
+      setSuccess(false);
+      setIsLoading(false);
+      return;
+    }
 
     const formData = new FormData();
     formData.append("name", userData.name);
@@ -100,25 +117,34 @@ export default function SettingsPembeli() {
       formData.append("profilepict", userData.profilepict);
     }
 
-    fetch(`${apiroutes}/user/editpembeli`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSuccess(true);
-        setUserData((prevData) => ({
-          ...prevData,
-          profilepict: data.user.profilepict, // Pastikan backend mengembalikan URL gambar baru
-        }));
-      })
-      .catch((err) => {
-        console.error(err);
-        setSuccess(false);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${apiroutes}/user/editpembeli`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
       });
+
+      if (!response.ok) {
+        throw new Error("Gagal memperbarui data pengguna.");
+      }
+
+      const data = await response.json();
+
+      setSuccess(true);
+      setUserData((prevData) => ({
+        ...prevData,
+        profilepict: data.user.profilepict, // Pastikan backend mengembalikan URL gambar baru
+      }));
+    } catch (err) {
+      console.error(err);
+      setSuccess(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -131,7 +157,7 @@ export default function SettingsPembeli() {
     return () => clearTimeout(timer);
   }, [success]);
 
-  if (loading) {
+  if (loadingGet) {
     return <LoaderPage />;
   }
 
@@ -265,10 +291,41 @@ export default function SettingsPembeli() {
               <div className="flex gap-10">
                 <button
                   type="submit"
-                  className="rounded-md mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out"
+                  disabled={isLoading}
+                  className={`rounded-md mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 
+    ${
+      isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-violet-700"
+    } transition-colors duration-300 ease-out`}
                 >
-                  Simpan Perubahan
+                  {isLoading ? (
+                    <div className="flex justify-center items-center">
+                      <svg
+                        className="animate-spin h-5 w-5 mr-2 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                      Loading...
+                    </div>
+                  ) : (
+                    "Simpan Perubahan"
+                  )}
                 </button>
+
                 <Link className="rounded-md mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
                   Ubah Password
                 </Link>

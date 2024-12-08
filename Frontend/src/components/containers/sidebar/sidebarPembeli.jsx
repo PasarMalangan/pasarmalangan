@@ -9,10 +9,10 @@ export default function SidebarPembeli() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
+  const [isLoading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
   useAuthCheck();
-  useEffect(() => {}, [token]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -22,40 +22,59 @@ export default function SidebarPembeli() {
   };
 
   useEffect(() => {
-    if (!token) {
-      setError("Token tidak ditemukan, silakan login.");
-      return;
-    }
+    const fetchUserData = async () => {
+      if (!token) {
+        setError("Token tidak ditemukan, silakan login.");
+        return;
+      }
 
-    // Mendekode token untuk mendapatkan userId dan role
-    const decodedToken = jwtDecode(token);
-    decodedToken.userId;
+      setLoading(true);
 
-    // Mengambil data lengkap user dari backend
-    fetch(`${apiroutes}/user/getuser`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
+      try {
+        // Mendekode token untuk mendapatkan userId dan role
+        const decodedToken = jwtDecode(token);
+        console.log("UserId:", decodedToken.userId);
+
+        // Mengambil data lengkap user dari backend
+        const response = await fetch(`${apiroutes}/user/getuser`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Gagal mengambil data pengguna.");
+        }
+
+        const data = await response.json();
         setUserData(data);
         setError(null);
-      })
-      .catch((error) =>
-        console.error(error),
-        setError("Terjadi kesalahan saat mengambil data pengguna.")
-      );
+      } catch (err) {
+        console.error(err);
+        setError("Terjadi kesalahan saat mengambil data pengguna.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
   }, [token]);
 
   const isActive = (path) => location.pathname === path;
-  console.log(userData);
   return (
     <aside className="w-[20%] h-full bg-gray-200 p-5 border-r-2 shadow-inner shadow-gray-300">
       <ul className="flex flex-col gap-10">
         <li className="flex items-center gap-5">
-        {error && <div className="text-red-500">{error}</div>}
-          {userData ? (
+          {isLoading ? (
+            <>
+              <ion-icon
+                size="large"
+                name="refresh-outline"
+                className="animate-spin"
+              ></ion-icon>
+              <p>Memuat data akun...</p>
+            </>
+          ) : userData ? (
             <>
               <img
                 className="w-16 h-16 rounded-full"
@@ -65,10 +84,7 @@ export default function SidebarPembeli() {
               <h6 className="text-xl font-medium">{userData.username}</h6>
             </>
           ) : (
-            <>
-              <ion-icon size="large" name="refresh-outline"></ion-icon>
-              <p>Mendapatkan data akun</p>
-            </>
+            <p>{error || "Data tidak ditemukan."}</p>
           )}
         </li>
         <Link to="/dashboard/pembeli">

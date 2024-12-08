@@ -11,6 +11,7 @@ export default function RegPembeli() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const role = "pembeli";
 
   const handleSubmit = async (e) => {
@@ -27,6 +28,7 @@ export default function RegPembeli() {
       return;
     }
 
+    setIsLoading(true);
     try {
       // Panggil fungsi registerUser dari services/auth.js
       const responseData = await registerUserPembeli({
@@ -35,16 +37,18 @@ export default function RegPembeli() {
         password,
         role,
       });
-      setSuccess(responseData.message)
+      setSuccess(responseData.message);
       setError("");
-      setEmail(""); 
-      setUsername(""); 
-      setPassword(""); 
-      setRePassword(""); 
+      setEmail("");
+      setUsername("");
+      setPassword("");
+      setRePassword("");
       // Tambahkan logika redirect atau notifikasi sukses di sini
     } catch (error) {
-      setSuccess("")
+      setSuccess("");
       setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -67,7 +71,7 @@ export default function RegPembeli() {
                   {error && <div className="text-red-500">{error}</div>}
                   {success && <div className="text-green-500">{success}</div>}
                   <input
-                    className="border-[1px] border-slate-700 px-4 py-2"
+                    className="rounded-xl border-[1px] border-slate-700 px-4 py-2"
                     type="email"
                     name="email"
                     id="email"
@@ -77,7 +81,7 @@ export default function RegPembeli() {
                     required
                   />
                   <input
-                    className="border-[1px] border-slate-700 px-4 py-2"
+                    className="rounded-xl border-[1px] border-slate-700 px-4 py-2"
                     type="text"
                     name="username"
                     id="username"
@@ -87,7 +91,7 @@ export default function RegPembeli() {
                     required
                   />
                   <input
-                    className="border-[1px] border-slate-700 px-4 py-2"
+                    className="rounded-xl border-[1px] border-slate-700 px-4 py-2"
                     type="password"
                     name="password"
                     id="password"
@@ -97,7 +101,7 @@ export default function RegPembeli() {
                     required
                   />
                   <input
-                    className="border-[1px] border-slate-700 px-4 py-2"
+                    className="rounded-xl border-[1px] border-slate-700 px-4 py-2"
                     type="password"
                     id="repassword"
                     placeholder="Konfirmasi Password"
@@ -107,9 +111,43 @@ export default function RegPembeli() {
                   />
                   <button
                     type="submit"
-                    className="rounded-xl text-xl bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out"
+                    className={`rounded-xl text-xl bg-violet-500 text-white font-semibold py-2 hover:bg-violet-700 transition-colors duration-300 ease-out ${
+                      isLoading ? "bg-violet-400 cursor-not-allowed" : ""
+                    }`}
+                    disabled={isLoading} // Disable tombol selama loading
                   >
-                    Daftar
+                    {isLoading ? (
+                      <span className="flex items-center justify-center">
+                        <svg
+                          className="w-5 h-5 animate-spin"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          ></circle>
+                          <path
+                            d="M4 12a8 8 0 1 0 16 0"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                          ></path>
+                        </svg>
+                        <span className="ml-2">Loading...</span>
+                      </span>
+                    ) : (
+                      "Daftar"
+                    )}
                   </button>
                 </form>
                 <div className="w-full text-center">
