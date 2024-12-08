@@ -109,7 +109,7 @@ export default function EditProduct() {
     productData.images.forEach((image) => formData.append("images", image));
 
     try {
-  const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+  const response = await fetch(`${apiroutes}/products/${id}`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
     body: formData,
