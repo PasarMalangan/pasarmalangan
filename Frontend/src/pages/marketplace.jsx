@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useState } from "react";
 import image from "../image";
 import Navbar from "../components/containers/navbar/navbar";
@@ -278,9 +279,8 @@ export default function Marketplace() {
               <section id="recomendation" className="my-6 px-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
                   {productsrec.map((product) => (
-                    <a
-                      href={product.link}
-                      target="_blank"
+                    <Link
+                      to={"/produkdetail/" + product.id}
                       rel="noopener noreferrer"
                       key={product.id}
                       className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-100 transform hover:scale-105"
@@ -300,7 +300,7 @@ export default function Marketplace() {
                           {product.price}
                         </p>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </section>
@@ -310,9 +310,8 @@ export default function Marketplace() {
               <section id="unggulan" className="my-6 px-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
                   {productsshop.map((product) => (
-                    <a
-                      href={product.link}
-                      target="_blank"
+                    <Link
+                      to={"/produkdetail/" + product.id}
                       rel="noopener noreferrer"
                       key={product.id}
                       className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-100 transform hover:scale-105"
@@ -332,7 +331,7 @@ export default function Marketplace() {
                           {product.price}
                         </p>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </section>
@@ -342,9 +341,8 @@ export default function Marketplace() {
               <section id="unggulan" className="my-6 px-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
                   {products.map((product) => (
-                    <a
-                      href={product.link}
-                      target="_blank"
+                    <Link
+                      to={"/produkdetail/" + product.id}
                       rel="noopener noreferrer"
                       key={product.id}
                       className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-100 transform hover:scale-105"
@@ -364,7 +362,7 @@ export default function Marketplace() {
                           {product.price}
                         </p>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </section>
