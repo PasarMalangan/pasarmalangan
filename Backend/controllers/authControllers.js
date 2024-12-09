@@ -4,6 +4,7 @@ const superAdmin = require("../models/superadmin");
 const jwt = require("jsonwebtoken");
 const { secret, expiresIn } = require("../lib/jwt");
 const { uploadFileToS3 } = require("../lib/S3client");
+const { detectTextAndApprove } = require("../lib/Textractclient");
 require("dotenv").config();
 
 const checkEmailExists = async (email) => {
@@ -19,12 +20,10 @@ exports.register = async (req, res) => {
   const file = req.file;
 
   try {
-    // Validasi role
     if (!role) {
       return res.status(400).json({ message: "Role tidak boleh kosong" });
     }
 
-    // Cek apakah email sudah digunakan di salah satu koleksi
     const emailExists = await checkEmailExists(data.email);
     if (emailExists) {
       return res.status(400).json({ message: "Email sudah digunakan" });
@@ -44,6 +43,15 @@ exports.register = async (req, res) => {
       const uploadResult = await uploadFileToS3(file, bucketName);
       data.identitaspedagang = uploadResult.Location;
 
+      // Deteksi teks di dalam file menggunakan AWS Textract
+      const isMalangFound = await detectTextAndApprove(
+        bucketName,
+        uploadResult.Key
+      );
+
+      // Tambahkan field isApproved berdasarkan hasil deteksi teks
+      data.isApproved = isMalangFound ? true : false;
+
       user = new pedagang(data);
     } else if (role === "pembeli") {
       user = new pembeli(data);
@@ -53,7 +61,6 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: "Invalid role" });
     }
 
-    // Simpan user ke database
     await user.save();
 
     const successMessage =
@@ -66,7 +73,7 @@ exports.register = async (req, res) => {
     if (error.code === 11000) {
       return res
         .status(400)
-        .json({ message: "Email atau Username sudah terdaftar" });
+        .json({ message: "Email atau Nomor Telepon sudah terdaftar" });
     }
 
     res
@@ -101,6 +108,13 @@ exports.login = async (req, res) => {
     // Jika user tidak ditemukan
     if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
+
+    if (role === "pedagang" && !user.isApproved) {
+      return res.status(403).json({
+        message:
+          "Akun belum bisa masuk ke dashboard, silahkan tunggu konfirmasi dari Admin.",
+      });
     }
 
     // Verifikasi password

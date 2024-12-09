@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const ApproveProduk = () => {
   const [productList, setProductList] = useState([]);
@@ -162,15 +163,15 @@ const ApproveProduk = () => {
                       link.length > 30 ? link.substring(0, 30) + "..." : link;
 
                     return (
-                      <a
+                      <Link
                         key={i}
-                        href={link}
+                        to={link}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-500 hover:underline block"
                       >
                         {displayLink}
-                      </a>
+                      </Link>
                     );
                   })}
               </td>

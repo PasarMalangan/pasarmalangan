@@ -19,7 +19,7 @@ export default function SettingsPedagang() {
     linkecommerences: "",
     profilepict: "",
   });
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
@@ -129,12 +129,12 @@ export default function SettingsPedagang() {
       });
 
       const data = await response.json();
-
+      console.log(data);
       if (!response.ok) {
         throw new Error(data.message || "Gagal memperbarui data pengguna.");
       }
-
-      setSuccess(true);
+      
+      setSuccess(data.message)
       setUserData((prevData) => ({
         ...prevData,
         profilepict: data.user.profilepict, // Perbarui foto profil
@@ -360,7 +360,7 @@ export default function SettingsPedagang() {
             </div>
           </form>
         </article>
-        {success && <SuccessAlert func={() => setSuccess(false)} />}
+        {success && <SuccessAlert success={success} func={() => setSuccess(false)} />}
         {error && <ErrorAlert error={error} func={() => setError(false)} />}
       </main>
       <Footer />

@@ -85,6 +85,7 @@ exports.createProduct = async (req, res) => {
     }
 
     const namausaha = pedagang.namausaha;
+    const alamatusaha = pedagang.alamatusaha;
 
     // Buat produk baru
     const newProduct = new Product({
@@ -97,6 +98,7 @@ exports.createProduct = async (req, res) => {
       isApproved,
       owner_id: userId,
       namausaha,
+      alamatusaha
     });
 
     await newProduct.save();

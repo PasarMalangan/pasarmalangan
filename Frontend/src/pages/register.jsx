@@ -11,7 +11,7 @@ export default function Register() {
           <section className="bg-blue-600 w-max h-max p-10">
             <div className="flex justify-center gap-10">
               <img className="w-1/2" src={image.logo_auth} alt="logoauth" />
-              <div className="w-1/2 bg-white px-9 py-5">
+              <div className="w-1/2 bg-white px-9 py-5 rounded-2xl">
                 <h2 className="font-semibold text-xl mb-7">Daftar Sebagai?</h2>
                 <section className="flex flex-col gap-10">
                   <Link

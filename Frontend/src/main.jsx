@@ -27,6 +27,7 @@ import CreateProduct from "./pages/pedagang/createProduct.jsx";
 import EditProduct from "./pages/pedagang/editProduct.jsx";
 
 import DashboardSuperAdmin from "./pages/dashboardAdmin/dashboard.jsx";
+import Comingsoon from "./pages/comingsoon.jsx";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
   {
     path: "/aboutus",
     element: <AboutUs />,
+  },
+  {
+    path: "/service",
+    element: <Comingsoon />,
   },
   {
     path: "/login",
@@ -140,9 +145,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/produkdetail/:id",
-    element: (
-        <DetailProduk />
-    ),
+    element: <DetailProduk />,
   },
 ]);
 

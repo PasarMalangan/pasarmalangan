@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import Footer from "../components/containers/footer/footer";
 import NavAuth from "../components/containers/navbar/navbarAuth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import ErrorAlert from "../components/elements/erroralert";
+import SuccessAlert from "../components/elements/successalert";
 const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 export default function RegPedagang() {
@@ -103,7 +105,6 @@ export default function RegPedagang() {
       setIsLoading(false);
     }
   };
-  console.log("VITE_API_BASE_URL:", import.meta.env.VITE_API_BASE_URL);
 
   const inputField = (type, value, id, label, setter) => (
     <input
@@ -117,6 +118,26 @@ export default function RegPedagang() {
       required
     />
   );
+
+  useEffect(() => {
+    let timer;
+    if (success) {
+      timer = setTimeout(() => {
+        setSuccess(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [success]);
+
+  useEffect(() => {
+    let timer;
+    if (error) {
+      timer = setTimeout(() => {
+        setError(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [error]);
 
   return (
     <>
@@ -134,8 +155,6 @@ export default function RegPedagang() {
                   <p className="font-semibold text-xl text-center mb-5">
                     DAFTAR SEBAGAI PEDAGANG UMKM
                   </p>
-                  {error && <div className="text-red-500">{error}</div>}
-                  {success && <div className="text-green-500">{success}</div>}
                   <section className="w-full grid grid-cols-2 gap-10 mx-auto">
                     <div className="flex flex-col gap-5">
                       {inputField(
@@ -261,6 +280,15 @@ export default function RegPedagang() {
                       "Daftar"
                     )}
                   </button>
+                  {error && (
+                    <ErrorAlert error={error} func={() => setError(false)} />
+                  )}
+                  {success && (
+                    <SuccessAlert
+                      success={success}
+                      func={() => setSuccess(false)}
+                    />
+                  )}
                 </form>
                 <p className="w-full text-center">
                   Sudah Punya Akun?{" "}

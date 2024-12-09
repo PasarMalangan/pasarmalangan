@@ -1,195 +1,91 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import image from "../image";
 import Navbar from "../components/containers/navbar/navbar";
 import Footer from "../components/containers/footer/footer";
-import SearchResults from "../components/containers/marketplace/SearchResults"; // Import komponen baru
+import SearchResults from "../components/containers/marketplace/SearchResults";
+import { Link } from "react-router-dom";
 
 export default function Marketplace() {
+  const apiroutes = import.meta.env.VITE_API_BASE_URL;
   const [searchQuery, setSearchQuery] = useState("");
-  const [isSearching, setIsSearching] = useState(false); // Menambahkan state untuk memantau status pencarian
+  const [isSearching, setIsSearching] = useState(false);
   const [filterLocation, setIsFilterLocation] = useState();
+  const [loading, setLoading] = useState(false);
+  const [productList, setProductList] = useState([]);
+  const [hoveredProducts, setHoveredProducts] = useState(false);
 
-  const productsrec = [
-    //ini buat fetch produk rekomendasi aja (klo gasalah ngambil dari klik terbanyak?)
-    {
-      id: 1,
-      name: "Produk 1",
-      image: "https://via.placeholder.com/300x200?text=Produk+1",
-      price: "Rp 100.000",
-      link: "https://example.com/produk1",
-    },
-    {
-      id: 2,
-      name: "Produk 2",
-      image: "https://via.placeholder.com/300x200?text=Produk+2",
-      price: "Rp 200.000",
-      link: "https://example.com/produk2",
-    },
-    {
-      id: 3,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+3",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-    {
-      id: 4,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+4",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-    {
-      id: 4,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+4",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${apiroutes}/products/getallproducts`);
 
-  const productsshop = [
-    //ini buat fetch produk rekomendasi toko
-    {
-      id: 1,
-      name: "Produk 1",
-      image: "https://via.placeholder.com/300x200?text=Produk+1",
-      price: "Rp 100.000",
-      link: "https://example.com/produk1",
-    },
-    {
-      id: 2,
-      name: "Produk 2",
-      image: "https://via.placeholder.com/300x200?text=Produk+2",
-      price: "Rp 200.000",
-      link: "https://example.com/produk2",
-    },
-    {
-      id: 3,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+3",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-    {
-      id: 4,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+4",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-    {
-      id: 4,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+4",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-  ];
+        if (!response.ok) {
+          throw new Error("Gagal memuat produk");
+        }
 
-  const products = [
-    //ini buat fetch semua produk yang ada di db ya bre
-    {
-      id: 1,
-      name: "Produk 1",
-      image: "https://via.placeholder.com/300x200?text=Produk+1",
-      category: "Kuliner",
-      location: "blimbing",
-      price: "Rp 100.000",
-      link: "https://example.com/produk1",
-    },
-    {
-      id: 2,
-      name: "Produk 2",
-      image: "https://via.placeholder.com/300x200?text=Produk+2",
-      category: "Fashion",
-      location: "kedungkandang",
-      price: "Rp 200.000",
-      link: "https://example.com/produk2",
-    },
-    {
-      id: 3,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+3",
-      category: "Pertanian",
-      location: "klojen",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-    {
-      id: 4,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+4",
-      category: "Kerajinan",
-      location: "lowokwaru",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-    {
-      id: 5,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+4",
-      category: "Digital",
-      location: "klojen",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-    {
-      id: 6,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+4",
-      category: "Fashion",
-      location: "klojen",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-    {
-      id: 7,
-      name: "Produk 3",
-      image: "https://via.placeholder.com/300x200?text=Produk+4",
-      category: "Fashion",
-      location: "sukun",
-      price: "Rp 300.000",
-      link: "https://example.com/produk3",
-    },
-  ];
+        const data = await response.json();
+
+        // Filter hanya produk dengan status disetujui
+        const approvedProducts = data.filter(
+          (product) => product.isApproved === "disetujui"
+        );
+
+        setProductList(approvedProducts); // Hanya set produk yang disetujui
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault(); // Menghindari reload halaman
-    setIsSearching(true); // Mulai pencarian
+    e.preventDefault();
+    setIsSearching(true);
     setTimeout(() => {
-      setIsSearching(false); // Hentikan animasi loading setelah pencarian selesai
-    }, 2000); // Set waktu delay untuk animasi loading (2 detik)
+      setIsSearching(false);
+    }, 2000);
   };
 
   const handleCategoryClick = (category) => {
-    // Isi searchQuery dengan kategori yang diklik dan mulai pencarian
     setSearchQuery(category);
     setIsSearching(true);
     setTimeout(() => {
       setIsSearching(false);
-    }, 500); // Set waktu delay untuk animasi loading
+    }, 500);
   };
 
   const handleLocationClick = () => {
     setIsFilterLocation(true);
     setTimeout(() => {
       setIsSearching(false);
-    }, 500); // Set waktu delay untuk animasi loading
+    }, 500);
   };
 
+  const categoryStyles = {
+    kuliner: "bg-red-500 text-white font-medium px-2 py-[2px] rounded-lg",
+    fashion: "bg-blue-700 text-white font-medium px-2 py-[2px] rounded-lg",
+    pertanian: "bg-green-500 text-white font-medium px-2 py-[2px] rounded-lg",
+    kerajinan: "bg-yellow-500 text-white font-medium px-2 py-[2px] rounded-lg",
+    digital: "bg-cyan-500 text-white font-medium px-2 py-[2px] rounded-lg",
+  };
+
+  const handleHover = (id, isHovered) => {
+    setHoveredProducts((prev) => ({ ...prev, [id]: isHovered }));
+  };
   return (
     <>
       <Navbar />
       <main className="w-full h-max bg-gradient-to-b from-sky-300 via-sky-200 to-sky-100 py-10">
         <div className="relative flex items-center max-w-full px-4 sm:px-6 lg:px-8 mx-auto w-full pb-10">
-          {/* Filter Lokasi */}
-
-          {/* Searchbar */}
           <form
             onSubmit={handleSearchSubmit}
             className="flex items-center w-full sm:w-2/3 lg:w-2/3 bg-white border border-gray-300 rounded-full shadow-sm overflow-hidden transition-transform duration-300 ease-in-out focus-within:scale-105 focus-within:shadow-xl focus-within:border-blue-600 hover:shadow-blue-300 hover:border-blue-400 mx-auto"
@@ -229,7 +125,7 @@ export default function Marketplace() {
         )}
 
         {!isSearching && (searchQuery || filterLocation) && (
-          <SearchResults searchQuery={searchQuery} products={products} />
+          <SearchResults searchQuery={searchQuery} products={productList} />
         )}
 
         {!isSearching && !searchQuery && !filterLocation && (
@@ -268,39 +164,71 @@ export default function Marketplace() {
                 </li>
               </ul>
             </div>
+
             <img
               className="mx-auto w-[70vw] py-10"
               src={image.ads_example}
               alt="ads"
             />
-            <produk id="produk" className="">
-              <h4 className=" px-5 text-2xl font-bold">Rekomendasi</h4>
+            <article id="produk">
+              <h4 className="px-5 text-2xl font-bold">Rekomendasi</h4>
               <section id="recomendation" className="my-6 px-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
-                  {productsrec.map((product) => (
-                    <a
-                      href={product.link}
+                  {productList.map((product) => (
+                    <Link
+                      key={product._id}
+                      to={product.linkecommerences}
                       target="_blank"
                       rel="noopener noreferrer"
-                      key={product.id}
-                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-100 transform hover:scale-105"
+                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
                     >
-                      <div className="w-full aspect-w-4 aspect-h-3">
+                      <div className="w-full">
                         <img
-                          className="w-full h-full object-cover"
-                          src={product.image}
+                          className="w-full max-h-36 object-cover"
+                          src={product.images[0]}
                           alt={product.name}
                         />
                       </div>
                       <div className="p-4">
-                        <h5 className="text-lg font-bold text-gray-900">
+                        <h5 className="text-lg text-gray-900">
                           {product.name}
                         </h5>
-                        <p className="mt-2 text-gray-700 text-sm">
-                          {product.price}
-                        </p>
+                        <div className="flex items-center justify-between my-5">
+                          <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
+                          <p
+                            className={`capitalize ${
+                              categoryStyles[product.category]
+                            } `}
+                          >
+                            {product.category}
+                          </p>
+                        </div>
+                        <h6
+                          className="text-gray-700 text-sm overflow-hidden relative"
+                          onMouseEnter={() => handleHover(product._id, true)}
+                          onMouseLeave={() => handleHover(product._id, false)}
+                        >
+                          <span
+                            className={`capi block transition-transform duration-300 ease-in-out ${
+                              hoveredProducts[product._id]
+                                ? "transform translate-y-[-100%]"
+                                : "transform translate-y-0"
+                            }`}
+                          >
+                            {product.alamatusaha}
+                          </span>
+                          <span
+                            className={`capi block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
+                              hoveredProducts[product._id]
+                                ? "transform translate-y-0"
+                                : "transform translate-y-[100%]"
+                            }`}
+                          >
+                            {product.namausaha}
+                          </span>
+                        </h6>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </section>
@@ -309,30 +237,61 @@ export default function Marketplace() {
               <br />
               <section id="unggulan" className="my-6 px-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
-                  {productsshop.map((product) => (
-                    <a
-                      href={product.link}
+                  {productList.map((product) => (
+                    <Link
+                      key={product._id}
+                      to={product.linkecommerences}
                       target="_blank"
                       rel="noopener noreferrer"
-                      key={product.id}
-                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-100 transform hover:scale-105"
+                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
                     >
-                      <div className="w-full aspect-w-4 aspect-h-3">
+                      <div className="w-full">
                         <img
-                          className="w-full h-full object-cover"
-                          src={product.image}
+                          className="w-full max-h-36 object-cover"
+                          src={product.images[0]}
                           alt={product.name}
                         />
                       </div>
                       <div className="p-4">
-                        <h5 className="text-lg font-bold text-gray-900">
+                        <h5 className="text-lg text-gray-900">
                           {product.name}
                         </h5>
-                        <p className="mt-2 text-gray-700 text-sm">
-                          {product.price}
-                        </p>
+                        <div className="flex items-center justify-between my-5">
+                          <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
+                          <p
+                            className={`capitalize ${
+                              categoryStyles[product.category]
+                            } `}
+                          >
+                            {product.category}
+                          </p>
+                        </div>
+                        <h6
+                          className="text-gray-700 text-sm overflow-hidden relative"
+                          onMouseEnter={() => handleHover(product._id, true)}
+                          onMouseLeave={() => handleHover(product._id, false)}
+                        >
+                          <span
+                            className={`capi block transition-transform duration-300 ease-in-out ${
+                              hoveredProducts[product._id]
+                                ? "transform translate-y-[-100%]"
+                                : "transform translate-y-0"
+                            }`}
+                          >
+                            {product.alamatusaha}
+                          </span>
+                          <span
+                            className={`capi block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
+                              hoveredProducts[product._id]
+                                ? "transform translate-y-0"
+                                : "transform translate-y-[100%]"
+                            }`}
+                          >
+                            {product.namausaha}
+                          </span>
+                        </h6>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </section>
@@ -341,34 +300,65 @@ export default function Marketplace() {
               <br />
               <section id="unggulan" className="my-6 px-10">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
-                  {products.map((product) => (
-                    <a
-                      href={product.link}
+                  {productList.map((product) => (
+                    <Link
+                      key={product._id}
+                      to={product.linkecommerences}
                       target="_blank"
                       rel="noopener noreferrer"
-                      key={product.id}
-                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-100 transform hover:scale-105"
+                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
                     >
-                      <div className="w-full aspect-w-4 aspect-h-3">
+                      <div className="w-full">
                         <img
-                          className="w-full h-full object-cover"
-                          src={product.image}
+                          className="w-full max-h-36 object-cover"
+                          src={product.images[0]}
                           alt={product.name}
                         />
                       </div>
                       <div className="p-4">
-                        <h5 className="text-lg font-bold text-gray-900">
+                        <h5 className="text-lg text-gray-900">
                           {product.name}
                         </h5>
-                        <p className="mt-2 text-gray-700 text-sm">
-                          {product.price}
-                        </p>
+                        <div className="flex items-center justify-between my-5">
+                          <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
+                          <p
+                            className={`capitalize ${
+                              categoryStyles[product.category]
+                            } `}
+                          >
+                            {product.category}
+                          </p>
+                        </div>
+                        <h6
+                          className="text-gray-700 text-sm overflow-hidden relative"
+                          onMouseEnter={() => handleHover(product._id, true)}
+                          onMouseLeave={() => handleHover(product._id, false)}
+                        >
+                          <span
+                            className={`capi block transition-transform duration-300 ease-in-out ${
+                              hoveredProducts[product._id]
+                                ? "transform translate-y-[-100%]"
+                                : "transform translate-y-0"
+                            }`}
+                          >
+                            {product.alamatusaha}
+                          </span>
+                          <span
+                            className={`capi block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
+                              hoveredProducts[product._id]
+                                ? "transform translate-y-0"
+                                : "transform translate-y-[100%]"
+                            }`}
+                          >
+                            {product.namausaha}
+                          </span>
+                        </h6>
                       </div>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </section>
-            </produk>
+            </article>
           </>
         )}
       </main>

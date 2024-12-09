@@ -32,8 +32,7 @@ export default function SidebarPembeli() {
 
       try {
         // Mendekode token untuk mendapatkan userId dan role
-        const decodedToken = jwtDecode(token);
-        console.log("UserId:", decodedToken.userId);
+        jwtDecode(token);
 
         // Mengambil data lengkap user dari backend
         const response = await fetch(`${apiroutes}/user/getuser`, {
