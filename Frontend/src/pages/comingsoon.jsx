@@ -49,6 +49,7 @@ export default function Comingsoon() {
             <div class="w-full md:w-1/3 px-4 mb-8">
               <div class="rounded-md bg-white shadow-md p-8">
                 <div class="text-4xl font-bold text-purple-600 mb-4">01</div>
+                <img className="h-72 mx-auto w-auto" src="/comingsoon/communitycm.jpg" alt="" />
                 <h3 class="text-2xl font-bold mb-4">Komunitas</h3>
                 <p class="text-gray-600 mb-4">
                   Layanan Komunitas Pedagang UMKM kami bertujuan untuk
@@ -63,6 +64,7 @@ export default function Comingsoon() {
             <div class="w-full md:w-1/3 px-4 mb-8">
               <div class="rounded-md bg-white shadow-md p-8">
                 <div class="text-4xl font-bold text-purple-600 mb-4">02</div>
+                <img className="h-72 mx-auto w-auto" src="/comingsoon/learningcm.jpg" alt="" />
                 <h3 class="text-2xl font-bold mb-4">Pelatihan UMKM</h3>
                 <p class="text-gray-600 mb-4">
                   Layanan Pelatihan UMKM kami menawarkan berbagai program yang

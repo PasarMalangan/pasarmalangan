@@ -8,7 +8,7 @@ export default function Home() {
       <Navbar />
       <main>
         {/* Hero Section */}
-        <article className="relative w-full h-full bg-blue-600 pt-20 mb-20 md:mb-10">
+        <article className="relative w-full h-full bg-blue-300 pt-20 mb-20 md:mb-10">
           <section className="grid md:grid-cols-2 items-center gap-5 md:pr-2">
             <div className="bg-sky-400 h-max py-5 pl-5 pr-10 md:pr-20 md:rounded-tr-[200px] md:rounded-br-[200px]">
               <h1 className="text-slate-100 font-bold text-3xl">

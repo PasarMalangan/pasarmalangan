@@ -1,10 +1,12 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import image from "../../../image";
 import { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import useAuthCheck from "../../../hooks/useAuthCheck";
 const apiroutes = import.meta.env.VITE_API_BASE_URL;
 export default function Navbar() {
+  const location = useLocation();
+
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -63,9 +65,9 @@ export default function Navbar() {
       line3.classList.remove("-rotate-45", "-translate-y-2.5");
     }
   }
-
+  const isActive = (path) => location.pathname === path;
   return (
-    <header className="w-full bg-blue-500 px-5 md:px-10 h-full py-5 sticky top-0 left-0 z-50">
+    <header className="w-full bg-blue-500 px-5 md:px-10 h-full py-2 sticky top-0 left-0 z-50">
       <nav className="flex items-center justify-between">
         {/* Hamburger Menu for Mobile */}
         <button
@@ -91,8 +93,43 @@ export default function Navbar() {
 
         {/* Logo for Larger Screens */}
         <Link to="/" className="hidden md:block">
-          <img src={image.logo_header} alt="iconhome" className="h-12" />
+          <img src={image.logo_header} alt="iconhome" />
         </Link>
+
+        <ul className="hidden md:flex gap-10 text-white">
+          <li>
+            <Link
+              className={`text-xl hover:text-yellow-300 transition-colors duration-300 ease-out ${isActive("/")? "text-yellow-500" : ""}`}
+              to="/"
+            >
+              Beranda
+            </Link>
+          </li>
+          <li>
+            <Link
+              className={`text-xl hover:text-yellow-300 transition-colors duration-300 ease-out ${isActive("/marketplace")? "text-yellow-500" : ""}`}
+              to="/marketplace"
+            >
+              Marketplace
+            </Link>
+          </li>
+          <li>
+            <Link
+              className={`text-xl hover:text-yellow-300 transition-colors duration-300 ease-out ${isActive("/service")? "text-yellow-500" : ""}`}
+              to="/service"
+            >
+              Layanan
+            </Link>
+          </li>
+          <li>
+            <Link
+              className={`text-xl hover:text-yellow-300 transition-colors duration-300 ease-out ${isActive("/aboutus")? "text-yellow-500" : ""}`}
+              to="/aboutus"
+            >
+              Tentang Kami
+            </Link>
+          </li>
+        </ul>
 
         {/* Login/Logout Button */}
 

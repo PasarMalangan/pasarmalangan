@@ -57,20 +57,20 @@ export default function Login() {
     <>
       <NavAuth typeform="LOG IN" />
       <main className="w-full h-full">
-        <article className="w-full h-full bg-blue-400 flex items-center justify-center">
-          <section className="bg-blue-600 max-w-[70vw] h-max p-10">
-            <div className="grid grid-cols-2 gap-10">
+        <article className="w-full h-full bg-blue-400 md:flex items-center justify-center">
+          <section className="mx-auto md:bg-blue-600 md:max-w-[80vw] h-max p-6 sm:p-10 rounded-lg">
+            <div className="md:grid grid-cols-2 gap-6">
               <img
-                className="w-full max-h-full self-center"
+                className="hidden md:block w-full"
                 src={image.logo_auth}
                 alt="logoauth"
               />
-              <div className="relative w-full h-full bg-white px-9 py-5 rounded-2xl">
+              <div className="relative w-full h-max m-auto bg-white px-6 py-5 rounded-2xl">
                 <form
-                  className="flex flex-col gap-8 mb-5"
+                  className="flex flex-col gap-6 sm:gap-8 mb-5"
                   onSubmit={handleSubmit}
                 >
-                  <p className="font-bold text-xl">LOG IN</p>
+                  <p className="font-bold text-xl sm:text-2xl">LOG IN</p>
 
                   <input
                     className="border-[1px] rounded-xl border-slate-700 px-4 py-2"
@@ -96,8 +96,12 @@ export default function Login() {
                     type="submit"
                     disabled={isLoading}
                     className={`rounded-xl text-xl bg-violet-500 text-white font-semibold py-2 
-    ${isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-violet-700"} 
-    transition-colors duration-300 ease-out`}
+                ${
+                  isLoading
+                    ? "opacity-70 cursor-not-allowed"
+                    : "hover:bg-violet-700"
+                } 
+                transition-colors duration-300 ease-out`}
                   >
                     {isLoading ? (
                       <div className="flex justify-center items-center">
@@ -148,6 +152,7 @@ export default function Login() {
           </section>
         </article>
       </main>
+
       <Footer />
     </>
   );

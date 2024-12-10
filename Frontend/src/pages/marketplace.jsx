@@ -4,6 +4,7 @@ import Navbar from "../components/containers/navbar/navbar";
 import Footer from "../components/containers/footer/footer";
 import SearchResults from "../components/containers/marketplace/SearchResults";
 import { Link } from "react-router-dom";
+import AdsSlider from "../components/containers/adsslider/AdsSlider";
 
 export default function Marketplace() {
   const apiroutes = import.meta.env.VITE_API_BASE_URL;
@@ -64,10 +65,15 @@ export default function Marketplace() {
   };
 
   const handleLocationClick = () => {
-    setIsFilterLocation(true);
-    setTimeout(() => {
-      setIsSearching(false);
-    }, 500);
+    // Toggle filter visibility
+    setIsFilterLocation((prevState) => !prevState);
+  
+    // Optionally, hide search after a delay when the filter is shown
+    if (!filterLocation) {
+      setTimeout(() => {
+        setIsSearching(false);
+      }, 500);
+    }
   };
 
   const categoryStyles = {
@@ -84,25 +90,43 @@ export default function Marketplace() {
   return (
     <>
       <Navbar />
-      <main className="w-full h-max bg-gradient-to-b from-sky-300 via-sky-200 to-sky-100 py-10">
-        <div className="relative flex items-center max-w-full px-4 sm:px-6 lg:px-8 mx-auto w-full pb-10">
+      <main className="w-full h-max bg-gradient-to-b from-sky-300 via-sky-200 to-sky-100 py-10 px-5">
+        <div className="relative max-w-full px-4 sm:px-6 lg:px-8 mx-auto w-full pb-10">
+          {/* Tombol Filter Lokasi untuk Mobile */}
+          <button
+            onClick={() => handleLocationClick("")}
+            className="sm:hidden flex items-center justify-between bg-white border border-gray-300 rounded-full shadow-sm px-3 py-2 mb-4 cursor-pointer hover:border-blue-400 hover:shadow-md transition duration-100"
+          >
+            <img
+              className="w-5 h-5 mr-2"
+              src={image.icon_location}
+              alt="Location Icon"
+            />
+            <span className="text-gray-700 font-medium text-sm">
+              Filter Lokasi
+            </span>
+          </button>
+
+          {/* Form Pencarian */}
           <form
             onSubmit={handleSearchSubmit}
-            className="flex items-center w-full sm:w-2/3 lg:w-2/3 bg-white border border-gray-300 rounded-full shadow-sm overflow-hidden transition-transform duration-300 ease-in-out focus-within:scale-105 focus-within:shadow-xl focus-within:border-blue-600 hover:shadow-blue-300 hover:border-blue-400 mx-auto"
+            className="flex flex-wrap items-center w-[80vw] bg-white border border-gray-300 rounded-full shadow-sm overflow-hidden transition-transform duration-300 ease-in-out focus-within:scale-105 focus-within:shadow-xl focus-within:border-blue-600 hover:shadow-blue-300 hover:border-blue-400 mx-auto"
           >
-            <div
-              className="left-4 flex items-center bg-white border border-gray-300 rounded-full shadow-sm mx-4 px-4 py-2 cursor-pointer hover:border-blue-400 hover:shadow-md transition duration-100"
+            <button
+              className="hidden sm:flex items-center bg-white border border-gray-300 rounded-full shadow-sm mx-2 sm:mx-4 px-4 py-2 cursor-pointer hover:border-blue-400 hover:shadow-md transition duration-100"
               onClick={() => handleLocationClick("")}
             >
               <img
-                className="w-7 h-7 mr-2"
+                className="w-6 h-6 sm:w-7 sm:h-7 mr-2"
                 src={image.icon_location}
                 alt="Location Icon"
               />
-              <span className="text-gray-700 font-medium">Filter Lokasi</span>
-            </div>
+              <span className="text-gray-700 font-medium text-sm sm:text-base">
+                Filter Lokasi
+              </span>
+            </button>
             <input
-              className="flex-1 px-6 py-3 placeholder:text-gray-400 placeholder:font-semibold text-lg text-gray-700 focus:outline-none"
+              className="flex-1 px-3 py-2 sm:px-4 sm:py-3 placeholder:text-gray-400 placeholder:font-semibold text-sm sm:text-lg text-gray-700 focus:outline-none mb-2 sm:mb-0"
               type="text"
               name="query"
               placeholder="Cari Produk UMKM Malang"
@@ -111,9 +135,13 @@ export default function Marketplace() {
             />
             <button
               type="submit"
-              className="flex items-center justify-center w-12 h-12 bg-blue-500 hover:bg-blue-600 text-white rounded-full m-1 transition-all duration-150 ease-in-out"
+              className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition-all duration-150 ease-in-out"
             >
-              <img className="w-6 h-6" src={image.icon_search} alt="Search" />
+              <img
+                className="w-5 h-5 sm:w-6 sm:h-6"
+                src={image.icon_search}
+                alt="Search"
+              />
             </button>
           </form>
         </div>
@@ -131,7 +159,7 @@ export default function Marketplace() {
         {!isSearching && !searchQuery && !filterLocation && (
           <>
             <div>
-              <ul className="flex justify-center gap-10">
+              <ul className="flex gap-4 sm:gap-10 md:justify-center overflow-x-auto scrollbar-hide px-4">
                 <li
                   onClick={() => handleCategoryClick("Kuliner")}
                   className="bg-red-500 hover:bg-red-700 transition-colors duration-300 ease-in-out text-white font-medium px-10 py-2 rounded-lg cursor-pointer"
@@ -165,15 +193,11 @@ export default function Marketplace() {
               </ul>
             </div>
 
-            <img
-              className="mx-auto w-[70vw] py-10"
-              src={image.ads_example}
-              alt="ads"
-            />
+           <AdsSlider/>
             <article id="produk">
               <h4 className="px-5 text-2xl font-bold">Rekomendasi</h4>
               <section id="recomendation" className="my-6 px-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                   {productList.map((product) => (
                     <Link
                       key={product._id}
@@ -184,16 +208,16 @@ export default function Marketplace() {
                     >
                       <div className="w-full">
                         <img
-                          className="w-full max-h-36 object-cover"
+                          className="w-full max-h-32 sm:max-h-36 object-cover"
                           src={product.images[0]}
                           alt={product.name}
                         />
                       </div>
                       <div className="p-4">
-                        <h5 className="text-lg text-gray-900">
+                        <h5 className="text-base sm:text-lg text-gray-900">
                           {product.name}
                         </h5>
-                        <div className="flex items-center justify-between my-5">
+                        <div className="flex items-center justify-between my-2 sm:my-5">
                           <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
                           <p
                             className={`capitalize ${
@@ -209,7 +233,7 @@ export default function Marketplace() {
                           onMouseLeave={() => handleHover(product._id, false)}
                         >
                           <span
-                            className={`capi block transition-transform duration-300 ease-in-out ${
+                            className={`capitalize block transition-transform duration-300 ease-in-out ${
                               hoveredProducts[product._id]
                                 ? "transform translate-y-[-100%]"
                                 : "transform translate-y-0"
@@ -218,7 +242,7 @@ export default function Marketplace() {
                             {product.alamatusaha}
                           </span>
                           <span
-                            className={`capi block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
+                            className={`capitalize block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
                               hoveredProducts[product._id]
                                 ? "transform translate-y-0"
                                 : "transform translate-y-[100%]"
@@ -236,7 +260,7 @@ export default function Marketplace() {
               <h4 className="px-5 text-2xl font-bold">Dari Toko Unggulan</h4>
               <br />
               <section id="unggulan" className="my-6 px-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                   {productList.map((product) => (
                     <Link
                       key={product._id}
@@ -247,16 +271,16 @@ export default function Marketplace() {
                     >
                       <div className="w-full">
                         <img
-                          className="w-full max-h-36 object-cover"
+                          className="w-full max-h-32 sm:max-h-36 object-cover"
                           src={product.images[0]}
                           alt={product.name}
                         />
                       </div>
                       <div className="p-4">
-                        <h5 className="text-lg text-gray-900">
+                        <h5 className="text-base sm:text-lg text-gray-900">
                           {product.name}
                         </h5>
-                        <div className="flex items-center justify-between my-5">
+                        <div className="flex items-center justify-between my-2 sm:my-5">
                           <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
                           <p
                             className={`capitalize ${
@@ -272,7 +296,7 @@ export default function Marketplace() {
                           onMouseLeave={() => handleHover(product._id, false)}
                         >
                           <span
-                            className={`capi block transition-transform duration-300 ease-in-out ${
+                            className={`capitalize block transition-transform duration-300 ease-in-out ${
                               hoveredProducts[product._id]
                                 ? "transform translate-y-[-100%]"
                                 : "transform translate-y-0"
@@ -281,7 +305,7 @@ export default function Marketplace() {
                             {product.alamatusaha}
                           </span>
                           <span
-                            className={`capi block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
+                            className={`capitalize block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
                               hoveredProducts[product._id]
                                 ? "transform translate-y-0"
                                 : "transform translate-y-[100%]"
@@ -299,7 +323,7 @@ export default function Marketplace() {
               <h4 className="px-5 text-2xl font-bold">Semua Produk</h4>
               <br />
               <section id="unggulan" className="my-6 px-10">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                   {productList.map((product) => (
                     <Link
                       key={product._id}
@@ -310,16 +334,16 @@ export default function Marketplace() {
                     >
                       <div className="w-full">
                         <img
-                          className="w-full max-h-36 object-cover"
+                          className="w-full max-h-32 sm:max-h-36 object-cover"
                           src={product.images[0]}
                           alt={product.name}
                         />
                       </div>
                       <div className="p-4">
-                        <h5 className="text-lg text-gray-900">
+                        <h5 className="text-base sm:text-lg text-gray-900">
                           {product.name}
                         </h5>
-                        <div className="flex items-center justify-between my-5">
+                        <div className="flex items-center justify-between my-2 sm:my-5">
                           <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
                           <p
                             className={`capitalize ${
@@ -335,7 +359,7 @@ export default function Marketplace() {
                           onMouseLeave={() => handleHover(product._id, false)}
                         >
                           <span
-                            className={`capi block transition-transform duration-300 ease-in-out ${
+                            className={`capitalize block transition-transform duration-300 ease-in-out ${
                               hoveredProducts[product._id]
                                 ? "transform translate-y-[-100%]"
                                 : "transform translate-y-0"
@@ -344,7 +368,7 @@ export default function Marketplace() {
                             {product.alamatusaha}
                           </span>
                           <span
-                            className={`capi block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
+                            className={`capitalize block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
                               hoveredProducts[product._id]
                                 ? "transform translate-y-0"
                                 : "transform translate-y-[100%]"
