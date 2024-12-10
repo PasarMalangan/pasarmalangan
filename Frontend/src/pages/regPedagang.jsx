@@ -143,7 +143,7 @@ export default function RegPedagang() {
     <>
       <NavAuth typeform="DAFTAR" />
       <main className="w-full h-full">
-        <article className="w-full h-full bg-blue-400 md:flex items-center justify-center">
+        <article className="w-full h-full bg-blue-400">
           <section className="md:bg-blue-600 md:max-w-[90vw] mx-auto h-max p-6 sm:p-10 rounded-lg">
             <div className="w-full rounded-xl bg-white px-6 py-5">
               <form

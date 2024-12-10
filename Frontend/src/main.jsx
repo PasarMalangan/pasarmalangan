@@ -28,6 +28,7 @@ import EditProduct from "./pages/pedagang/editProduct.jsx";
 
 import DashboardSuperAdmin from "./pages/dashboardAdmin/dashboard.jsx";
 import Comingsoon from "./pages/comingsoon.jsx";
+import DashboardPedagang from "./pages/pedagang/dashboardpedagang.jsx";
 
 const router = createBrowserRouter([
   {
@@ -100,6 +101,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedDashboardRoute>
         <SettingsPembeli />
+      </ProtectedDashboardRoute>
+    ),
+  },
+  {
+    path: "/dashboard/pedagang",
+    element: (
+      <ProtectedDashboardRoute>
+        <DashboardPedagang />
       </ProtectedDashboardRoute>
     ),
   },

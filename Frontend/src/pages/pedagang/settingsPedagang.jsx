@@ -23,7 +23,19 @@ export default function SettingsPedagang() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
 
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
 
@@ -133,8 +145,8 @@ export default function SettingsPedagang() {
       if (!response.ok) {
         throw new Error(data.message || "Gagal memperbarui data pengguna.");
       }
-      
-      setSuccess(data.message)
+
+      setSuccess(data.message);
       setUserData((prevData) => ({
         ...prevData,
         profilepict: data.user.profilepict, // Perbarui foto profil
@@ -174,10 +186,10 @@ export default function SettingsPedagang() {
 
   return (
     <>
-      <Navbar />
-      <main className="flex h-screen">
+      {!isMobile && <Navbar />}
+      <main className="flex flex-col md:flex-row h-screen">
         <SidebarPedagang />
-        <article className="w-[80%] pt-5 pb-10 border-2 shadow-sm my-5 bg-gradient-to-b from-blue-300 via-blue-100 to-blue-50 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
+        <article className="w-full md:w-[80%] pt-5 pb-10 border-2 shadow-sm my-5 bg-gradient-to-b from-blue-300 via-blue-100 to-blue-50 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
           <div className="w-full border-b-2 border-black px-5">
             <h5 className="font-bold text-2xl">Akun UMKM Anda</h5>
             <h6 className="text-xl py-2">
@@ -186,11 +198,12 @@ export default function SettingsPedagang() {
             </h6>
           </div>
           <form
-            className="grid grid-cols-2"
+            className="grid grid-cols-1 lg:grid-cols-2"
             onSubmit={handleSubmit}
             encType="multipart/form-data"
           >
-            <section className="flex flex-col px-5 my-10 gap-5 border-r-2 border-gray-400">
+            <section className="flex flex-col px-5 my-10 gap-5 border-r-0 lg:border-r-2 border-gray-400">
+              {/* Input fields */}
               <input
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 py-2 px-5"
                 type="text"
@@ -300,7 +313,7 @@ export default function SettingsPedagang() {
                 onChange={handleFileChange}
               />
             </section>
-            <div className="flex gap-10 px-5">
+            <div className="flex flex-wrap gap-10 px-5">
               <button
                 type="submit"
                 disabled={loadingSubmit}
@@ -360,7 +373,9 @@ export default function SettingsPedagang() {
             </div>
           </form>
         </article>
-        {success && <SuccessAlert success={success} func={() => setSuccess(false)} />}
+        {success && (
+          <SuccessAlert success={success} func={() => setSuccess(false)} />
+        )}
         {error && <ErrorAlert error={error} func={() => setError(false)} />}
       </main>
       <Footer />
