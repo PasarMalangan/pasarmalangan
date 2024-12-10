@@ -42,21 +42,86 @@ export default function Navbar() {
       .then((data) => {
         setUserData(data);
       })
-      .catch((error) =>
-        console.error(error)
-      );
+      .catch((error) => console.error(error));
   }, [token]);
 
+  function toggleMenu() {
+    const menu = document.getElementById("mobile-menu");
+    const line1 = document.getElementById("line1");
+    const line2 = document.getElementById("line2");
+    const line3 = document.getElementById("line3");
+
+    if (menu.classList.contains("hidden")) {
+      menu.classList.remove("hidden");
+      line1.classList.add("rotate-45", "translate-y-2.5");
+      line2.classList.add("opacity-0");
+      line3.classList.add("-rotate-45", "-translate-y-2.5");
+    } else {
+      menu.classList.add("hidden");
+      line1.classList.remove("rotate-45", "translate-y-2.5");
+      line2.classList.remove("opacity-0");
+      line3.classList.remove("-rotate-45", "-translate-y-2.5");
+    }
+  }
+
   return (
-    <header className="w-full bg-blue-500 px-10 py-2 sticky top-0 left-0 z-50">
+    <header className="w-full bg-blue-500 px-5 md:px-10 h-full py-5 sticky top-0 left-0 z-50">
       <nav className="flex items-center justify-between">
-        <Link to="/">
-          <img src={image.logo_header} alt="iconhome" />
+        {/* Hamburger Menu for Mobile */}
+        <button
+          id="menu-toggle"
+          className="block md:hidden focus:outline-none"
+          onClick={toggleMenu}
+        >
+          <div className="space-y-2">
+            <span
+              id="line1"
+              className="block h-1 w-8 bg-white transition-transform duration-300"
+            ></span>
+            <span
+              id="line2"
+              className="block h-1 w-8 bg-white transition-opacity duration-300"
+            ></span>
+            <span
+              id="line3"
+              className="block h-1 w-8 bg-white transition-transform duration-300"
+            ></span>
+          </div>
+        </button>
+
+        {/* Logo for Larger Screens */}
+        <Link to="/" className="hidden md:block">
+          <img src={image.logo_header} alt="iconhome" className="h-12" />
         </Link>
-        <ul className="flex gap-10 text-white">
+
+        {/* Login/Logout Button */}
+
+        {isLoggedIn ? (
+          <button
+            onClick={handleLogout}
+            className="text-lg md:text-xl rounded-2xl border-[1.5px] shadow-2xl px-5 md:px-10 py-2 border-black bg-red-500 text-white font-semibold hover:bg-red-700 transition-colors duration-300 ease-out"
+          >
+            LOGOUT
+          </button>
+        ) : (
+          <Link
+            className="text-lg md:text-xl rounded-2xl border-[1.5px] shadow-2xl px-5 md:px-10 py-2 border-black bg-violet-500 text-white font-semibold hover:bg-violet-700 transition-colors duration-300 ease-out"
+            to="/login"
+          >
+            LOGIN
+          </Link>
+        )}
+      </nav>
+
+      {/* Mobile Menu */}
+      <div
+        id="mobile-menu"
+        className="hidden flex-col gap-2 my-2 bg-blue-600 text-white p-5 rounded-lg md:hidden"
+      >
+        <ul className="flex flex-col gap-2">
           <li>
             <Link
-              className="text-xl hover:text-yellow-300 transition-colors duration-300 ease-out"
+              className="text-lg hover:text-yellow-300 transition-colors duration-300 ease-out"
               to="/"
             >
               Beranda
@@ -64,7 +129,7 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              className="text-xl hover:text-yellow-300 transition-colors duration-300 ease-out"
+              className="text-lg hover:text-yellow-300 transition-colors duration-300 ease-out"
               to="/marketplace"
             >
               Marketplace
@@ -72,7 +137,7 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              className="text-xl hover:text-yellow-300 transition-colors duration-300 ease-out"
+              className="text-lg hover:text-yellow-300 transition-colors duration-300 ease-out"
               to="/service"
             >
               Layanan
@@ -80,31 +145,14 @@ export default function Navbar() {
           </li>
           <li>
             <Link
-              className="text-xl hover:text-yellow-300 transition-colors duration-300 ease-out"
+              className="text-lg hover:text-yellow-300 transition-colors duration-300 ease-out"
               to="/aboutus"
             >
               Tentang Kami
             </Link>
           </li>
         </ul>
-
-        {/* Tampilkan tombol Login atau Logout berdasarkan status login */}
-        {isLoggedIn ? (
-          <button
-            onClick={handleLogout}
-            className="text-xl rounded-2xl border-[1.5px] shadow-2xl px-10 py-2 border-black bg-red-500 text-white font-semibold hover:bg-red-700 transition-colors duration-300 ease-out"
-          >
-            LOGOUT
-          </button>
-        ) : (
-          <Link
-            className="text-xl rounded-2xl border-[1.5px] shadow-2xl px-10 py-2 border-black bg-violet-500 text-white font-semibold hover:bg-violet-700 transition-colors duration-300 ease-out"
-            to="/login"
-          >
-            LOGIN
-          </Link>
-        )}
-      </nav>
+      </div>
     </header>
   );
 }

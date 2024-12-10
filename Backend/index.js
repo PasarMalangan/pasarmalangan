@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const products = require("./models/products");
+const categories = require("./models/categories");
 const connectDB = require("./lib/mongodb");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -9,6 +11,7 @@ const port = process.env.PORT;
 const frontend = process.env.FRONTEND_DEST;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const serverless = require("serverless-http");
 
 const cors = require("cors");
 app.use(cors({ origin: frontend })); // Sesuaikan dengan URL frontend
@@ -33,13 +36,12 @@ app.use("/api/products", productRoutes);
 app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message });
 });
-
-app.get("/", (req, res) => {
-  res.send("helloworld");
-});
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
 
 app.listen(port, () =>
   console.log(`Listening on ${port}, udah jalan backendnya bro`)
 );
 
-// test ci/cd
+module.exports.handler = serverless(app);
