@@ -11,6 +11,7 @@ import RegPedagang from "./pages/regPedagang.jsx";
 import ErrorPage from "./pages/404.jsx";
 import AboutUs from "./pages/about.jsx";
 import DetailProduk from "./pages/produk.jsx";
+import DetailToko from "./pages/toko.jsx";
 
 import {
   ProtectedAuthRoute,
@@ -155,6 +156,12 @@ const router = createBrowserRouter([
   {
     path: "/produkdetail/:id",
     element: <DetailProduk />,
+  },
+  {
+    path: "/tokodetail/:owner_id",
+    element: (
+        <DetailToko />
+    ),
   },
 ]);
 
