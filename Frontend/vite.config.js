@@ -10,5 +10,5 @@ export default defineConfig({
     port: 8080,
   },
   // Base name of your app
-  base: "/", // Replace this with the subdirectory path if needed
+  base: "/", // Replace this with the subdirectory path if needed
 });
