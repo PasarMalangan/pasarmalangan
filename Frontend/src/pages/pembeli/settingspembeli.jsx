@@ -4,6 +4,8 @@ import SidebarPembeli from "../../components/containers/sidebar/sidebarPembeli";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import LoaderPage from "../../components/elements/loading";
+import SuccessAlert from "../../components/elements/successalert";
+import ErrorAlert from "../../components/elements/erroralert";
 const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 export default function SettingsPembeli() {
@@ -17,28 +19,55 @@ export default function SettingsPembeli() {
     profilepict: "",
   });
 
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(null);
   const [gender, setGender] = useState();
-  const [loading, setLoading] = useState(true);
+  const [loadingGet, setLoadingGet] = useState(true);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
 
-    if (!token) {
-      setError("Token tidak ditemukan.");
-      setLoading(false);
-      return;
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (userData.jeniskelamin) {
+      setGender(userData.jeniskelamin);
     }
+  }, [userData.jeniskelamin]);
 
-    fetch(`${apiroutes}/user/getuser`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setError("Token tidak ditemukan.");
+        setLoadingGet(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${apiroutes}/user/getuser`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Gagal mengambil data pengguna.");
+        }
+
+        const data = await response.json();
+
         setUserData({
           name: data.name,
           username: data.username,
@@ -48,13 +77,15 @@ export default function SettingsPembeli() {
           tanggallahir: data.tanggallahir,
           profilepict: data.profilepict,
         });
-        setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         setError("Terjadi kesalahan saat mengambil data pengguna.");
         console.error(err);
-        setLoading(false);
-      });
+      } finally {
+        setLoadingGet(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleChange = (e) => {
@@ -85,9 +116,16 @@ export default function SettingsPembeli() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Token tidak ditemukan.");
+      setSuccess(false);
+      setIsLoading(false);
+      return;
+    }
 
     const formData = new FormData();
     formData.append("name", userData.name);
@@ -100,25 +138,35 @@ export default function SettingsPembeli() {
       formData.append("profilepict", userData.profilepict);
     }
 
-    fetch(`${apiroutes}/user/editpembeli`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSuccess(true);
-        setUserData((prevData) => ({
-          ...prevData,
-          profilepict: data.user.profilepict, // Pastikan backend mengembalikan URL gambar baru
-        }));
-      })
-      .catch((err) => {
-        console.error(err);
-        setSuccess(false);
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${apiroutes}/user/editpembeli`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
       });
+
+      if (!response.ok) {
+        throw new Error("Gagal memperbarui data pengguna.");
+      }
+
+      const data = await response.json();
+
+      setSuccess(data.message);
+      setUserData((prevData) => ({
+        ...prevData,
+        profilepict: data.user.profilepict, // Pastikan backend mengembalikan URL gambar baru
+      }));
+    } catch (err) {
+      setError(err.message);
+      console.error(err);
+      setSuccess(false);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -131,12 +179,18 @@ export default function SettingsPembeli() {
     return () => clearTimeout(timer);
   }, [success]);
 
-  if (loading) {
-    return <LoaderPage />;
-  }
+  useEffect(() => {
+    let timer;
+    if (error) {
+      timer = setTimeout(() => {
+        setError(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [error]);
 
-  if (error) {
-    return <div>{error}</div>;
+  if (loadingGet) {
+    return <LoaderPage />;
   }
 
   const inputField = (label, id, type, value) => (
@@ -165,7 +219,7 @@ export default function SettingsPembeli() {
         name="jeniskelamin"
         id={id}
         checked={checked}
-        onChange={onChange}
+        onChange={() => onChange(id)}
       />
       <label className="text-xl" htmlFor={id}>
         {label}
@@ -173,26 +227,30 @@ export default function SettingsPembeli() {
     </div>
   );
 
+  const handleGenderChange = (value) => {
+    setGender(value);
+    setUserData((prevData) => ({
+      ...prevData,
+      jeniskelamin: value,
+    }));
+  };
+
   return (
     <>
-      <Navbar />
-      <main className="relative flex h-screen">
+      {!isMobile && <Navbar />}
+      <main className="relative flex flex-col md:flex-row h-screen">
         <SidebarPembeli />
-        <article className="w-[80%] pt-5 pb-10 border-2 shadow-sm my-5 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
+        <article className="w-full md:w-[80%] pt-5 pb-10 border-2 shadow-sm my-5 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
           <div className="w-full border-b-2 border-black px-5">
             <h5 className="font-bold text-2xl">Pengaturan Akun Saya</h5>
-            <h6 className="text-xl py-2">
+            <h6 className="text-lg md:text-xl py-2">
               Kelola informasi profil Anda untuk mengontrol, melindungi dan
               mengamankan akun
             </h6>
           </div>
           <section className="flex flex-col px-5 my-10 gap-5">
-            <form
-              className=""
-              onSubmit={handleSubmit}
-              encType="multipart/form-data"
-            >
-              <section className="grid grid-cols-2">
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+              <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div className="flex flex-col gap-5">
                   {inputField("Nama", "name", "text", userData.name)}
                   {inputField(
@@ -209,20 +267,20 @@ export default function SettingsPembeli() {
                     userData.notelepon
                   )}
 
-                  <div className="flex items-center">
-                    <h6 className="w-1/4 text-xl mr-5">Jenis Kelamin</h6>
-                    <div className="flex items-center gap-3 mr-10">
+                  <div className="flex flex-col md:flex-row items-start md:items-center">
+                    <h6 className="text-lg md:text-xl mr-5">Jenis Kelamin</h6>
+                    <div className="flex items-center gap-3 mt-2 md:mt-0">
                       {radioButton(
                         "laki-laki",
                         "Laki-laki",
                         gender === "laki-laki",
-                        (e) => setGender(e.target.value)
+                        handleGenderChange
                       )}
                       {radioButton(
                         "perempuan",
                         "Perempuan",
                         gender === "perempuan",
-                        (e) => setGender(e.target.value)
+                        handleGenderChange
                       )}
                     </div>
                   </div>
@@ -241,7 +299,7 @@ export default function SettingsPembeli() {
 
                 <div className="flex flex-col items-center gap-5 self-center">
                   <img
-                    className="rounded-full w-60 h-60"
+                    className="rounded-full w-40 h-40 sm:w-60 sm:h-60"
                     src={preview || userData.profilepict}
                     alt="imgprofile"
                   />
@@ -262,14 +320,47 @@ export default function SettingsPembeli() {
                 </div>
               </section>
 
-              <div className="flex gap-10">
+              <div className="flex md:flex-col flex-row gap-5 sm:gap-10 mt-5">
                 <button
                   type="submit"
-                  className="rounded-md mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out"
+                  disabled={isLoading}
+                  className={`rounded-md w-full text-center md:text-lg bg-violet-500 text-white font-semibold py-2 px-2 md:px-5 
+            ${
+              isLoading
+                ? "opacity-70 cursor-not-allowed"
+                : "hover:bg-violet-700"
+            } transition-colors duration-300 ease-out`}
                 >
-                  Simpan Perubahan
+                  {isLoading ? (
+                    <div className="flex justify-center items-center">
+                      <svg
+                        className="animate-spin h-5 w-5 mr-2 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8v8H4z"
+                        ></path>
+                      </svg>
+                      Loading...
+                    </div>
+                  ) : (
+                    "Simpan Perubahan"
+                  )}
                 </button>
-                <Link className="rounded-md mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
+
+                <Link className="rounded-md w-full sm:w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-2 md:px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
                   Ubah Password
                 </Link>
               </div>
@@ -277,47 +368,17 @@ export default function SettingsPembeli() {
             <h5 className="text-red-500 font-bold text-lg mt-5">
               Minta Penghapusan Akun
             </h5>
-            <button className="rounded-md mt-5 w-1/4 text-center text-lg bg-red-500 text-white font-semibold py-2 px-5 hover:bg-red-700 transition-colors duration-300 ease-out">
+            <button className="rounded-md w-full sm:w-1/4 text-center text-lg bg-red-500 text-white font-semibold py-2 px-5 hover:bg-red-700 transition-colors duration-300 ease-out">
               Menghapus Akun
             </button>
           </section>
         </article>
-        {success && (
-          <div className="absolute bottom-10 right-10 flex w-96 shadow-lg rounded-lg">
-            <div className="bg-green-600 py-4 px-6 rounded-l-lg flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="text-white fill-current"
-                viewBox="0 0 16 16"
-                width="20"
-                height="20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"
-                ></path>
-              </svg>
-            </div>
-            <div className="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
-              <div>Berhasil mengubah profil</div>
-              <button onClick={() => setSuccess(false)}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="fill-current text-gray-700"
-                  viewBox="0 0 16 16"
-                  width="20"
-                  height="20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"
-                  ></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-        )}
       </main>
+
+      {success && (
+        <SuccessAlert success={success} func={() => setSuccess(false)} />
+      )}
+      {error && <ErrorAlert error={error} func={() => setError(false)} />}
       <Footer />
     </>
   );

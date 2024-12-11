@@ -146,7 +146,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/tokodetail/:id",
+    path: "/tokodetail/:owner_id",
     element: (
         <DetailToko />
     ),

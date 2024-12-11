@@ -7,8 +7,8 @@ export default defineConfig({
   server: {
     // Specify the development server port
     host: '0.0.0.0',
-    port: 3000,
+    port: 8080,
   },
   // Base name of your app
-  base: "/", // Replace this with the subdirectory path if needed
+  base: "/", // Replace this with the subdirectory path if needed
 });

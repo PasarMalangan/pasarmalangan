@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 // Komponen untuk menampilkan produk hasil pencarian
 const SearchResults = ({ searchQuery, products }) => {
@@ -83,8 +84,8 @@ const SearchResults = ({ searchQuery, products }) => {
           <p className="text-center col-span-4">Produk tidak ditemukan.</p>
         ) : (
           filteredProducts.map((product) => (
-            <a
-              href={product.link}
+            <Link
+              to={"/produkdetail/" + product.id}
               target="_blank"
               rel="noopener noreferrer"
               key={product.id}
@@ -93,7 +94,7 @@ const SearchResults = ({ searchQuery, products }) => {
               <div className="w-full aspect-w-4 aspect-h-3">
                 <img
                   className="w-full h-full object-cover"
-                  src={product.image}
+                  src={product.images[0]}
                   alt={product.name}
                 />
               </div>
@@ -101,7 +102,7 @@ const SearchResults = ({ searchQuery, products }) => {
                 <h5 className="text-lg font-bold text-gray-900">{product.name}</h5>
                 <p className="mt-2 text-gray-700 text-sm">{product.price}</p>
               </div>
-            </a>
+            </Link>
           ))
         )}
       </div>
