@@ -1,10 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 
-// Komponen untuk menampilkan produk hasil pencarian
 const SearchResults = ({ searchQuery, products }) => {
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [selectedLocations, setSelectedLocations] = useState({
     klojen: false,
     blimbing: false,
@@ -13,26 +10,29 @@ const SearchResults = ({ searchQuery, products }) => {
     sukun: false,
   });
 
-  useEffect(() => {
-    // Menampilkan animasi loading saat proses pencarian
-    setLoading(true);
+  const [hoveredProducts, setHoveredProducts] = useState({});
 
-    // Proses filter produk berdasarkan query dan lokasi
-    const timer = setTimeout(() => {
-      const filtered = products.filter((product) => {
-        const query = searchQuery.toLowerCase();
-        const locationMatches = selectedLocations[product.location.toLowerCase()] || Object.values(selectedLocations).every(loc => !loc);
+  const categoryStyles = {
+    kuliner: "bg-red-500 text-white font-medium px-2 py-[2px] rounded-lg",
+    fashion: "bg-blue-700 text-white font-medium px-2 py-[2px] rounded-lg",
+    pertanian: "bg-green-500 text-white font-medium px-2 py-[2px] rounded-lg",
+    kerajinan: "bg-yellow-500 text-white font-medium px-2 py-[2px] rounded-lg",
+    digital: "bg-cyan-500 text-white font-medium px-2 py-[2px] rounded-lg",
+  };
 
-        return (
-          (product.name.toLowerCase().includes(query) ||
-            product.category.toLowerCase().includes(query)) && locationMatches
-        );
-      });
-      setFilteredProducts(filtered);
-      setLoading(false); // Menghentikan animasi loading setelah selesai
-    }, 500); // Menunggu 500ms agar animasi loading terlihat
+  const filteredProducts = useMemo(() => {
+    const query = searchQuery.toLowerCase();
+    return products.filter((product) => {
+      const locationMatches =
+        selectedLocations[product.alamatusaha.toLowerCase()] ||
+        Object.values(selectedLocations).every((loc) => !loc);
 
-    return () => clearTimeout(timer); // Bersihkan timeout jika searchQuery atau selectedLocations berubah
+      return (
+        (product.name.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query)) &&
+        locationMatches
+      );
+    });
   }, [searchQuery, products, selectedLocations]);
 
   const handleLocationChange = (event) => {
@@ -43,70 +43,100 @@ const SearchResults = ({ searchQuery, products }) => {
     }));
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-48">
-        <div
-          className="spinner-border animate-spin inline-block w-12 h-12 border-4 rounded-full border-t-blue-500 border-solid"
-          role="status"
-        >
-          <span className="sr-only">Loading...</span>
-        </div>
-      </div>
-    );
-  }
+  const handleHover = (id, isHovered) => {
+    setHoveredProducts((prev) => ({ ...prev, [id]: isHovered }));
+  };
 
   return (
-    <div className="flex">
-      {/* Filter lokasi */}
-      <div className="w-64 p-4 bg-white border border-gray-200 rounded-lg shadow-md mr-6">
-        <h5 className="text-lg font-bold text-gray-900 mb-4">Filter Lokasi</h5>
-        {["klojen", "blimbing", "lowokwaru", "kedungkandang", "sukun"].map((location) => (
-          <div key={location} className="flex items-center mb-2">
-            <input
-              type="checkbox"
-              name={location}
-              checked={selectedLocations[location]}
-              onChange={handleLocationChange}
-              id={location}
-              className="mr-2"
-            />
-            <label htmlFor={location} className="text-sm text-gray-700 capitalize">
-              {location}
-            </label>
-          </div>
-        ))}
-      </div>
-
-      {/* Hasil pencarian */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 flex-1">
-        {filteredProducts.length === 0 ? (
-          <p className="text-center col-span-4">Produk tidak ditemukan.</p>
-        ) : (
-          filteredProducts.map((product) => (
-            <Link
-              to={"/produkdetail/" + product.id}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={product.id}
-              className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-100 transform hover:scale-105"
-            >
-              <div className="w-full aspect-w-4 aspect-h-3">
-                <img
-                  className="w-full h-full object-cover"
-                  src={product.images[0]}
-                  alt={product.name}
-                />
-              </div>
-              <div className="p-4">
-                <h5 className="text-lg font-bold text-gray-900">{product.name}</h5>
-                <p className="mt-2 text-gray-700 text-sm">{product.price}</p>
-              </div>
-            </Link>
-          ))
-        )}
-      </div>
+    <div className="flex flex-col lg:flex-row">
+    {/* Filter lokasi */}
+    <div className="w-full lg:w-64 p-4 bg-white border border-gray-200 rounded-lg shadow-md mb-6 lg:mb-0 lg:mr-6">
+      <h5 className="text-lg font-bold text-gray-900 mb-4">Filter Lokasi</h5>
+      {Object.keys(selectedLocations).map((location) => (
+        <div key={location} className="flex items-center mb-2">
+          <input
+            type="checkbox"
+            name={location}
+            checked={selectedLocations[location]}
+            onChange={handleLocationChange}
+            id={location}
+            className="mr-2"
+          />
+          <label
+            htmlFor={location}
+            className="text-sm text-gray-700 capitalize"
+          >
+            {location}
+          </label>
+        </div>
+      ))}
     </div>
+  
+    {/* Hasil pencarian */}
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+      {filteredProducts.length === 0 ? (
+        <p className="text-center col-span-full">Produk tidak ditemukan.</p>
+      ) : (
+        filteredProducts.map((product) => (
+          <Link
+                      key={product._id}
+                      to={product.linkecommerences}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
+                    >
+                      <div className="w-full">
+                        <img
+                          className="w-full max-h-32 sm:max-h-36 object-cover"
+                          src={product.images[0]}
+                          alt={product.name}
+                        />
+                      </div>
+                      <div className="p-4">
+                        <h5 className="text-base sm:text-lg text-gray-900">
+                          {product.name}
+                        </h5>
+                        <div className="flex items-center justify-between my-2 sm:my-5">
+                          <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
+                          <p
+                            className={`capitalize ${
+                              categoryStyles[product.category]
+                            } `}
+                          >
+                            {product.category}
+                          </p>
+                        </div>
+                        <h6
+                          className="text-gray-700 text-sm overflow-hidden relative"
+                          onMouseEnter={() => handleHover(product._id, true)}
+                          onMouseLeave={() => handleHover(product._id, false)}
+                        >
+                          <span
+                            className={`capi block transition-transform duration-300 ease-in-out ${
+                              hoveredProducts[product._id]
+                                ? "transform translate-y-[-100%]"
+                                : "transform translate-y-0"
+                            }`}
+                          >
+                            {product.alamatusaha}
+                          </span>
+                          <span
+                            className={`capitalize block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
+                              hoveredProducts[product._id]
+                                ? "transform translate-y-0"
+                                : "transform translate-y-[100%]"
+                            }`}
+                          >
+                            {product.namausaha}
+                          </span>
+                        </h6>
+                      </div>
+                    </Link>
+        ))
+      )}
+    </div>
+  </div>
+  
   );
 };
 

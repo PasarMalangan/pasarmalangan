@@ -3,7 +3,8 @@ const router = express.Router();
 const { authenticateToken } = require("../middlewares/auth");
 const {
   getAllProducts,
-  getProductbyId,
+  getProductbyUserId,
+  getProductById,
   createProduct,
   deleteProduct,
   editProduct,
@@ -18,9 +19,9 @@ router.post(
   authenticateToken,
   createProduct
 );
-router.get("/getproducts", authenticateToken, getProductbyId);
+router.get("/getproducts", authenticateToken, getProductbyUserId);
 router.get("/getallproducts", getAllProducts);
-router.get("/:id", authenticateToken, getProductbyId);
+router.get("/:id", authenticateToken, getProductById);
 router.put("/:id", authenticateToken, upload.array("images"), editProduct);
 router.delete("/:id", deleteProduct);
 

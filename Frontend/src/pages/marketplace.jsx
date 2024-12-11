@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import image from "../image";
 import Navbar from "../components/containers/navbar/navbar";
@@ -75,6 +74,7 @@ export default function Marketplace() {
         setIsSearching(false);
       }, 500);
     }
+
   };
 
   const categoryStyles = {
@@ -265,7 +265,9 @@ export default function Marketplace() {
                   {productList.map((product) => (
                     <Link
                       key={product._id}
+
                       to={`/detailproduk/${product._id}`}
+
                       target="_blank"
                       rel="noopener noreferrer"
                       className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
@@ -327,8 +329,7 @@ export default function Marketplace() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                   {productList.map((product) => (
                     <Link
-                      key={product._id}
-                      to={`/detailproduk/${product._id}`}
+                      key={product._id} to={`/detailproduk/${product._id}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"

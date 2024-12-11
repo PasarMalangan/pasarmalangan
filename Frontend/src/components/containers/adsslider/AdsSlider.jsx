@@ -43,4 +43,5 @@ const AdsSlider = () => {
   );
 };
 
+
 export default AdsSlider;

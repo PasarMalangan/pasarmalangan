@@ -44,7 +44,6 @@ const DashboardSuperAdmin = () => {
       .then((response) => response.json())
       .then((data) => {
         setUserData(data);
-        console.log(data);
       })
       .catch((error) => console.error(error));
   }, [token]);

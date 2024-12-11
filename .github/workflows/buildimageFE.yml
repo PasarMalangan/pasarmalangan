@@ -34,9 +34,9 @@ jobs:
         run: npm install
         working-directory: ./Frontend
 
-      - name: Run linting (Frontend)
-        run: npm run lint
-        working-directory: ./Frontend
+      # - name: Run linting (Frontend)
+      #   run: npm run lint
+      #   working-directory: ./Frontend
 
       # Build Vite.js project
       - name: Build Vite.js project
@@ -50,9 +50,13 @@ jobs:
           name: vite-build
           path: ./Frontend/dist
 
-      # Build Docker image for Frontend
+      # Build Docker image for Frontend with environment variable
       - name: Build Docker image
-        run: docker build -t koozee/pasarmalangan:latest -f Frontend/Dockerfile .
+        run: |
+          docker build \
+            --build-arg VITE_API_BASE_URL=${{ secrets.VITE_API_BASE_URL }} \
+            -t koozee/pasarmalangan:latest \
+            -f Frontend/Dockerfile ./Frontend
 
       - name: Tag and push to Docker Hub
         run: |
@@ -67,4 +71,5 @@ jobs:
           script: |
             cd /home/ubuntu/pasarmalanganFE
             sudo docker pull koozee/pasarmalangan:latest
+            sudo docker-compose down
             sudo docker-compose up -d

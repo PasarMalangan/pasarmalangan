@@ -1,6 +1,6 @@
 export default function LoaderPage() {
   return (
-    <div className="grid gap-3">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
       <div className="flex items-center justify-center">
         <svg
           className="animate-spin border-indigo-600"
@@ -42,7 +42,7 @@ export default function LoaderPage() {
           </defs>
         </svg>
       </div>
-      <span className="text-black text-sm font-normal leading-snug">
+      <span className="text-black text-sm font-normal leading-snug mt-3">
         Loading...
       </span>
     </div>

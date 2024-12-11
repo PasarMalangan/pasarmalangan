@@ -11,6 +11,7 @@ const port = process.env.PORT;
 const frontend = process.env.FRONTEND_DEST;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const serverless = require("serverless-http");
 
 const cors = require("cors");
 app.use(cors({ origin: frontend })); // Sesuaikan dengan URL frontend
@@ -43,3 +44,4 @@ app.listen(port, () =>
   console.log(`Listening on ${port}, udah jalan backendnya bro`)
 );
 
+module.exports.handler = serverless(app);

@@ -4,6 +4,7 @@
   "description": "",
   "index": "index.js",
   "scripts": {
+    "start": "node index.js",
     "dev": "nodemon index.js"
   },
   "keywords": [],
@@ -11,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.701.0",
+    "@aws-sdk/client-textract": "^3.699.0",
     "aws-sdk": "^2.1692.0",
     "aws-serverless-express": "^3.4.0",
     "bcrypt": "^5.1.1",
