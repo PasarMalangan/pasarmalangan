@@ -29,6 +29,7 @@ import EditProduct from "./pages/pedagang/editProduct.jsx";
 import DashboardSuperAdmin from "./pages/dashboardAdmin/dashboard.jsx";
 import Comingsoon from "./pages/comingsoon.jsx";
 import DashboardPedagang from "./pages/pedagang/dashboardpedagang.jsx";
+import HelpAndSupport from "./pages/helpsupport.jsx";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
   {
     path: "/service",
     element: <Comingsoon />,
+  },
+  {
+    path: "/helpsupport",
+    element: <HelpAndSupport/>,
   },
   {
     path: "/login",
