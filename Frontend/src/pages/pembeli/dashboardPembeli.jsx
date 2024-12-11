@@ -9,7 +9,19 @@ export default function DashboardPembeli() {
   const [userData, setUserData] = useState(null);
   const [gender, setGender] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   // Ambil token dari localStorage
   const token = localStorage.getItem("token");
 
@@ -48,16 +60,13 @@ export default function DashboardPembeli() {
   if (!userData) {
     return <div>Data pengguna tidak ditemukan.</div>;
   }
-  const formattedDate = new Date(userData.tanggallahir)
-    .toISOString()
-    .split("T")[0];
 
   return (
     <>
-      <Navbar />
-      <main className="flex h-screen">
+      {!isMobile && <Navbar />}
+      <main className="flex flex-col lg:flex-row h-screen">
         <SidebarPembeli />
-        <article className="w-[80%] pt-5 pb-10 border-2 shadow-sm my-5">
+        <article className="w-full md:w-[80%] pt-5 pb-10 border-2 shadow-sm my-5 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
           <div className="w-full border-b-2 border-black px-5">
             <h5 className="font-bold text-2xl">Profil Saya</h5>
             <h6 className="text-xl py-2">
@@ -66,12 +75,15 @@ export default function DashboardPembeli() {
             </h6>
           </div>
           <section className="flex flex-col px-5 my-10 gap-5">
-            <div className="flex items-center">
-              <label className="w-1/4 text-xl" htmlFor="name">
+            <div className="flex flex-col lg:flex-row items-center">
+              <label
+                className="w-full lg:w-1/4 text-xl mb-2 lg:mb-0"
+                htmlFor="name"
+              >
                 Nama
               </label>
               <input
-                className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
+                className="w-full lg:w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 type="text"
                 value={userData.name || ""}
                 name="name"
@@ -79,12 +91,15 @@ export default function DashboardPembeli() {
                 readOnly
               />
             </div>
-            <div className="flex items-center">
-              <label className="w-1/4 text-xl" htmlFor="username">
+            <div className="flex flex-col lg:flex-row items-center">
+              <label
+                className="w-full lg:w-1/4 text-xl mb-2 lg:mb-0"
+                htmlFor="username"
+              >
                 Username
               </label>
               <input
-                className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
+                className="w-full lg:w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 type="text"
                 value={userData.username || ""}
                 name="username"
@@ -92,12 +107,15 @@ export default function DashboardPembeli() {
                 readOnly
               />
             </div>
-            <div className="flex items-center">
-              <label className="w-1/4 text-xl" htmlFor="email">
+            <div className="flex flex-col lg:flex-row items-center">
+              <label
+                className="w-full lg:w-1/4 text-xl mb-2 lg:mb-0"
+                htmlFor="email"
+              >
                 Email
               </label>
               <input
-                className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
+                className="w-full lg:w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 type="email"
                 value={userData.email || ""}
                 name="email"
@@ -105,12 +123,15 @@ export default function DashboardPembeli() {
                 readOnly
               />
             </div>
-            <div className="flex items-center">
-              <label className="w-1/4 text-xl" htmlFor="notelepon">
+            <div className="flex flex-col lg:flex-row items-center">
+              <label
+                className="w-full lg:w-1/4 text-xl mb-2 lg:mb-0"
+                htmlFor="notelepon"
+              >
                 No Telepon
               </label>
               <input
-                className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
+                className="w-full lg:w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 type="tel"
                 value={userData.notelepon || ""}
                 name="notelepon"
@@ -118,39 +139,46 @@ export default function DashboardPembeli() {
                 readOnly
               />
             </div>
-            <div className="flex items-center">
-              <h6 className="w-1/4 text-xl">Jenis Kelamin</h6>
-              <div className="flex items-center gap-3 mr-10">
-                <input
-                  type="radio"
-                  value="laki-laki"
-                  name="jeniskelamin"
-                  checked={gender === "laki-laki"}
-                  readOnly
-                />
-                <label className="text-xl" htmlFor="laki-laki">
-                  Laki-laki
-                </label>
-              </div>
-              <div className="flex items-center gap-3">
-                <input
-                  type="radio"
-                  value="perempuan"
-                  name="jeniskelamin"
-                  checked={gender === "perempuan"}
-                  readOnly
-                />
-                <label className="text-xl" htmlFor="perempuan">
-                  Perempuan
-                </label>
+            <div className="flex flex-col lg:flex-row items-center">
+              <h6 className="w-full lg:w-1/4 text-xl mb-2 lg:mb-0">
+                Jenis Kelamin
+              </h6>
+              <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3">
+                <div className="flex items-center gap-3">
+                  <input
+                    type="radio"
+                    value="laki-laki"
+                    name="jeniskelamin"
+                    checked={gender === "laki-laki"}
+                    readOnly
+                  />
+                  <label className="text-xl" htmlFor="laki-laki">
+                    Laki-laki
+                  </label>
+                </div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="radio"
+                    value="perempuan"
+                    name="jeniskelamin"
+                    checked={gender === "perempuan"}
+                    readOnly
+                  />
+                  <label className="text-xl" htmlFor="perempuan">
+                    Perempuan
+                  </label>
+                </div>
               </div>
             </div>
-            <div className="flex items-center">
-              <label className="w-1/4 text-xl" htmlFor="tanggallahir">
+            <div className="flex flex-col lg:flex-row items-center">
+              <label
+                className="w-full lg:w-1/4 text-xl mb-2 lg:mb-0"
+                htmlFor="tanggallahir"
+              >
                 Tanggal Lahir
               </label>
               <input
-                className="w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
+                className="w-full lg:w-[60%] bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                 type="date"
                 value={
                   userData.tanggallahir
@@ -167,13 +195,14 @@ export default function DashboardPembeli() {
             </div>
             <Link
               to="/pengaturan/pembeli"
-              className="rounded-md mt-5 w-1/3 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out"
+              className="rounded-md mt-5 w-full lg:w-1/3 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out"
             >
               Ubah Pengaturan Akun
             </Link>
           </section>
         </article>
       </main>
+
       <Footer />
     </>
   );

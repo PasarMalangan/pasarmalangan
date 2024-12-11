@@ -24,6 +24,19 @@ export default function SettingsPembeli() {
   const [loadingGet, setLoadingGet] = useState(true);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (userData.jeniskelamin) {
@@ -141,7 +154,6 @@ export default function SettingsPembeli() {
       }
 
       const data = await response.json();
-      console.log(data);
 
       setSuccess(data.message);
       setUserData((prevData) => ({
@@ -225,24 +237,20 @@ export default function SettingsPembeli() {
 
   return (
     <>
-      <Navbar />
-      <main className="relative flex h-screen">
+      {!isMobile && <Navbar />}
+      <main className="relative flex flex-col md:flex-row h-screen">
         <SidebarPembeli />
-        <article className="w-[80%] pt-5 pb-10 border-2 shadow-sm my-5 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
+        <article className="w-full md:w-[80%] pt-5 pb-10 border-2 shadow-sm my-5 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
           <div className="w-full border-b-2 border-black px-5">
             <h5 className="font-bold text-2xl">Pengaturan Akun Saya</h5>
-            <h6 className="text-xl py-2">
+            <h6 className="text-lg md:text-xl py-2">
               Kelola informasi profil Anda untuk mengontrol, melindungi dan
               mengamankan akun
             </h6>
           </div>
           <section className="flex flex-col px-5 my-10 gap-5">
-            <form
-              className=""
-              onSubmit={handleSubmit}
-              encType="multipart/form-data"
-            >
-              <section className="grid grid-cols-2">
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+              <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
                 <div className="flex flex-col gap-5">
                   {inputField("Nama", "name", "text", userData.name)}
                   {inputField(
@@ -259,9 +267,9 @@ export default function SettingsPembeli() {
                     userData.notelepon
                   )}
 
-                  <div className="flex items-center">
-                    <h6 className="w-1/4 text-xl mr-5">Jenis Kelamin</h6>
-                    <div className="flex items-center gap-3 mr-10">
+                  <div className="flex flex-col md:flex-row items-start md:items-center">
+                    <h6 className="text-lg md:text-xl mr-5">Jenis Kelamin</h6>
+                    <div className="flex items-center gap-3 mt-2 md:mt-0">
                       {radioButton(
                         "laki-laki",
                         "Laki-laki",
@@ -291,7 +299,7 @@ export default function SettingsPembeli() {
 
                 <div className="flex flex-col items-center gap-5 self-center">
                   <img
-                    className="rounded-full w-60 h-60"
+                    className="rounded-full w-40 h-40 sm:w-60 sm:h-60"
                     src={preview || userData.profilepict}
                     alt="imgprofile"
                   />
@@ -312,14 +320,16 @@ export default function SettingsPembeli() {
                 </div>
               </section>
 
-              <div className="flex gap-10">
+              <div className="flex md:flex-col flex-row gap-5 sm:gap-10 mt-5">
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`rounded-md mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 
-    ${
-      isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-violet-700"
-    } transition-colors duration-300 ease-out`}
+                  className={`rounded-md w-full text-center md:text-lg bg-violet-500 text-white font-semibold py-2 px-2 md:px-5 
+            ${
+              isLoading
+                ? "opacity-70 cursor-not-allowed"
+                : "hover:bg-violet-700"
+            } transition-colors duration-300 ease-out`}
                 >
                   {isLoading ? (
                     <div className="flex justify-center items-center">
@@ -350,7 +360,7 @@ export default function SettingsPembeli() {
                   )}
                 </button>
 
-                <Link className="rounded-md mt-5 w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
+                <Link className="rounded-md w-full sm:w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-2 md:px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
                   Ubah Password
                 </Link>
               </div>
@@ -358,12 +368,13 @@ export default function SettingsPembeli() {
             <h5 className="text-red-500 font-bold text-lg mt-5">
               Minta Penghapusan Akun
             </h5>
-            <button className="rounded-md mt-5 w-1/4 text-center text-lg bg-red-500 text-white font-semibold py-2 px-5 hover:bg-red-700 transition-colors duration-300 ease-out">
+            <button className="rounded-md w-full sm:w-1/4 text-center text-lg bg-red-500 text-white font-semibold py-2 px-5 hover:bg-red-700 transition-colors duration-300 ease-out">
               Menghapus Akun
             </button>
           </section>
         </article>
       </main>
+
       {success && (
         <SuccessAlert success={success} func={() => setSuccess(false)} />
       )}
