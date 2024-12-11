@@ -313,11 +313,11 @@ export default function SettingsPedagang() {
                 onChange={handleFileChange}
               />
             </section>
-            <div className="flex flex-wrap gap-10 px-5">
+            <div className="flex flex-wrap gap-5 md:gap-10 px-5">
               <button
                 type="submit"
                 disabled={loadingSubmit}
-                className={`rounded-lg mt-5 text-center text-lg py-2 px-5 font-semibold transition-colors duration-300 ease-out ${
+                className={`rounded-lg mt-5 text-center md:text-lg py-2 px-5 font-semibold transition-colors duration-300 ease-out ${
                   loadingSubmit
                     ? "bg-gray-400 text-gray-200 cursor-not-allowed"
                     : "bg-violet-500 text-white hover:bg-violet-700"
@@ -367,7 +367,7 @@ export default function SettingsPedagang() {
                 )}
               </button>
 
-              <Link className="rounded-lg mt-5 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
+              <Link className="rounded-lg mt-5 text-center md:text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
                 Ubah Password
               </Link>
             </div>

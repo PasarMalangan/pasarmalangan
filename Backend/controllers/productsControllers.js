@@ -2,7 +2,7 @@ const Product = require("../models/products");
 const Pedagang = require("../models/pedagang");
 const { uploadFileToS3, deleteFileFromS3 } = require("../lib/S3client");
 require("dotenv").config();
-exports.getProductbyId = async (req, res) => {
+exports.getProductbyUserId = async (req, res) => {
   const { userId } = req.user; // Ambil data user yang sudah diset di middleware
 
   try {
@@ -56,6 +56,29 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+exports.getProductById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Cari produk berdasarkan ID
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Produk tidak ditemukan",
+      });
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat mengambil data produk",
+      error: error.message,
+    });
+  }
+};
+
 exports.createProduct = async (req, res) => {
   const { name, description, harga, category, linkecommerences, isApproved } =
     req.body;
@@ -98,7 +121,7 @@ exports.createProduct = async (req, res) => {
       isApproved,
       owner_id: userId,
       namausaha,
-      alamatusaha
+      alamatusaha,
     });
 
     await newProduct.save();
@@ -148,6 +171,7 @@ exports.editProduct = async (req, res) => {
   const files = req.files;
   try {
     const product = await Product.findById(id);
+    console.log(product);
 
     if (!product) {
       return res.status(404).json({ message: "Produk tidak ditemukan" });
@@ -218,12 +242,10 @@ exports.approveProduct = async (req, res) => {
       data: product,
     });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Gagal memperbarui status produk",
-        error: err.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Gagal memperbarui status produk",
+      error: err.message,
+    });
   }
 };
