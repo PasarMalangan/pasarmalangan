@@ -20,7 +20,7 @@ const pembeliSchema = new mongoose.Schema(
       default:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOG6E-AnifHE0PvMzIpCiDOZy1nWhJXXMZPg&s",
     },
-    wishlist: { type: [String], default: null },
+    wishlist: { type: [String], default: [] },
   },
   { timestamps: true }
 );

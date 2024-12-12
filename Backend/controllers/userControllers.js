@@ -1,6 +1,7 @@
 const Pembeli = require("../models/pembeli");
 const Pedagang = require("../models/pedagang");
 const Superadmin = require("../models/superadmin");
+const Product = require("../models/products");
 const { uploadFileToS3, deleteFileFromS3 } = require("../lib/S3client");
 require("dotenv").config();
 exports.getuser = async (req, res) => {
@@ -49,7 +50,7 @@ exports.editpembeli = async (req, res) => {
     Object.keys(updates).forEach((key) => {
       user[key] = updates[key];
     });
-    
+
     const bucketName = process.env.BUCKET_ASBY;
 
     // Jika ada file baru (foto profil baru), hapus foto lama dari S3
@@ -126,7 +127,7 @@ exports.getUsers = async (req, res) => {
     let filter = {};
 
     // Filter berdasarkan nama jika ada (case-insensitive)
-    if (name) filter.name = { $regex: name, $options: 'i' };
+    if (name) filter.name = { $regex: name, $options: "i" };
 
     let users = [];
 
@@ -157,5 +158,109 @@ exports.getUsers = async (req, res) => {
       message: "Terjadi kesalahan saat mengfilter data pengguna",
       error,
     });
+  }
+};
+
+exports.getTokobyId = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const store = await Pedagang.findById(id);
+    if (!store) {
+      return res.status(404).json({ message: "Toko tidak ditemukan" });
+    }
+    res.json(store);
+  } catch (error) {
+    console.error("Error fetching store:", error);
+    res.status(500).json({ message: "Gagal memuat data toko" });
+  }
+};
+
+exports.addToWishlist = async (req, res) => {
+  try {
+    const { productId } = req.body;
+    const pembeliId = req.user.userId;
+    console.log(productId);
+    console.log(pembeliId);
+
+    // Validasi keberadaan produk dengan status disetujui
+    const productExists = await Product.findOne({
+      _id: productId,
+      isApproved: "disetujui",
+    });
+
+    if (!productExists) {
+      return res
+        .status(404)
+        .json({ message: "Produk tidak ditemukan atau belum disetujui" });
+    }
+
+    const pembeli = await Pembeli.findById(pembeliId);
+    if (!pembeli) {
+      return res.status(404).json({ message: "Pembeli tidak ditemukan" });
+    }
+
+    if (!pembeli.wishlist.includes(productId)) {
+      pembeli.wishlist.push(productId);
+      await pembeli.save();
+      return res
+        .status(200)
+        .json({ message: "Produk berhasil ditambahkan ke wishlist" });
+    } else {
+      return res.status(400).json({ message: "Produk sudah ada di wishlist" });
+    }
+  } catch (error) {
+    console.error("Error adding to wishlist:", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
+
+exports.removeFromWishlist = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const pembeliId = req.user.userId;
+
+    const pembeli = await Pembeli.findById(pembeliId);
+    if (!pembeli) {
+      return res.status(404).json({ message: "Pembeli tidak ditemukan" });
+    }
+
+    const initialLength = pembeli.wishlist.length;
+    pembeli.wishlist = pembeli.wishlist.filter(
+      (id) => id.toString() !== productId
+    );
+
+    if (pembeli.wishlist.length === initialLength) {
+      return res.status(404).json({ message: "Produk tidak ditemukan di wishlist" });
+    }
+
+    // Simpan perubahan
+    await pembeli.save();
+
+    res.status(200).json({ message: "Produk berhasil dihapus dari wishlist" });
+  } catch (error) {
+    console.error("Error removing product from wishlist:", error);
+    res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
+
+
+exports.getWishlist = async (req, res) => {
+  try {
+    const pembeliId = req.user.userId;
+
+    const pembeli = await Pembeli.findById(pembeliId).populate('wishlist');
+    
+    if (!pembeli) {
+      return res.status(404).json({ message: "Pembeli tidak ditemukan" });
+    }
+
+    const wishlistProducts = await Product.find({
+      '_id': { $in: pembeli.wishlist }
+    });
+
+    return res.status(200).json({ wishlist: wishlistProducts });
+  } catch (error) {
+    console.error("Error fetching wishlist:", error);
+    return res.status(500).json({ message: "Terjadi kesalahan server" });
   }
 };

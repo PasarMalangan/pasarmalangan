@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { authenticateToken } = require("../middlewares/auth");
+const { authenticateToken, authorizeRole } = require("../middlewares/auth");
 const {
   getAllProducts,
   getProductbyUserId,
@@ -9,6 +9,9 @@ const {
   deleteProduct,
   editProduct,
   approveProduct,
+  clickProduct,
+  relatedProducts,
+  getProductsByOwnerId
 } = require("../controllers/productsControllers");
 const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
@@ -19,9 +22,20 @@ router.post(
   authenticateToken,
   createProduct
 );
+
+router.post(
+  "/:id/click",
+  authenticateToken,
+  authorizeRole("pembeli"),
+  clickProduct
+);
+
 router.get("/getproducts", authenticateToken, getProductbyUserId);
 router.get("/getallproducts", getAllProducts);
 router.get("/:id", authenticateToken, getProductById);
+router.get("/detailproduct/:id", getProductById);
+router.post("/related", relatedProducts);
+router.post("/getproductfrom", getProductsByOwnerId)
 router.put("/:id", authenticateToken, upload.array("images"), editProduct);
 router.delete("/:id", deleteProduct);
 

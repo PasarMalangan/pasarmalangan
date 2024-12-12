@@ -5,9 +5,9 @@ import Footer from "../components/containers/footer/footer";
 import SearchResults from "../components/containers/marketplace/SearchResults";
 import { Link } from "react-router-dom";
 import AdsSlider from "../components/containers/adsslider/AdsSlider";
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 export default function Marketplace() {
-  const apiroutes = import.meta.env.VITE_API_BASE_URL;
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const [filterLocation, setIsFilterLocation] = useState();
@@ -44,6 +44,21 @@ export default function Marketplace() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleProductClick = async (productId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await fetch(`${apiroutes}/products/${productId}/click`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.error("Error recording product click:", error);
+    }
+  };
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -67,22 +82,21 @@ export default function Marketplace() {
   const handleLocationClick = () => {
     // Toggle filter visibility
     setIsFilterLocation((prevState) => !prevState);
-  
+
     // Optionally, hide search after a delay when the filter is shown
     if (!filterLocation) {
       setTimeout(() => {
         setIsSearching(false);
       }, 500);
     }
-
   };
 
   const categoryStyles = {
-    kuliner: "bg-red-500 text-white font-medium px-2 py-[2px] rounded-lg",
-    fashion: "bg-blue-700 text-white font-medium px-2 py-[2px] rounded-lg",
-    pertanian: "bg-green-500 text-white font-medium px-2 py-[2px] rounded-lg",
-    kerajinan: "bg-yellow-500 text-white font-medium px-2 py-[2px] rounded-lg",
-    digital: "bg-cyan-500 text-white font-medium px-2 py-[2px] rounded-lg",
+    kuliner: "bg-red-500",
+    fashion: "bg-blue-700",
+    pertanian: "bg-green-500",
+    kerajinan: "bg-yellow-500",
+    digital: "bg-cyan-500",
   };
 
   const handleHover = (id, isHovered) => {
@@ -194,7 +208,8 @@ export default function Marketplace() {
               </ul>
             </div>
 
-           <AdsSlider/>
+            <AdsSlider />
+
             <article id="produk">
               <h4 className="px-5 text-2xl font-bold">Rekomendasi</h4>
               <section id="recomendation" className="my-6 px-10">
@@ -203,31 +218,44 @@ export default function Marketplace() {
                     <Link
                       key={product._id}
                       to={`/detailproduk/${product._id}`}
-                      target="_blank"
                       rel="noopener noreferrer"
-                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
+                      onClick={() => handleProductClick(product._id)}
+                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
                     >
-                      <div className="w-full">
+                      <div className="w-full relative">
                         <img
-                          className="w-full max-h-32 sm:max-h-36 object-cover"
+                          className="w-full h-36 sm:h-40 object-cover"
                           src={product.images[0]}
-                          alt={product.name}
+                          alt={`Gambar ${product.name}`}
+                          loading="lazy"
                         />
+                        <p
+                          className={`md:hidden text-center capitalize text-white text-sm font-medium rounded px-2 py-1 ${
+                            categoryStyles[product.category]
+                          }`}
+                        >
+                          {product.category}
+                        </p>
                       </div>
+
                       <div className="p-4">
-                        <h5 className="text-base sm:text-lg text-gray-900">
+                        <h5 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                           {product.name}
                         </h5>
-                        <div className="flex items-center justify-between my-2 sm:my-5">
-                          <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
-                          <p
-                            className={`capitalize ${
+
+                        <div className="flex items-center justify-between my-3">
+                          <p className="text-gray-700 font-bold">
+                            Rp {(product.harga ?? 0).toLocaleString()}
+                          </p>
+                          <span
+                            className={`hidden md:block capitalize text-white text-sm font-medium rounded px-2 py-1 ${
                               categoryStyles[product.category]
-                            } `}
+                            }`}
                           >
                             {product.category}
-                          </p>
+                          </span>
                         </div>
+
                         <h6
                           className="text-gray-700 text-sm overflow-hidden relative"
                           onMouseEnter={() => handleHover(product._id, true)}
@@ -265,34 +293,45 @@ export default function Marketplace() {
                   {productList.map((product) => (
                     <Link
                       key={product._id}
-
                       to={`/detailproduk/${product._id}`}
-
-                      target="_blank"
                       rel="noopener noreferrer"
-                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
+                      onClick={() => handleProductClick(product._id)}
+                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
                     >
-                      <div className="w-full">
+                      <div className="w-full relative">
                         <img
-                          className="w-full max-h-32 sm:max-h-36 object-cover"
+                          className="w-full h-36 sm:h-40 object-cover"
                           src={product.images[0]}
-                          alt={product.name}
+                          alt={`Gambar ${product.name}`}
+                          loading="lazy"
                         />
+                        <p
+                          className={`md:hidden text-center capitalize text-white text-sm font-medium rounded px-2 py-1 ${
+                            categoryStyles[product.category]
+                          }`}
+                        >
+                          {product.category}
+                        </p>
                       </div>
+
                       <div className="p-4">
-                        <h5 className="text-base sm:text-lg text-gray-900">
+                        <h5 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                           {product.name}
                         </h5>
-                        <div className="flex items-center justify-between my-2 sm:my-5">
-                          <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
-                          <p
-                            className={`capitalize ${
+
+                        <div className="flex items-center justify-between my-3">
+                          <p className="text-gray-700 font-bold">
+                            Rp {(product.harga ?? 0).toLocaleString()}
+                          </p>
+                          <span
+                            className={`hidden md:block capitalize text-white text-sm font-medium rounded px-2 py-1 ${
                               categoryStyles[product.category]
-                            } `}
+                            }`}
                           >
                             {product.category}
-                          </p>
+                          </span>
                         </div>
+
                         <h6
                           className="text-gray-700 text-sm overflow-hidden relative"
                           onMouseEnter={() => handleHover(product._id, true)}
@@ -325,36 +364,51 @@ export default function Marketplace() {
               <br />
               <h4 className="px-5 text-2xl font-bold">Semua Produk</h4>
               <br />
-              <section id="unggulan" className="my-6 px-10">
+
+              <section id="allproduct" className="my-6 px-10">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
                   {productList.map((product) => (
                     <Link
-                      key={product._id} to={`/detailproduk/${product._id}`}
-                      target="_blank"
+                      key={product._id}
+                      to={`/detailproduk/${product._id}`}
                       rel="noopener noreferrer"
-                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
+                      onClick={() => handleProductClick(product._id)}
+                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
                     >
-                      <div className="w-full">
+                      <div className="w-full relative">
                         <img
-                          className="w-full max-h-32 sm:max-h-36 object-cover"
+                          className="w-full h-36 sm:h-40 object-cover"
                           src={product.images[0]}
-                          alt={product.name}
+                          alt={`Gambar ${product.name}`}
+                          loading="lazy"
                         />
+                        <p
+                          className={`md:hidden text-center capitalize text-white text-sm font-medium rounded px-2 py-1 ${
+                            categoryStyles[product.category]
+                          }`}
+                        >
+                          {product.category}
+                        </p>
                       </div>
+
                       <div className="p-4">
-                        <h5 className="text-base sm:text-lg text-gray-900">
+                        <h5 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                           {product.name}
                         </h5>
-                        <div className="flex items-center justify-between my-2 sm:my-5">
-                          <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
-                          <p
-                            className={`capitalize ${
+
+                        <div className="flex items-center justify-between my-3">
+                          <p className="text-gray-700 font-bold">
+                            Rp {(product.harga ?? 0).toLocaleString()}
+                          </p>
+                          <span
+                            className={`hidden md:block capitalize text-white text-sm font-medium rounded px-2 py-1 ${
                               categoryStyles[product.category]
-                            } `}
+                            }`}
                           >
                             {product.category}
-                          </p>
+                          </span>
                         </div>
+
                         <h6
                           className="text-gray-700 text-sm overflow-hidden relative"
                           onMouseEnter={() => handleHover(product._id, true)}

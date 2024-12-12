@@ -1,8 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const products = require("./models/products");
-const categories = require("./models/categories");
 const connectDB = require("./lib/mongodb");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");

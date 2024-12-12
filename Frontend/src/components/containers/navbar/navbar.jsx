@@ -10,7 +10,6 @@ export default function Navbar() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const token = localStorage.getItem("token");
 
@@ -147,7 +146,7 @@ export default function Navbar() {
   userData && userData.profilepict ? (
     <button onClick={() => setDropdownOpen(!isDropdownOpen)}>
       <img
-        className="rounded-full w-14"
+        className="rounded-full w-16"
         src={userData.profilepict}
         alt="Profile"
       />
@@ -173,9 +172,9 @@ export default function Navbar() {
               <li>
                 <Link
                   className={`block text-gray-700 py-2 ${
-                    isActive("/dashboard/pedagang") ? "font-medium" : ""
+                    isActive(`/dashboard/${userData.role}`) ? "font-medium" : ""
                   }`}
-                  to="/dashboard/pedagang"
+                  to={`/dashboard/${userData.role}`}
                 >
                   Dashboard
                 </Link>
@@ -193,9 +192,9 @@ export default function Navbar() {
               <li>
                 <Link
                   className={`block text-gray-700 py-2 ${
-                    isActive("/pengaturan/pedagang") ? "font-medium" : ""
+                    isActive(`/pengaturan/${userData.role}`) ? "font-medium" : ""
                   }`}
-                  to="/pengaturan/pedagang"
+                  to={`/pengaturan/${userData.role}`}
                 >
                   Pengaturan
                 </Link>

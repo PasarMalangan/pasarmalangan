@@ -58,7 +58,6 @@ exports.getAllProducts = async (req, res) => {
 
 exports.getProductById = async (req, res) => {
   const { id } = req.params;
-
   try {
     // Cari produk berdasarkan ID
     const product = await Product.findById(id);
@@ -171,7 +170,6 @@ exports.editProduct = async (req, res) => {
   const files = req.files;
   try {
     const product = await Product.findById(id);
-    console.log(product);
 
     if (!product) {
       return res.status(404).json({ message: "Produk tidak ditemukan" });
@@ -247,5 +245,68 @@ exports.approveProduct = async (req, res) => {
       message: "Gagal memperbarui status produk",
       error: err.message,
     });
+  }
+};
+
+exports.clickProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    const product = await Product.findByIdAndUpdate(
+      productId,
+      { $inc: { click: 1 } }, // Increment clickCount
+      { new: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({ message: "Produk tidak ditemukan" });
+    }
+
+    res.json({ message: "Klik berhasil direkam", product });
+  } catch (error) {
+    console.error("Error updating click count:", error);
+    res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
+
+exports.relatedProducts = async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    if (!category) {
+      return res.status(400).json({ message: "Kategori tidak ditemukan" });
+    }
+
+    const relatedProducts = await Product.find({ category })
+      .limit(4)
+      .exec();
+
+    if (relatedProducts.length === 0) {
+      return res.status(404).json({ message: "Produk terkait tidak ditemukan" });
+    }
+
+    res.status(200).json(relatedProducts);
+  } catch (error) {
+    console.error("Error fetching related products:", error);
+    res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
+
+exports.getProductsByOwnerId = async (req, res) => {
+  const { owner_id } = req.query;
+  try {
+    if (!owner_id) {
+      return res.status(400).json({ error: "Parameter owner_id harus disediakan." });
+    }
+
+    const products = await Product.find({ owner_id });
+    if (!products.length) {
+      return res.status(404).json({ error: "Tidak ada produk untuk owner_id ini." });
+    }
+
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching products by owner_id:", error);
+    return res.status(500).json({ error: "Terjadi kesalahan server." });
   }
 };

@@ -2,8 +2,12 @@ import { useState, useEffect } from "react";
 import Footer from "../../components/containers/footer/footer";
 import SidebarPedagang from "../../components/containers/sidebar/sidebarPedagang";
 import Navbar from "../../components/containers/navbar/navbar";
+const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 export default function DashboardPedagang() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -17,7 +21,49 @@ export default function DashboardPedagang() {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
+
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${apiroutes}/products/getproducts`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(
+            "Produk tidak ditemukan, silahkan tambah produk UMKM Anda"
+          );
+        }
+
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError(`${err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [token]);
+
+  const stats = products.reduce(
+    (acc, product) => {
+      acc.totalClicks += product.click;
+      if (product.isApproved === "pending") {
+        acc.pendingCount += 1;
+      }
+      return acc;
+    },
+    { totalClicks: 0, pendingCount: 0 }
+  );
+
   return (
     <>
       {!isMobile && <Navbar />}
@@ -32,28 +78,27 @@ export default function DashboardPedagang() {
           </section>
 
           <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card: Jumlah Produk */}
             <div className="bg-white p-4 rounded-lg shadow-md border flex flex-col items-center">
               <h2 className="text-lg font-semibold text-gray-700">
                 Jumlah Produk
               </h2>
-              <p className="text-3xl font-bold text-blue-600">12</p>
+              <p className="text-3xl font-bold text-blue-600">
+                {products.length}
+              </p>
             </div>
 
-            {/* Card: Total Klik Produk */}
             <div className="bg-white p-4 rounded-lg shadow-md border flex flex-col items-center">
               <h2 className="text-lg font-semibold text-gray-700">
                 Total Klik Produk
               </h2>
-              <p className="text-3xl font-bold text-blue-600">345</p>
+              <p className="text-3xl font-bold text-blue-600">{stats.totalClicks}</p>
             </div>
 
-            {/* Card: Produk Pending */}
             <div className="bg-white p-4 rounded-lg shadow-md border flex flex-col items-center">
               <h2 className="text-lg font-semibold text-gray-700">
                 Produk Pending
               </h2>
-              <p className="text-3xl font-bold text-blue-600">3</p>
+              <p className="text-3xl font-bold text-blue-600">{stats.pendingCount}</p>
             </div>
           </section>
 
@@ -71,27 +116,43 @@ export default function DashboardPedagang() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                <tr>
-                  <td className="py-2 px-4">Produk A</td>
-                  <td className="py-2 px-4">120</td>
-                  <td className="py-2 px-4 text-green-500 font-semibold">
-                    Disetujui
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-4">Produk B</td>
-                  <td className="py-2 px-4">90</td>
-                  <td className="py-2 px-4 text-yellow-500 font-semibold">
-                    Pending
-                  </td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-4">Produk C</td>
-                  <td className="py-2 px-4">45</td>
-                  <td className="py-2 px-4 text-red-500 font-semibold">
-                    Ditolak
-                  </td>
-                </tr>
+                {loading ? (
+                  <tr>
+                    <td colSpan="3" className="text-center text-gray-600 py-4">
+                      Memuat produk...
+                    </td>
+                  </tr>
+                ) : error ? (
+                  <tr>
+                    <td colSpan="3" className="text-center text-red-500 py-4">
+                      {error}
+                    </td>
+                  </tr>
+                ) : products.length > 0 ? (
+                  products.map((product, index) => (
+                    <tr key={index}>
+                      <td className="py-2 px-4">{product.name}</td>
+                      <td className="py-2 px-4">{product.click}</td>
+                      <td
+                        className={`py-2 px-4 font-semibold capitalize ${
+                          product.isApproved === "disetujui"
+                            ? "text-green-500"
+                            : product.isApproved === "pending"
+                            ? "text-yellow-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {product.isApproved}
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="3" className="text-center text-gray-600 py-4">
+                      Tidak ada produk tersedia.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </section>

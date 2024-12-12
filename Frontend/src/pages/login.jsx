@@ -31,7 +31,7 @@ export default function Login() {
         navigate(`/dashboard/${role}`);
       }
       if (role === "pedagang") {
-        navigate(`/pengaturan/${role}`);
+        navigate(`/dashboard/${role}`);
       }
       if (role === "superadmin") {
         navigate(`/dashboard/${role}`);

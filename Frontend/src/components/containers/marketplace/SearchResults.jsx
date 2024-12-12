@@ -49,94 +49,104 @@ const SearchResults = ({ searchQuery, products }) => {
 
   return (
     <div className="flex flex-col lg:flex-row">
-    {/* Filter lokasi */}
-    <div className="w-full lg:w-64 p-4 bg-white border border-gray-200 rounded-lg shadow-md mb-6 lg:mb-0 lg:mr-6">
-      <h5 className="text-lg font-bold text-gray-900 mb-4">Filter Lokasi</h5>
-      {Object.keys(selectedLocations).map((location) => (
-        <div key={location} className="flex items-center mb-2">
-          <input
-            type="checkbox"
-            name={location}
-            checked={selectedLocations[location]}
-            onChange={handleLocationChange}
-            id={location}
-            className="mr-2"
-          />
-          <label
-            htmlFor={location}
-            className="text-sm text-gray-700 capitalize"
-          >
-            {location}
-          </label>
-        </div>
-      ))}
+      {/* Filter lokasi */}
+      <div className="w-full lg:w-64 p-4 bg-white border border-gray-200 rounded-lg shadow-md mb-6 lg:mb-0 lg:mr-6">
+        <h5 className="text-lg font-bold text-gray-900 mb-4">Filter Lokasi</h5>
+        {Object.keys(selectedLocations).map((location) => (
+          <div key={location} className="flex items-center mb-2">
+            <input
+              type="checkbox"
+              name={location}
+              checked={selectedLocations[location]}
+              onChange={handleLocationChange}
+              id={location}
+              className="mr-2"
+            />
+            <label
+              htmlFor={location}
+              className="text-sm text-gray-700 capitalize"
+            >
+              {location}
+            </label>
+          </div>
+        ))}
+      </div>
+
+      {/* Hasil pencarian */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+        {filteredProducts.length === 0 ? (
+          <p className="text-center col-span-full">Produk tidak ditemukan.</p>
+        ) : (
+          filteredProducts.map((product) => (
+            <Link
+              key={product._id}
+              to={`/detailproduk/${product._id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
+            >
+              <div className="w-full relative">
+                <img
+                  className="w-full h-36 sm:h-40 object-cover"
+                  src={product.images[0]}
+                  alt={`Gambar ${product.name}`}
+                  loading="lazy"
+                />
+                <p
+                  className={`md:hidden text-center capitalize text-white text-sm font-medium rounded px-2 py-1 ${
+                    categoryStyles[product.category]
+                  }`}
+                >
+                  {product.category}
+                </p>
+              </div>
+
+              <div className="p-4">
+                <h5 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
+                  {product.name}
+                </h5>
+
+                <div className="flex items-center justify-between my-3">
+                  <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
+                  <span
+                    className={`hidden md:block capitalize text-white text-sm font-medium rounded px-2 py-1 ${
+                      categoryStyles[product.category]
+                    }`}
+                  >
+                    {product.category}
+                  </span>
+                </div>
+
+                <h6
+                  className="text-gray-700 text-sm overflow-hidden relative"
+                  onMouseEnter={() => handleHover(product._id, true)}
+                  onMouseLeave={() => handleHover(product._id, false)}
+                >
+                  <span
+                    className={`capitalize block transition-transform duration-300 ease-in-out ${
+                      hoveredProducts[product._id]
+                        ? "transform translate-y-[-100%]"
+                        : "transform translate-y-0"
+                    }`}
+                  >
+                    {product.alamatusaha}
+                  </span>
+                  <span
+                    className={`capitalize block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
+                      hoveredProducts[product._id]
+                        ? "transform translate-y-0"
+                        : "transform translate-y-[100%]"
+                    }`}
+                  >
+                    {product.namausaha}
+                  </span>
+                </h6>
+              </div>
+            </Link>
+          ))
+        )}
+      </div>
     </div>
-  
-    {/* Hasil pencarian */}
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-      {filteredProducts.length === 0 ? (
-        <p className="text-center col-span-full">Produk tidak ditemukan.</p>
-      ) : (
-        filteredProducts.map((product) => (
-          <Link
-                      key={product._id}
-                      to={product.linkecommerences}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
-                    >
-                      <div className="w-full">
-                        <img
-                          className="w-full max-h-32 sm:max-h-36 object-cover"
-                          src={product.images[0]}
-                          alt={product.name}
-                        />
-                      </div>
-                      <div className="p-4">
-                        <h5 className="text-base sm:text-lg text-gray-900">
-                          {product.name}
-                        </h5>
-                        <div className="flex items-center justify-between my-2 sm:my-5">
-                          <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
-                          <p
-                            className={`capitalize ${
-                              categoryStyles[product.category]
-                            } `}
-                          >
-                            {product.category}
-                          </p>
-                        </div>
-                        <h6
-                          className="text-gray-700 text-sm overflow-hidden relative"
-                          onMouseEnter={() => handleHover(product._id, true)}
-                          onMouseLeave={() => handleHover(product._id, false)}
-                        >
-                          <span
-                            className={`capi block transition-transform duration-300 ease-in-out ${
-                              hoveredProducts[product._id]
-                                ? "transform translate-y-[-100%]"
-                                : "transform translate-y-0"
-                            }`}
-                          >
-                            {product.alamatusaha}
-                          </span>
-                          <span
-                            className={`capitalize block transition-transform duration-300 ease-in-out absolute top-0 left-0 ${
-                              hoveredProducts[product._id]
-                                ? "transform translate-y-0"
-                                : "transform translate-y-[100%]"
-                            }`}
-                          >
-                            {product.namausaha}
-                          </span>
-                        </h6>
-                      </div>
-                    </Link>
-        ))
-      )}
-    </div>
-  </div>
-  
   );
 };
 

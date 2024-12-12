@@ -34,7 +34,6 @@ export default function EditProduct() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Ambil data produk saat komponen dimuat
   useEffect(() => {
     const fetchProduct = async () => {
       const token = localStorage.getItem("token");

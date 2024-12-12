@@ -52,7 +52,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/helpsupport",
-    element: <HelpAndSupport/>,
+    element: <HelpAndSupport />,
   },
   {
     path: "/login",
@@ -159,14 +159,12 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/produkdetail/:id",
+    path: "/detailproduk/:id",
     element: <DetailProduk />,
   },
   {
-    path: "/tokodetail/:owner_id",
-    element: (
-        <DetailToko />
-    ),
+    path: "/tokodetail/:id",
+    element: <DetailToko />,
   },
 ]);
 

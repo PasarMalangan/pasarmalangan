@@ -29,7 +29,6 @@ const registerUserPembeli = async (data) => {
 const loginUser = async (data) => {
   try {
     const response = await fetch(`${apiroutes}/auth/login`, {
-      // Pastikan endpoint login benar
       method: "POST",
       headers: {
         "Content-Type": "application/json",
