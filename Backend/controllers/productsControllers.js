@@ -2,7 +2,7 @@ const Product = require("../models/products");
 const Pedagang = require("../models/pedagang");
 const { uploadFileToS3, deleteFileFromS3 } = require("../lib/S3client");
 require("dotenv").config();
-exports.getProductbyId = async (req, res) => {
+exports.getProductbyUserId = async (req, res) => {
   const { userId } = req.user; // Ambil data user yang sudah diset di middleware
 
   try {
@@ -56,6 +56,28 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
+exports.getProductById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    // Cari produk berdasarkan ID
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Produk tidak ditemukan",
+      });
+    }
+
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Terjadi kesalahan saat mengambil data produk",
+      error: error.message,
+    });
+  }
+};
+
 exports.createProduct = async (req, res) => {
   const { name, description, harga, category, linkecommerences, isApproved } =
     req.body;
@@ -85,6 +107,7 @@ exports.createProduct = async (req, res) => {
     }
 
     const namausaha = pedagang.namausaha;
+    const alamatusaha = pedagang.alamatusaha;
 
     // Buat produk baru
     const newProduct = new Product({
@@ -97,6 +120,7 @@ exports.createProduct = async (req, res) => {
       isApproved,
       owner_id: userId,
       namausaha,
+      alamatusaha,
     });
 
     await newProduct.save();
@@ -216,12 +240,73 @@ exports.approveProduct = async (req, res) => {
       data: product,
     });
   } catch (err) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Gagal memperbarui status produk",
-        error: err.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Gagal memperbarui status produk",
+      error: err.message,
+    });
+  }
+};
+
+exports.clickProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    const product = await Product.findByIdAndUpdate(
+      productId,
+      { $inc: { click: 1 } }, // Increment clickCount
+      { new: true }
+    );
+
+    if (!product) {
+      return res.status(404).json({ message: "Produk tidak ditemukan" });
+    }
+
+    res.json({ message: "Klik berhasil direkam", product });
+  } catch (error) {
+    console.error("Error updating click count:", error);
+    res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
+
+exports.relatedProducts = async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    if (!category) {
+      return res.status(400).json({ message: "Kategori tidak ditemukan" });
+    }
+
+    const relatedProducts = await Product.find({ category })
+      .limit(4)
+      .exec();
+
+    if (relatedProducts.length === 0) {
+      return res.status(404).json({ message: "Produk terkait tidak ditemukan" });
+    }
+
+    res.status(200).json(relatedProducts);
+  } catch (error) {
+    console.error("Error fetching related products:", error);
+    res.status(500).json({ message: "Terjadi kesalahan server" });
+  }
+};
+
+exports.getProductsByOwnerId = async (req, res) => {
+  const { owner_id } = req.query;
+  try {
+    if (!owner_id) {
+      return res.status(400).json({ error: "Parameter owner_id harus disediakan." });
+    }
+
+    const products = await Product.find({ owner_id });
+    if (!products.length) {
+      return res.status(404).json({ error: "Tidak ada produk untuk owner_id ini." });
+    }
+
+    return res.status(200).json(products);
+  } catch (error) {
+    console.error("Error fetching products by owner_id:", error);
+    return res.status(500).json({ error: "Terjadi kesalahan server." });
   }
 };

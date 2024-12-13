@@ -2,16 +2,17 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "index": "app.js",
+  "index": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.701.0",
+    "@aws-sdk/client-textract": "^3.699.0",
     "aws-sdk": "^2.1692.0",
     "aws-serverless-express": "^3.4.0",
     "bcrypt": "^5.1.1",
@@ -23,6 +24,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.1",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.16",
     "serverless-http": "^3.2.0"
   },
   "devDependencies": {

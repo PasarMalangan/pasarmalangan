@@ -4,7 +4,26 @@ const superAdmin = require("../models/superadmin");
 const jwt = require("jsonwebtoken");
 const { secret, expiresIn } = require("../lib/jwt");
 const { uploadFileToS3 } = require("../lib/S3client");
+const { detectTextAndApprove } = require("../lib/Textractclient");
+const {
+  emailTemplate,
+  emailfail,
+  emailsucceeded,
+} = require("../utils/templateEmail");
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
 require("dotenv").config();
+
+// Kirim email ke pengguna
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.SMTP_EMAIL,
+    pass: process.env.SMTP_PASSWORD,
+  },
+});
 
 const checkEmailExists = async (email) => {
   const existsInPedagang = await pedagang.findOne({ email });
@@ -14,17 +33,23 @@ const checkEmailExists = async (email) => {
   return existsInPedagang || existsInPembeli || existsInSuperAdmin;
 };
 
+const findUserByEmail = async (email) => {
+  let user = await pembeli.findOne({ email });
+  if (!user) {
+    user = await pedagang.findOne({ email });
+  }
+  return user;
+};
+
 exports.register = async (req, res) => {
   const { role, ...data } = req.body;
   const file = req.file;
 
   try {
-    // Validasi role
     if (!role) {
       return res.status(400).json({ message: "Role tidak boleh kosong" });
     }
 
-    // Cek apakah email sudah digunakan di salah satu koleksi
     const emailExists = await checkEmailExists(data.email);
     if (emailExists) {
       return res.status(400).json({ message: "Email sudah digunakan" });
@@ -44,7 +69,30 @@ exports.register = async (req, res) => {
       const uploadResult = await uploadFileToS3(file, bucketName);
       data.identitaspedagang = uploadResult.Location;
 
+      // Deteksi teks di dalam file menggunakan AWS Textract
+      const isMalangFound = await detectTextAndApprove(
+        bucketName,
+        uploadResult.Key
+      );
+
+      // Tambahkan field isApproved berdasarkan hasil deteksi teks
+      data.isApproved = isMalangFound ? true : false;
+
       user = new pedagang(data);
+
+      data.isApproved
+        ? await transporter.sendMail({
+            from: process.env.SMTP_EMAIL,
+            to: user.email,
+            subject: "Reset Password",
+            html: emailsucceeded(),
+          })
+        : await transporter.sendMail({
+            from: process.env.SMTP_EMAIL,
+            to: user.email,
+            subject: "Reset Password",
+            html: emailfail(),
+          });
     } else if (role === "pembeli") {
       user = new pembeli(data);
     } else if (role === "superadmin") {
@@ -53,7 +101,6 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: "Invalid role" });
     }
 
-    // Simpan user ke database
     await user.save();
 
     const successMessage =
@@ -66,7 +113,7 @@ exports.register = async (req, res) => {
     if (error.code === 11000) {
       return res
         .status(400)
-        .json({ message: "Email atau Username sudah terdaftar" });
+        .json({ message: "Email atau Nomor Telepon sudah terdaftar" });
     }
 
     res
@@ -103,6 +150,13 @@ exports.login = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    if (role === "pedagang" && !user.isApproved) {
+      return res.status(403).json({
+        message:
+          "Akun belum bisa masuk ke dashboard, silahkan tunggu konfirmasi dari Admin.",
+      });
+    }
+
     // Verifikasi password
     const isPasswordValid = await user.isValidPassword(password);
     if (!isPasswordValid) {
@@ -114,5 +168,70 @@ exports.login = async (req, res) => {
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
     res.status(500).json({ message: "Error logging in", error: error.message });
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await findUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({ message: "Email tidak ditemukan." });
+    }
+
+    // Buat token reset password
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetTokenExpiry = Date.now() + 3600000; // Token berlaku 1 jam
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiry = resetTokenExpiry;
+    await user.save();
+
+    const resetUrl = `${process.env.FRONTEND_DEST}/resetpassword/${resetToken}`;
+    await transporter.sendMail({
+      from: process.env.SMTP_EMAIL,
+      to: user.email,
+      subject: "Reset Password",
+      html: emailTemplate(resetUrl),
+    });
+
+    res.status(200).json({ message: "Email reset password telah dikirim." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Terjadi kesalahan pada server." });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    let user = await pembeli.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiry: { $gt: Date.now() },
+    });
+    if (!user) {
+      user = await pedagang.findOne({
+        resetPasswordToken: token,
+        resetPasswordExpiry: { $gt: Date.now() },
+      });
+    }
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "Token tidak valid atau telah kedaluwarsa." });
+    }
+
+    // Simpan password baru
+    user.password = newPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiry = undefined;
+    await user.save();
+
+    res.status(200).json({ message: "Password berhasil diatur ulang." });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Terjadi kesalahan pada server." });
   }
 };

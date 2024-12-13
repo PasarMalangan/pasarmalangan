@@ -11,6 +11,7 @@ import RegPedagang from "./pages/regPedagang.jsx";
 import ErrorPage from "./pages/404.jsx";
 import AboutUs from "./pages/about.jsx";
 import DetailProduk from "./pages/produk.jsx";
+import DetailToko from "./pages/toko.jsx";
 
 import {
   ProtectedAuthRoute,
@@ -27,6 +28,11 @@ import CreateProduct from "./pages/pedagang/createProduct.jsx";
 import EditProduct from "./pages/pedagang/editProduct.jsx";
 
 import DashboardSuperAdmin from "./pages/dashboardAdmin/dashboard.jsx";
+import Comingsoon from "./pages/comingsoon.jsx";
+import DashboardPedagang from "./pages/pedagang/dashboardpedagang.jsx";
+import HelpAndSupport from "./pages/helpsupport.jsx";
+import ForgotPassword from "./pages/forgotpassword.jsx";
+import ResetPassword from "./pages/resetpassword.jsx";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +47,14 @@ const router = createBrowserRouter([
   {
     path: "/aboutus",
     element: <AboutUs />,
+  },
+  {
+    path: "/service",
+    element: <Comingsoon />,
+  },
+  {
+    path: "/helpsupport",
+    element: <HelpAndSupport />,
   },
   {
     path: "/login",
@@ -99,6 +113,14 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/dashboard/pedagang",
+    element: (
+      <ProtectedDashboardRoute>
+        <DashboardPedagang />
+      </ProtectedDashboardRoute>
+    ),
+  },
+  {
     path: "/pengaturan/pedagang",
     element: (
       <ProtectedDashboardRoute>
@@ -139,10 +161,20 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/produkdetail/:id",
-    element: (
-        <DetailProduk />
-    ),
+    path: "/detailproduk/:id",
+    element: <DetailProduk />,
+  },
+  {
+    path: "/tokodetail/:id",
+    element: <DetailToko />,
+  },
+  {
+    path: "/forgotpassword",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/resetpassword/:token",
+    element: <ResetPassword />,
   },
 ]);
 

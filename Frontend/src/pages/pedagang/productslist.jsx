@@ -10,7 +10,20 @@ export default function ProductList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [productToDelete, setProductToDelete] = useState(null); // ID produk yang akan dihapus
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const token = localStorage.getItem("token");
 
@@ -77,17 +90,17 @@ export default function ProductList() {
 
   return (
     <>
-      <Navbar />
-      <main className="flex h-screen">
+      {!isMobile && <Navbar />}
+      <main className="flex flex-col md:flex-row h-screen">
         <SidebarPedagang />
 
-        <article className="w-[80%] pt-5 px-5 pb-10 border-2 shadow-sm my-5 bg-gradient-to-b from-blue-300 via-blue-100 to-blue-50 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
+        <article className="w-full md:w-[80%] pt-5 px-5 pb-10 border-2 shadow-sm my-5 bg-gradient-to-b from-blue-300 via-blue-100 to-blue-50 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
           <section className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-semibold text-gray-800">
               Dashboard Produk Pedagang
             </h1>
             <Link
-              to={"/products/create"}
+              to="/products/create"
               className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700"
             >
               Tambah Produk
@@ -150,7 +163,7 @@ export default function ProductList() {
                             {product.isApproved}
                           </span>
                         </td>
-                        <td className="px-6 py-4 space-x-3">
+                        <td className="flex flex-col md:flex-row gap-3 px-6 py-4 space-x-3">
                           <Link
                             to={`/products/edit/${product._id}`}
                             className="bg-yellow-500 text-white px-3 py-2 rounded-md hover:bg-yellow-600"

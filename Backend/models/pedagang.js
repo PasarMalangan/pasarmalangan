@@ -24,6 +24,8 @@ const pedagangSchema = new mongoose.Schema(
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOG6E-AnifHE0PvMzIpCiDOZy1nWhJXXMZPg&s",
     },
     isApproved: { type: Boolean, default: false },
+    resetPasswordToken: String,
+    resetPasswordExpiry: Date,
   },
   { timestamps: true }
 );

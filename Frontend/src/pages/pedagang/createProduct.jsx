@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 import Navbar from "../../components/containers/navbar/navbar";
 import SidebarPedagang from "../../components/containers/sidebar/sidebarPedagang";
@@ -20,6 +20,19 @@ export default function CreateProduct() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const navigate = useNavigate();
 
@@ -142,18 +155,18 @@ export default function CreateProduct() {
 
   return (
     <>
-      <Navbar />
-      <main className="flex h-screen">
+      {!isMobile && <Navbar />}
+      <main className="flex flex-col md:flex-row h-screen">
         <SidebarPedagang />
 
-        <article className="w-[80%] pt-5 px-5 pb-10 border-2 shadow-sm my-5 bg-gradient-to-b from-blue-300 via-blue-100 to-blue-50 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
-          <section className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-semibold text-gray-800">
+        <article className="w-full md:w-[80%] pt-5 px-5 pb-10 border-2 shadow-sm my-5 bg-gradient-to-b from-blue-300 via-blue-100 to-blue-50 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
+          <section className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <h1 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4 md:mb-0">
               Tambah Produk Baru
             </h1>
             <Link
               to={"/products/create"}
-              className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700"
+              className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 text-center"
             >
               Tambah Produk
             </Link>
@@ -172,7 +185,7 @@ export default function CreateProduct() {
               <form
                 onSubmit={handleSubmit}
                 encType="multipart/form-data"
-                className="space-y-4"
+                className="space-y-6"
               >
                 <div>
                   <label
@@ -228,7 +241,7 @@ export default function CreateProduct() {
                   />
                 </div>
 
-                <div className="mb-4">
+                <div>
                   <label
                     htmlFor="category"
                     className="block text-gray-700 font-semibold mb-2"
@@ -240,7 +253,7 @@ export default function CreateProduct() {
                     name="category"
                     value={productData.category}
                     onChange={handleChange}
-                    className="w-full bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
+                    className="w-full bg-gray-50 border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"
                   >
                     <option value="" disabled>
                       Pilih kategori produk
@@ -271,21 +284,19 @@ export default function CreateProduct() {
                   />
                 </div>
 
-                {/* Pratinjau gambar yang diunggah */}
                 {productData.previewImages.length > 0 && (
-                  <div className="flex space-x-4 mt-2">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
                     {productData.previewImages.map((imageUrl, index) => (
                       <img
                         key={index}
                         src={imageUrl}
                         alt={`Preview ${index}`}
-                        className="w-24 h-24 object-cover rounded-md border"
+                        className="w-full h-24 object-cover rounded-md border"
                       />
                     ))}
                   </div>
                 )}
 
-                {/* Link E-Commerce */}
                 <div>
                   <label
                     htmlFor="linkecommerences"
@@ -340,6 +351,7 @@ export default function CreateProduct() {
           )}
         </article>
       </main>
+
       <Footer />
     </>
   );

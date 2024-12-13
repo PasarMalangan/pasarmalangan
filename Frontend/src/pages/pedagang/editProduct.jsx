@@ -20,24 +20,33 @@ export default function EditProduct() {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Ambil data produk saat komponen dimuat
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   useEffect(() => {
     const fetchProduct = async () => {
       const token = localStorage.getItem("token");
       try {
-        const response = await fetch(
-          `${apiroutes}/products/${id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`${apiroutes}/products/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         const data = await response.json();
         if (response.ok) {
           // Ubah state menjadi objek pertama dari array
-          setProductData({...data[0],  previewImages: data[0].images});
+          setProductData({ ...data, previewImages: data.images });
         } else {
           setError(data.message || "Gagal mengambil data produk");
         }
@@ -109,33 +118,32 @@ export default function EditProduct() {
     productData.images.forEach((image) => formData.append("images", image));
 
     try {
-  const response = await fetch(`http://localhost:5000/api/products/${id}`, {
-    method: "PUT",
-    headers: { Authorization: `Bearer ${token}` },
-    body: formData,
-  });
+      const response = await fetch(`${apiroutes}/products/${id}`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
 
-  if (!response.ok) {
-    throw new Error("Gagal memperbarui produk");
-  }
+      if (!response.ok) {
+        throw new Error("Gagal memperbarui produk");
+      }
 
-  setSuccess(true);
-  setTimeout(() => navigate("/products/pedagang"), 1500);
-} catch (err) {
-  setError(err.message);
-} finally {
-  setLoading(false);
-}
-
+      setSuccess(true);
+      setTimeout(() => navigate("/products/pedagang"), 1500);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <>
-      <Navbar />
-      <main className="flex h-screen">
+      {!isMobile && <Navbar />}
+      <main className="flex flex-col lg:flex-row h-screen">
         <SidebarPedagang />
-        <article className="w-[80%] pt-5 px-5 pb-10 border-2 shadow-sm my-5 bg-gradient-to-b from-blue-300 via-blue-100 to-blue-50 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
-          <section className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-semibold text-gray-800">
+        <article className="lg:w-[80%] w-full pt-5 px-5 pb-10 border-2 shadow-sm my-5 bg-gradient-to-b from-blue-300 via-blue-100 to-blue-50 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
+          <section className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <h1 className="text-xl md:text-2xl font-semibold text-gray-800 mb-4 md:mb-0">
               Edit Produk
             </h1>
           </section>
@@ -254,7 +262,7 @@ export default function EditProduct() {
               {/* Pratinjau gambar */}
               {productData.previewImages &&
                 productData.previewImages.length > 0 && (
-                  <div className="flex space-x-4 mt-2">
+                  <div className="flex flex-wrap gap-4 mt-2">
                     {productData.previewImages.map((imageUrl, index) => (
                       <img
                         key={index}
@@ -320,6 +328,7 @@ export default function EditProduct() {
           )}
         </article>
       </main>
+
       <Footer />
     </>
   );

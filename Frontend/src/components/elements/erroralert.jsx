@@ -1,6 +1,6 @@
 export default function ErrorAlert(props) {
   return (
-    <div className="absolute bottom-0 right-10 flex w-96 shadow-lg rounded-lg">
+    <div className="absolute bottom-0 right-2 flex w-96 shadow-lg rounded-lg">
       <div className="bg-red-600 py-4 px-6 rounded-l-lg flex items-center">
         <svg
           xmlns="http://www.w3.org/2000/svg"

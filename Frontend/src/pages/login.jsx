@@ -3,7 +3,8 @@ import NavAuth from "../components/containers/navbar/navbarAuth";
 import Footer from "../components/containers/footer/footer";
 import image from "../image";
 import { loginUser } from "../../services/auth";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import ErrorAlert from "../components/elements/erroralert";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +31,7 @@ export default function Login() {
         navigate(`/dashboard/${role}`);
       }
       if (role === "pedagang") {
-        navigate(`/pengaturan/${role}`);
+        navigate(`/dashboard/${role}`);
       }
       if (role === "superadmin") {
         navigate(`/dashboard/${role}`);
@@ -42,23 +43,37 @@ export default function Login() {
     }
   };
 
+  useEffect(() => {
+    let timer;
+    if (error) {
+      timer = setTimeout(() => {
+        setError(false);
+      }, 5000);
+    }
+    return () => clearTimeout(timer);
+  }, [error]);
+
   return (
     <>
       <NavAuth typeform="LOG IN" />
       <main className="w-full h-full">
-        <article className="w-full h-full bg-blue-400 flex items-center justify-center">
-          <section className="bg-blue-600 w-max h-max p-10">
-            <div className="flex justify-center gap-10">
-              <img className="w-1/2" src={image.logo_auth} alt="logoauth" />
-              <div className="relative w-1/2 bg-white px-9 py-5 rounded-2xl">
+        <article className="w-full h-full bg-blue-400 md:flex items-center justify-center">
+          <section className="mx-auto md:bg-blue-600 md:max-w-[80vw] h-max p-6 sm:p-10 rounded-lg">
+            <div className="md:grid grid-cols-2 gap-6">
+              <img
+                className="hidden md:block w-full"
+                src={image.logo_auth}
+                alt="logoauth"
+              />
+              <div className="relative w-full h-max m-auto bg-white px-6 py-5 rounded-2xl">
                 <form
-                  className="flex flex-col gap-8 mb-5"
+                  className="flex flex-col gap-6 sm:gap-8 mb-5"
                   onSubmit={handleSubmit}
                 >
-                  <p className="font-bold text-xl">LOG IN</p>
-                  {error && <p className="text-red-500">{error}</p>}
+                  <p className="font-bold text-xl sm:text-2xl">LOG IN</p>
+
                   <input
-                    className="border-[1px] border-slate-700 px-4 py-2"
+                    className="border-[1px] rounded-xl border-slate-700 px-4 py-2"
                     type="email"
                     name="email"
                     id="email"
@@ -68,7 +83,7 @@ export default function Login() {
                     required
                   />
                   <input
-                    className="border-[1px] border-slate-700 px-4 py-2"
+                    className="border-[1px] rounded-xl border-slate-700 px-4 py-2"
                     type="password"
                     name="password"
                     id="password"
@@ -81,8 +96,12 @@ export default function Login() {
                     type="submit"
                     disabled={isLoading}
                     className={`rounded-xl text-xl bg-violet-500 text-white font-semibold py-2 
-    ${isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-violet-700"} 
-    transition-colors duration-300 ease-out`}
+                ${
+                  isLoading
+                    ? "opacity-70 cursor-not-allowed"
+                    : "hover:bg-violet-700"
+                } 
+                transition-colors duration-300 ease-out`}
                   >
                     {isLoading ? (
                       <div className="flex justify-center items-center">
@@ -112,24 +131,28 @@ export default function Login() {
                       "LOG IN"
                     )}
                   </button>
+                  <Link
+                    className="text-violet-500 hover:text-violet-700 transition-colors duration-300 ease-in-out"
+                    to={"/forgotpassword"}
+                  >
+                    Lupa Password?
+                  </Link>
+                  <div className="w-full text-center">
+                    Belum Punya Akun?{" "}
+                    <span className="text-red-500 hover:text-red-700 transition-colors duration-500 ease-in-out">
+                      <Link to={"/register"}>Daftar</Link>
+                    </span>
+                  </div>
+                  {error && (
+                    <ErrorAlert error={error} func={(e) => setError(false)} />
+                  )}
                 </form>
-                <Link
-                  className="text-violet-500 hover:text-violet-700 transition-colors duration-300 ease-in-out"
-                  to={""}
-                >
-                  Lupa Password?
-                </Link>
-                <p className="translate-y-full bottom-5 w-full text-center">
-                  Belum Punya Akun?{" "}
-                  <span className="text-red-500 hover:text-red-700 transition-colors duration-500 ease-in-out">
-                    <Link to={"/register"}>Daftar</Link>
-                  </span>
-                </p>
               </div>
             </div>
           </section>
         </article>
       </main>
+
       <Footer />
     </>
   );
