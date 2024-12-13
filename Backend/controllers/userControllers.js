@@ -179,8 +179,6 @@ exports.addToWishlist = async (req, res) => {
   try {
     const { productId } = req.body;
     const pembeliId = req.user.userId;
-    console.log(productId);
-    console.log(pembeliId);
 
     // Validasi keberadaan produk dengan status disetujui
     const productExists = await Product.findOne({
@@ -196,7 +194,7 @@ exports.addToWishlist = async (req, res) => {
 
     const pembeli = await Pembeli.findById(pembeliId);
     if (!pembeli) {
-      return res.status(404).json({ message: "Pembeli tidak ditemukan" });
+      return res.status(404).json({ message: "Silahkan Login sebagai Pembeli untuk menambahkan ke wishlist" });
     }
 
     if (!pembeli.wishlist.includes(productId)) {
@@ -230,7 +228,9 @@ exports.removeFromWishlist = async (req, res) => {
     );
 
     if (pembeli.wishlist.length === initialLength) {
-      return res.status(404).json({ message: "Produk tidak ditemukan di wishlist" });
+      return res
+        .status(404)
+        .json({ message: "Produk tidak ditemukan di wishlist" });
     }
 
     // Simpan perubahan
@@ -243,19 +243,18 @@ exports.removeFromWishlist = async (req, res) => {
   }
 };
 
-
 exports.getWishlist = async (req, res) => {
   try {
     const pembeliId = req.user.userId;
 
-    const pembeli = await Pembeli.findById(pembeliId).populate('wishlist');
-    
+    const pembeli = await Pembeli.findById(pembeliId).populate("wishlist");
+
     if (!pembeli) {
       return res.status(404).json({ message: "Pembeli tidak ditemukan" });
     }
 
     const wishlistProducts = await Product.find({
-      '_id': { $in: pembeli.wishlist }
+      _id: { $in: pembeli.wishlist },
     });
 
     return res.status(200).json({ wishlist: wishlistProducts });
