@@ -103,35 +103,31 @@ export default function ShopDetail() {
               <h1 className="capitalize text-3xl font-bold mb-2 text-blue-700">
                 {shopOwner.namausaha}
               </h1>
-              <p className="text-gray-600 mb-4">
-                {shopOwner.description ? "Belum ada deskripsi toko" : ""}
+              <p
+                className="text-gray-600 mb-4"
+                style={{
+                  overflowWrap: "break-word",
+                  wordWrap: "break-word",
+                  wordBreak: "break-word",
+                }}
+              >
+                <span className="font-semibold">Deskripsi Usaha:</span>{" "}
+                <span className="font-normal">
+                  {shopOwner.description
+                    ? shopOwner.description
+                    : "Belum ada deskripsi"}
+                </span>
               </p>
+
               <div className="mb-4">
                 <h2 className="text-lg font-semibold text-gray-800">
-                  Informasi Toko:
+                  Informasi Usaha:
                 </h2>
                 <p className="text-gray-600">Alamat: {shopOwner.alamatusaha}</p>
                 <p className="capitalize text-gray-600">
                   Kategori: {shopOwner.category || "Tidak tersedia"}
                 </p>
                 <p className="text-gray-600">Kontak: {shopOwner.notelepon}</p>
-              </div>
-              <div className="mb-4">
-                <h2 className="text-lg font-semibold text-gray-800">
-                  E-commerce Link:
-                </h2>
-                {shopOwner.linkecommerences ? (
-                  <a
-                    href={shopOwner.linkecommerences}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    Kunjungi Halaman E-commerce
-                  </a>
-                ) : (
-                  <p className="text-gray-600">Tidak tersedia</p>
-                )}
               </div>
               <Link
                 to={`https://wa.me/${shopOwner.notelepon}`}

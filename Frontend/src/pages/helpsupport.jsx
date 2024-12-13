@@ -16,29 +16,30 @@ const HelpAndSupport = () => {
             <div className="mt-4 space-y-3">
               <details className="border p-4 rounded shadow-sm bg-white">
                 <summary className="font-semibold text-gray-700 cursor-pointer">
-                  How can I update my profile?
+                  Bagaimana cara memperbarui profil saya?
                 </summary>
                 <p className="mt-2 text-gray-600">
-                  To update your profile, navigate to the profile page from the
-                  dashboard and click on the "Edit Profile" button.
+                  Untuk memperbarui profil Anda, navigasikan ke halaman profil
+                  dari dashboard dan pilih navigasi "Pengaturan Akun".
                 </p>
               </details>
               <details className="border p-4 rounded shadow-sm bg-white">
                 <summary className="font-semibold text-gray-700 cursor-pointer">
-                  What should I do if I forget my password?
+                  Apa yang harus saya lakukan jika saya lupa kata sandi saya?
                 </summary>
                 <p className="mt-2 text-gray-600">
-                  Click on the "Forgot Password" link on the login page and
-                  follow the instructions to reset your password.
+                  Klik tautan "Lupa Kata Sandi" di halaman login dan ikuti
+                  instruksi untuk mengatur ulang kata sandi Anda.
                 </p>
               </details>
               <details className="border p-4 rounded shadow-sm bg-white">
                 <summary className="font-semibold text-gray-700 cursor-pointer">
-                  How do I contact customer support?
+                  Bagaimana cara menghubungi dukungan pelanggan?
                 </summary>
                 <p className="mt-2 text-gray-600">
-                  You can contact customer support by emailing us at
-                  support@example.com or calling our hotline at 123-456-7890.
+                  Anda dapat menghubungi dukungan pelanggan dengan mengirim
+                  email kepada kami di pasarmalangan@gmail.com atau hubungi hotline
+                  kami di 123-456-7890.
                 </p>
               </details>
             </div>
@@ -103,7 +104,6 @@ const HelpAndSupport = () => {
               </button>
             </form>
           </article>
-
         </section>
       </main>
       <Footer />

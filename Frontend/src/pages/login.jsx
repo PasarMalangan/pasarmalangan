@@ -133,7 +133,7 @@ export default function Login() {
                   </button>
                   <Link
                     className="text-violet-500 hover:text-violet-700 transition-colors duration-300 ease-in-out"
-                    to={""}
+                    to={"/forgotpassword"}
                   >
                     Lupa Password?
                   </Link>

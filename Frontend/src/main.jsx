@@ -31,6 +31,8 @@ import DashboardSuperAdmin from "./pages/dashboardAdmin/dashboard.jsx";
 import Comingsoon from "./pages/comingsoon.jsx";
 import DashboardPedagang from "./pages/pedagang/dashboardpedagang.jsx";
 import HelpAndSupport from "./pages/helpsupport.jsx";
+import ForgotPassword from "./pages/forgotpassword.jsx";
+import ResetPassword from "./pages/resetpassword.jsx";
 
 const router = createBrowserRouter([
   {
@@ -165,6 +167,14 @@ const router = createBrowserRouter([
   {
     path: "/tokodetail/:id",
     element: <DetailToko />,
+  },
+  {
+    path: "/forgotpassword",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/resetpassword/:token",
+    element: <ResetPassword />,
   },
 ]);
 

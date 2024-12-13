@@ -5,6 +5,7 @@ import Footer from "../components/containers/footer/footer";
 import SearchResults from "../components/containers/marketplace/SearchResults";
 import { Link } from "react-router-dom";
 import AdsSlider from "../components/containers/adsslider/AdsSlider";
+import LoaderPage from "../components/elements/loading";
 const apiroutes = import.meta.env.VITE_API_BASE_URL;
 
 export default function Marketplace() {
@@ -12,7 +13,11 @@ export default function Marketplace() {
   const [isSearching, setIsSearching] = useState(false);
   const [filterLocation, setIsFilterLocation] = useState();
   const [loading, setLoading] = useState(false);
-  const [productList, setProductList] = useState([]);
+  const [productList, setProductList] = useState({
+    allProducts: [],
+    recommendedProducts: [],
+    highlightedStores: [],
+  });
   const [hoveredProducts, setHoveredProducts] = useState(false);
 
   useEffect(() => {
@@ -32,7 +37,33 @@ export default function Marketplace() {
           (product) => product.isApproved === "disetujui"
         );
 
-        setProductList(approvedProducts); // Hanya set produk yang disetujui
+        // Rekomendasi: Urutkan berdasarkan jumlah klik menurun
+        const recommendedProducts = [...approvedProducts].sort(
+          (a, b) => b.click - a.click
+        );
+
+        // Dari Toko Unggulan: Kelompokkan produk per toko dan hitung akumulasi klik
+        const storeClicks = {};
+        approvedProducts.forEach((product) => {
+          if (!storeClicks[product.namausaha]) {
+            storeClicks[product.namausaha] = 0;
+          }
+          storeClicks[product.namausaha] += product.click;
+        });
+        const highlightedStores = Object.entries(storeClicks)
+          .sort(([, clicksA], [, clicksB]) => clicksB - clicksA)
+          .map(([storeName]) =>
+            approvedProducts.filter(
+              (product) => product.namausaha === storeName
+            )
+          )
+          .flat();
+
+        setProductList({
+          allProducts: approvedProducts,
+          recommendedProducts,
+          highlightedStores,
+        });
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -102,6 +133,11 @@ export default function Marketplace() {
   const handleHover = (id, isHovered) => {
     setHoveredProducts((prev) => ({ ...prev, [id]: isHovered }));
   };
+
+  if (loading) {
+    <LoaderPage />;
+  }
+
   return (
     <>
       <Navbar />
@@ -168,7 +204,10 @@ export default function Marketplace() {
         )}
 
         {!isSearching && (searchQuery || filterLocation) && (
-          <SearchResults searchQuery={searchQuery} products={productList} />
+          <SearchResults
+            searchQuery={searchQuery}
+            products={productList.allProducts}
+          />
         )}
 
         {!isSearching && !searchQuery && !filterLocation && (
@@ -214,11 +253,10 @@ export default function Marketplace() {
               <h4 className="px-5 text-2xl font-bold">Rekomendasi</h4>
               <section id="recomendation" className="my-6 px-10">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                  {productList.map((product) => (
+                  {productList.recommendedProducts.map((product) => (
                     <Link
                       key={product._id}
                       to={`/detailproduk/${product._id}`}
-                      rel="noopener noreferrer"
                       onClick={() => handleProductClick(product._id)}
                       className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
                     >
@@ -285,16 +323,18 @@ export default function Marketplace() {
                   ))}
                 </div>
               </section>
+
               <br />
+
               <h4 className="px-5 text-2xl font-bold">Dari Toko Unggulan</h4>
               <br />
+
               <section id="unggulan" className="my-6 px-10">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                  {productList.map((product) => (
+                  {productList.highlightedStores.map((product) => (
                     <Link
                       key={product._id}
                       to={`/detailproduk/${product._id}`}
-                      rel="noopener noreferrer"
                       onClick={() => handleProductClick(product._id)}
                       className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
                     >
@@ -361,17 +401,19 @@ export default function Marketplace() {
                   ))}
                 </div>
               </section>
+
               <br />
+
               <h4 className="px-5 text-2xl font-bold">Semua Produk</h4>
+
               <br />
 
               <section id="allproduct" className="my-6 px-10">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                  {productList.map((product) => (
+                  {productList.allProducts.map((product) => (
                     <Link
                       key={product._id}
                       to={`/detailproduk/${product._id}`}
-                      rel="noopener noreferrer"
                       onClick={() => handleProductClick(product._id)}
                       className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
                     >

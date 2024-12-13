@@ -94,7 +94,7 @@ export default function ProductList() {
       <main className="flex flex-col md:flex-row h-screen">
         <SidebarPedagang />
 
-        <article className="w-full md:w-[80%] h-full pt-5 px-5 pb-10 border-2 shadow-sm my-5 bg-gradient-to-b from-blue-300 via-blue-100 to-blue-50 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
+        <article className="w-full md:w-[80%] pt-5 px-5 pb-10 border-2 shadow-sm my-5 bg-gradient-to-b from-blue-300 via-blue-100 to-blue-50 overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200">
           <section className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-semibold text-gray-800">
               Dashboard Produk Pedagang

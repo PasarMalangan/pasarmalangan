@@ -367,7 +367,7 @@ export default function SettingsPedagang() {
                 )}
               </button>
 
-              <Link className="rounded-lg mt-5 text-center md:text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
+              <Link to={"/forgotpassword"} className="rounded-lg mt-5 text-center md:text-lg bg-violet-500 text-white font-semibold py-2 px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
                 Ubah Password
               </Link>
             </div>

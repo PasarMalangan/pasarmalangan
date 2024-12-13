@@ -320,11 +320,11 @@ export default function SettingsPembeli() {
                 </div>
               </section>
 
-              <div className="flex md:flex-col flex-row gap-5 sm:gap-10 mt-5">
+              <div className="flex flex-row gap-5 sm:gap-10 mt-5">
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`rounded-md w-full text-center md:text-lg bg-violet-500 text-white font-semibold py-2 px-2 md:px-5 
+                  className={`rounded-md w-full md:w-max text-center md:text-lg bg-violet-500 text-white font-semibold py-2 px-2 md:px-5 
             ${
               isLoading
                 ? "opacity-70 cursor-not-allowed"
@@ -360,7 +360,7 @@ export default function SettingsPembeli() {
                   )}
                 </button>
 
-                <Link className="rounded-md w-full sm:w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-2 md:px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
+                <Link to={"/forgotpassword"} className="rounded-md w-full md:w-max sm:w-1/4 text-center text-lg bg-violet-500 text-white font-semibold py-2 px-2 md:px-5 hover:bg-violet-700 transition-colors duration-300 ease-out">
                   Ubah Password
                 </Link>
               </div>

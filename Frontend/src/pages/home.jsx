@@ -10,7 +10,7 @@ export default function Home() {
         {/* Hero Section */}
         <article className="relative w-full h-full bg-blue-300 pt-20 mb-20 md:mb-10">
           <section className="grid md:grid-cols-2 items-center gap-5 md:pr-2">
-            <div className="bg-sky-400 h-max py-5 pl-5 pr-10 md:pr-20 md:rounded-tr-[200px] md:rounded-br-[200px]">
+            <div className="bg-sky-400 h-max py-5 pl-5 pr-10 md:pr-20 md:rounded-tr-[200px] md:rounded-br-[200px] relative z-10">
               <h1 className="text-slate-100 font-bold text-3xl">
                 Dukung dan Temukan UMKM Terbaik di Malang,
               </h1>
@@ -36,17 +36,18 @@ export default function Home() {
             </div>
             <div className="hidden md:grid grid-cols-2 items-end gap-5">
               <img
-                className="w-full rounded-lg"
+                className="w-full rounded-lg animate-slideRight"
                 src={image.hero_1}
                 alt="icnhero1"
               />
               <img
-                className="w-full rounded-lg"
+                className="w-full rounded-lg animate-slideLeft"
                 src={image.hero_2}
                 alt="icnhero2"
               />
             </div>
           </section>
+
           <section className="translate-y-1/2 w-[90%] md:w-[80%] mx-auto bg-white grid grid-cols-2 md:flex justify-around items-center py-5 rounded-3xl shadow-2xl">
             {[
               { icon: image.icon_marketplace_home, label: "Marketplace" },
@@ -65,6 +66,34 @@ export default function Home() {
             ))}
           </section>
         </article>
+
+        <style jsx>{`
+          @keyframes slideRight {
+            0% {
+              transform: translateX(-100%);
+            }
+            100% {
+              transform: translateX(0);
+            }
+          }
+
+          @keyframes slideLeft {
+            0% {
+              transform: translateX(100%);
+            }
+            100% {
+              transform: translateX(0);
+            }
+          }
+
+          .animate-slideRight {
+            animation: slideRight 1s ease-out;
+          }
+
+          .animate-slideLeft {
+            animation: slideLeft 1s ease-out;
+          }
+        `}</style>
 
         {/* About Section */}
         <article className="md:grid grid-cols-2 items-center gap py-20 px-5 bg-gray-50 text-gray-800">
@@ -111,7 +140,7 @@ export default function Home() {
               ].map((feature, index) => (
                 <div
                   key={index}
-                  className="shadow-lg p-5 rounded-lg bg-gray-100"
+                  className="shadow-lg p-5 rounded-lg bg-gray-100 hover:scale-110 transition-all duration-300 ease-linear"
                 >
                   <img
                     className="w-40 h-40 mx-auto"
