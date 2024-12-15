@@ -35,65 +35,72 @@ const UserManagement = () => {
   };
 
   return (
-    <section>
-      <h2 className="text-xl font-bold mb-4">Manajemen User</h2>
+<section>
+  <h2 className="text-xl font-bold mb-4">Manajemen User</h2>
 
-      {/* Filter */}
-      <div className="mb-4">
-        <label className="mr-2">Role:</label>
-        <select
-          name="role"
-          value={filter.role}
-          onChange={handleFilterChange}
-          className="border px-2 py-1"
-        >
-          <option value="">Semua</option>
-          <option value="pedagang">Pedagang</option>
-          <option value="pembeli">Pembeli</option>
-          <option value="superadmin">Superadmin</option>
-        </select>
+  {/* Filter */}
+  <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center">
+    <div className="mb-2 sm:mb-0 sm:mr-4">
+      <label className="mr-2">Role:</label>
+      <select
+        name="role"
+        value={filter.role}
+        onChange={handleFilterChange}
+        className="border px-2 py-1"
+      >
+        <option value="">Semua</option>
+        <option value="pedagang">Pedagang</option>
+        <option value="pembeli">Pembeli</option>
+        <option value="superadmin">Superadmin</option>
+      </select>
+    </div>
 
-        <label className="ml-4 mr-2">Nama:</label>
-        <input
-          type="text"
-          name="name"
-          value={filter.name}
-          onChange={handleFilterChange}
-          className="border px-2 py-1"
-          placeholder="Cari nama"
-        />
-      </div>
+    <div className="flex items-center">
+      <label className="mr-2">Nama:</label>
+      <input
+        type="text"
+        name="name"
+        value={filter.name}
+        onChange={handleFilterChange}
+        className="border px-2 py-1"
+        placeholder="Cari nama"
+      />
+    </div>
+  </div>
 
-      {/* Tabel Pengguna */}
-      <table className="w-full bg-white rounded-lg shadow-md overflow-hidden">
-        <thead className="bg-blue-600 text-white">
-          <tr>
-            <th className="py-2 px-4">Nama</th>
-            <th className="py-2 px-4">Email</th>
-            <th className="py-2 px-4">Nomor Telepon</th>
-            <th className="py-2 px-4">Role</th>
-            <th className="py-2 px-4">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user, index) => (
-            <tr key={index} className="hover:bg-gray-100">
-              <td className="py-2 px-4">{user.name}</td>
-              <td className="py-2 px-4">{user.email}</td>
+  {/* Tabel Pengguna */}
+  <div className="overflow-x-auto">
+    <table className="w-full bg-white rounded-lg shadow-md">
+      <thead className="bg-blue-600 text-white">
+        <tr>
+          <th className="py-2 px-4 text-left">Nama</th>
+          <th className="py-2 px-4 text-left">Email</th>
+          <th className="py-2 px-4 text-left">Nomor Telepon</th>
+          <th className="py-2 px-4 text-left">Role</th>
+          <th className="py-2 px-4 text-left">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map((user, index) => (
+          <tr key={index} className="hover:bg-gray-100">
+            <td className="py-2 px-4">{user.name}</td>
+            <td className="py-2 px-4">{user.email}</td>
+            <td className="py-2 px-4">
+              {user.notelepon || "Tidak Ditemukan"}
+            </td>
+            <td className="py-2 px-4">{user.role}</td>
+            {user.role === "pedagang" && (
               <td className="py-2 px-4">
-                {user.notelepon || "Tidak Ditemukan"}
+                {user.isApproved ? <p>Active</p> : <p>Not Active</p>}
               </td>
-              <td className="py-2 px-4">{user.role}</td>
-              {user.role === "pedagang" && (
-                <td className="py-2 px-4">
-                  {user.isApproved ? <p>Active</p> : <p>Not Active</p>}
-                </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </section>
+            )}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>
+
   );
 };
 

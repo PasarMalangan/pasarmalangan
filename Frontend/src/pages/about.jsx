@@ -1,3 +1,4 @@
+import Footer from "../components/containers/footer/footer";
 import Navbar from "../components/containers/navbar/navbar";
 
 export default function About() {
@@ -69,11 +70,55 @@ export default function About() {
               <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
                 <img
                   className="w-full h-48 object-cover"
-                  src="https://via.placeholder.com/300x200"
+                  src="/team/Niko Achmad.jpg"
                   alt="Card Image"
                 />
                 <div className="p-4">
-                  <h5 className="text-lg font-bold text-gray-900">Nama</h5>
+                  <h5 className="text-lg font-bold text-gray-900">
+                    Niko Achmad
+                  </h5>
+                  <p className="mt-2 text-gray-700 text-sm">
+                    Hanya seorang bocah web developer dari Jawa lahir di Malang
+                    yang memiliki jiwa kompetitif yang tinggi. Mempunyai
+                    keinginan untuk berguna bagi diri sendiri dan lingkungan
+                    sekitarnya. Bocah yang suka bermain game dan bermain dengan
+                    sesuatu yang baru dan menarik bagi dirinya.
+                  </p>
+                </div>
+              </div>
+              <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
+                <img
+                  className="w-full h-48 object-cover"
+                  src="/team/M. Farid Alwaritsi.jpg"
+                  alt="Card Image"
+                />
+                <div className="p-4">
+                  <h5 className="text-lg font-bold text-gray-900">
+                    M Farid Alwaritsi
+                  </h5>
+                  <p className="mt-2 text-gray-700 text-sm">
+                    Seseorang yang menempuh pendidikan di malang lebih tepatnya
+                    di Universitas PGRI Kanjuruhan Malang, lahir di Kabupaten
+                    Sampang Dulunya hanya bocah ingusan yang memiliki mindset
+                    pendek dan suka direndahkan orang lain, tetapi dirinya
+                    percaya bahwsannya dunia berputar dan usaha tidak akan
+                    mengkhianati hasil Sekarang yang dipercayai dan mengemban
+                    amanah menjadi Ketua dari tim ini dan bisa membuktikan
+                    dirinya dengan daya berpikir kritisnya, cekatannya, dan
+                    komunikasi bersama rekan timnya
+                  </p>
+                </div>
+              </div>
+              <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
+                <img
+                  className="w-full h-48 object-cover"
+                  src="/team/M. Fiqi Fahrudillah.jpg"
+                  alt="Card Image"
+                />
+                <div className="p-4">
+                  <h5 className="text-lg font-bold text-gray-900">
+                    M. Fiqi Fahrudillah
+                  </h5>
                   <p className="mt-2 text-gray-700 text-sm">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     Voluptatibus unde neque quaerat maiores quas libero odio.
@@ -86,11 +131,34 @@ export default function About() {
               <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
                 <img
                   className="w-full h-48 object-cover"
-                  src="https://via.placeholder.com/300x200"
+                  src="/team/Muhamad Fauzi.jpg"
                   alt="Card Image"
                 />
                 <div className="p-4">
-                  <h5 className="text-lg font-bold text-gray-900">Nama</h5>
+                  <h5 className="text-lg font-bold text-gray-900">
+                    Muhamad Fauzi
+                  </h5>
+                  <p className="mt-2 text-gray-700 text-sm">
+                    Mahasiswa STT Terpadu Nurul Fikri Jurusan Teknik
+                    Informatika. Pada project ini aku berkontribusi sebagai
+                    UI/UX Tim. Saat ini aku sedang berfokus pada pengembangan
+                    skill Engineer IT dan Memiliki Hobi Motoran menikmati
+                    pemandangan baru & Game sebagai Relaksasi diri. Temui aku di
+                    Instagram: @masfauzi.18 , LinkedIn:
+                    https://www.linkedin.com/in/muhamad-fauzi-9219501b6/
+                  </p>
+                </div>
+              </div>
+              <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
+                <img
+                  className="w-full h-48 object-cover"
+                  src="/team/vina.jpg"
+                  alt="Card Image"
+                />
+                <div className="p-4">
+                  <h5 className="text-lg font-bold text-gray-900">
+                    Vina Najahah
+                  </h5>
                   <p className="mt-2 text-gray-700 text-sm">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     Voluptatibus unde neque quaerat maiores quas libero odio.
@@ -103,11 +171,13 @@ export default function About() {
               <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
                 <img
                   className="w-full h-48 object-cover"
-                  src="https://via.placeholder.com/300x200"
+                  src="/team/Keiza.jpg"
                   alt="Card Image"
                 />
                 <div className="p-4">
-                  <h5 className="text-lg font-bold text-gray-900">Nama</h5>
+                  <h5 className="text-lg font-bold text-gray-900">
+                    Keiza Sasako
+                  </h5>
                   <p className="mt-2 text-gray-700 text-sm">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     Voluptatibus unde neque quaerat maiores quas libero odio.
@@ -120,11 +190,13 @@ export default function About() {
               <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
                 <img
                   className="w-full h-48 object-cover"
-                  src="https://via.placeholder.com/300x200"
+                  src="/team/clau.jpg"
                   alt="Card Image"
                 />
                 <div className="p-4">
-                  <h5 className="text-lg font-bold text-gray-900">Nama</h5>
+                  <h5 className="text-lg font-bold text-gray-900">
+                    Claudia Pither
+                  </h5>
                   <p className="mt-2 text-gray-700 text-sm">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     Voluptatibus unde neque quaerat maiores quas libero odio.
@@ -137,11 +209,13 @@ export default function About() {
               <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
                 <img
                   className="w-full h-48 object-cover"
-                  src="https://via.placeholder.com/300x200"
+                  src="/team/Andhi.jpg"
                   alt="Card Image"
                 />
                 <div className="p-4">
-                  <h5 className="text-lg font-bold text-gray-900">Nama</h5>
+                  <h5 className="text-lg font-bold text-gray-900">
+                    Andhi Muhammad Mustofa
+                  </h5>
                   <p className="mt-2 text-gray-700 text-sm">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     Voluptatibus unde neque quaerat maiores quas libero odio.
@@ -154,11 +228,13 @@ export default function About() {
               <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
                 <img
                   className="w-full h-48 object-cover"
-                  src="https://via.placeholder.com/300x200"
+                  src="/team/fikri f.png"
                   alt="Card Image"
                 />
                 <div className="p-4">
-                  <h5 className="text-lg font-bold text-gray-900">Nama</h5>
+                  <h5 className="text-lg font-bold text-gray-900">
+                    Fikri Firmansyah
+                  </h5>
                   <p className="mt-2 text-gray-700 text-sm">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     Voluptatibus unde neque quaerat maiores quas libero odio.
@@ -171,27 +247,45 @@ export default function About() {
               <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
                 <img
                   className="w-full h-48 object-cover"
-                  src="https://via.placeholder.com/300x200"
+                  src="/team/Almas.JPG"
                   alt="Card Image"
                 />
                 <div className="p-4">
-                  <h5 className="text-lg font-bold text-gray-900">Nama</h5>
+                  <h5 className="text-lg font-bold text-gray-900">
+                    Amas Fa'iq Khairul Ikhwan
+                  </h5>
                   <p className="mt-2 text-gray-700 text-sm">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Voluptatibus unde neque quaerat maiores quas libero odio.
-                    Praesentium, magni ducimus qui odit excepturi, dolores
-                    dignissimos ipsa exercitationem deserunt voluptatum
-                    accusantium pariatur.
+                    Halo! Saya Almas Fa'iq Khairul Ikhwan, Mahasiswa Rekayasa
+                    Perangkat Lunak di Telkom University Purwokerto. Saya
+                    berfokus pada pengembangan aplikasi Android. Temui saya di
+                    Instagram: @almsfaa!
+                  </p>
+                </div>
+              </div>
+              <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
+                <img
+                  className="w-full h-48 object-cover"
+                  src="/team/constan.jpg"
+                  alt="Card Image"
+                />
+                <div className="p-4">
+                  <h5 className="text-lg font-bold text-gray-900">
+                    Constantine Kandowangko
+                  </h5>
+                  <p className="mt-2 text-gray-700 text-sm">
+                    Hi, aku Constantine Kandowangko, mahasiswa Teknik
+                    Informatika di Universitas Negeri Manado (UNIMA). Aku suka
+                    belajar hal-hal baru, terutama yang berhubungan dengan
+                    teknologi, dan selalu berusaha bertanggung jawab dalam apa
+                    pun yang dikerjakan. IG : @constanknd
                   </p>
                 </div>
               </div>
             </div>
           </section>
         </main>
-        <footer className="w-full py-4 bg-blue-700 mt-auto text-center">
-          <p>&copy; 2024 Pasar Malangan. All rights reserved.</p>
-        </footer>
       </div>
+      <Footer />
     </>
   );
 }
