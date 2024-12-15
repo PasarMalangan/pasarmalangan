@@ -81,19 +81,20 @@ const SearchResults = ({ searchQuery, products }) => {
             <Link
               key={product._id}
               to={`/detailproduk/${product._id}`}
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={() => handleProductClick(product._id)}
               className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-transform duration-300 transform hover:scale-105"
             >
+              {/* Gambar dengan ukuran responsif dan proporsi tetap */}
               <div className="w-full relative">
                 <img
-                  className="w-full h-36 sm:h-40 object-cover"
+                  className="w-full h-40 sm:h-48 md:h-60 lg:h-72 object-contain"
                   src={product.images[0]}
                   alt={`Gambar ${product.name}`}
                   loading="lazy"
                 />
+                {/* Kategori hanya tampil di mobile */}
                 <p
-                  className={`md:hidden text-center capitalize text-white text-sm font-medium rounded px-2 py-1 ${
+                  className={`md:hidden absolute bottom-2 left-2 text-center capitalize text-white text-sm font-medium rounded px-2 py-1 ${
                     categoryStyles[product.category]
                   }`}
                 >
@@ -107,7 +108,10 @@ const SearchResults = ({ searchQuery, products }) => {
                 </h5>
 
                 <div className="flex items-center justify-between my-3">
-                  <p className="text-gray-700 font-bold">{`Rp. ${product.harga}`}</p>
+                  <p className="text-gray-700 font-bold">
+                    Rp {(product.harga ?? 0).toLocaleString()}
+                  </p>
+                  {/* Kategori untuk layar lebih besar */}
                   <span
                     className={`hidden md:block capitalize text-white text-sm font-medium rounded px-2 py-1 ${
                       categoryStyles[product.category]
